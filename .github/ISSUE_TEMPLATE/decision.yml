@@ -1,0 +1,27 @@
+name: Decision needed
+description: A choice that is hard to reverse (library, schema, protocol, hosting)
+labels: ["decision"]
+body:
+  - type: input
+    id: id
+    attributes:
+      label: Decision id
+      description: Next free id in docs/DECISIONS.md, e.g. D-011
+    validations:
+      required: true
+  - type: textarea
+    id: question
+    attributes:
+      label: Question and why it matters
+    validations:
+      required: true
+  - type: textarea
+    id: options
+    attributes:
+      label: Options and trade-offs
+    validations:
+      required: true
+  - type: input
+    id: needed_by
+    attributes:
+      label: Needed by slice

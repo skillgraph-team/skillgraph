@@ -1,0 +1,28 @@
+name: Bug
+description: Something is broken
+labels: ["bug"]
+body:
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened
+      description: What you did, what you expected, what you got instead.
+    validations:
+      required: true
+  - type: textarea
+    id: repro
+    attributes:
+      label: How to reproduce
+      description: Commands, steps, or a failing test.
+    validations:
+      required: true
+  - type: input
+    id: slice
+    attributes:
+      label: Related slice
+      placeholder: e.g. M3.5
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs or error output
+      render: text

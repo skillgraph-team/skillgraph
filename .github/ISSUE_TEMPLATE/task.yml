@@ -1,0 +1,37 @@
+name: New slice or task
+description: Work that isn't in docs/MILESTONES.md yet (add it there too)
+body:
+  - type: input
+    id: id
+    attributes:
+      label: Slice id
+      description: Next free id in the milestone, e.g. M4.8. Use it as the start of the issue title.
+    validations:
+      required: true
+  - type: textarea
+    id: goal
+    attributes:
+      label: Goal
+    validations:
+      required: true
+  - type: textarea
+    id: tasks
+    attributes:
+      label: Tasks
+      value: |
+        - [ ]
+    validations:
+      required: true
+  - type: textarea
+    id: done
+    attributes:
+      label: Done when
+      value: |
+        - [ ]
+    validations:
+      required: true
+  - type: input
+    id: depends
+    attributes:
+      label: Depends on
+      placeholder: e.g. M4.5, M2.3
