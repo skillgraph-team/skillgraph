@@ -225,7 +225,9 @@ class GH:
             return ""
         if self.dry_run and read:
             return ""
-        proc = subprocess.run(["gh", *args], capture_output=True, text=True)
+        # gh always prints UTF-8; without an explicit encoding Windows decodes it
+        # as cp1252, which garbles "·" in titles and breaks the "already exists" checks.
+        proc = subprocess.run(["gh", *args], capture_output=True, text=True, encoding="utf-8")
         if proc.returncode != 0 and check:
             raise RuntimeError(f"gh {' '.join(args)} failed:\n{proc.stderr.strip()}")
         return proc.stdout
