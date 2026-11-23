@@ -1,6 +1,6 @@
-# SkillGraph — Spec v0.4
+# SkillGraph — Spec v0.5
 
-Changes go through a PR approved by the team. Bump the version and add a line to the changelog at the bottom.
+Changes go through a PR approved by Rasen (D-018). Bump the version and add a line to the changelog at the bottom.
 
 ## Goal
 SkillGraph builds evidence-backed skills profiles for students and recent graduates. It extracts skills from a CV and GitHub, records the evidence behind each skill with a status (claimed / demonstrated / assessed / unverified) and a confidence, matches the profile against a curated set of internships, and explains each match and gap with concrete next steps. A small set of specialized agents, coordinated by an orchestrator, does the analysis, and the project measures whether that multi-agent design beats a rule-based baseline and a single-agent version. It works in English, French and Arabic: the interface, the AI's explanations, and the CVs and postings it reads.
@@ -47,6 +47,7 @@ SkillGraph builds evidence-backed skills profiles for students and recent gradua
 7. Steps 1–3 work with the interface in English, French and Arabic (right-to-left), and for a French CV and an Arabic CV. The evaluation table is also broken down by language.
 
 ## Changelog
+- v0.5: spec changes are approved by Rasen, not the whole team (D-018).
 - v0.4: no assessments in the MVP (D-014); real participants' data stays out of the repo (D-013).
 - v0.3: English, French and Arabic support (D-012).
 - v0.2: $0 budget; provider interface + record/replay; open task claiming with one owner per contract; repo/board setup as the first slice.

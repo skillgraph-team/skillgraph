@@ -20,7 +20,7 @@ Every slice answers five questions:
 - Slice: `### M<n>.<k> · <title>`, then one line of tags: `` `area:…` `size:S|M|L` `depends:…` `` and optionally `` `contract:yes` ``, then the five sections above.
 - Areas: infra, backend, frontend, agents, ai, data, eval, research, docs.
 - Size: S = a few hours, M = about a day, L = several days (split it if it grows).
-- `contract:yes` means the slice defines something everyone else builds on. Its PR needs approval from the whole team, and later changes need the contract owner's approval.
+- `contract:yes` means the slice defines something everyone else builds on. Rasen approves it, and later changes need the contract owner's approval (D-018).
 
 ---
 
@@ -350,7 +350,7 @@ Agree on the definitions everyone builds on (evidence, database tables, agent me
 - [ ] Name the contract owner; mark D-006 Decided
 
 **Done when**
-- [ ] `docs/design/evidence-model.md` approved by all four members; D-006 Decided
+- [ ] `docs/design/evidence-model.md` approved by Rasen; D-006 Decided
 
 ### M2.4 · Database schema v1
 `area:backend` `size:M` `depends:M2.3, M0.3` `contract:yes`
@@ -439,7 +439,7 @@ Agree on the definitions everyone builds on (evidence, database tables, agent me
 - [ ] Style: formal or informal "you" in French (vous or tu), Modern Standard Arabic, technical names (Python, Docker) kept in Latin letters in every language
 
 **Done when**
-- [ ] Committed and approved by all four members; D-012 details marked Decided
+- [ ] Committed and approved by Rasen; D-012 details marked Decided
 
 ---
 
@@ -764,7 +764,7 @@ The machinery the agents run on: the agent loop, tools, the orchestrator, loggin
 
 **Goal:** A small, readable loop that runs one agent: ask the LLM, run any tool it requests, check the final answer, stop after a fixed number of steps.
 
-**Why:** Every agent runs on this loop. Writing it ourselves, instead of using a framework, is a core requirement of the project, so all four of us must be able to explain it.
+**Why:** Every agent runs on this loop. Writing it ourselves, instead of using a framework, is a core requirement of the project.
 
 **Read first:** GLOSSARY: agent, tool call, agent loop; `app/llm` (M2.2).
 

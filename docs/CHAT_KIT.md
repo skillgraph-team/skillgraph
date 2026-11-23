@@ -33,7 +33,6 @@ Rules:
 - For every file you produce, give its exact path in the repo and its complete contents
   in one code block, ready to paste. CSV and JSON must be valid.
 - Don't invent facts, links or numbers. Mark anything you're unsure about.
-- Explain your reasoning briefly so I can defend this work in the presentation.
 - Explain any term I might not know (our glossary is below if I paste it).
 - At the end, check the "Done when" list item by item and tell me what's still missing.
 
@@ -92,7 +91,6 @@ Rules:
 - When a test fails, find the cause in the code. Never change a test just to make it pass;
   if you think a test is wrong, explain why and let me decide.
 - If the same fix fails twice, stop and rethink the approach instead of patching again.
-- Explain anything I might not understand, so I can explain it at the presentation.
 
 CLAUDE.md:
 <paste>
@@ -123,15 +121,14 @@ Files I'll change, and examples to follow:
 ---
 
 ## Part C: review someone else's pull request
-Rasen reviews and merges every teammate's pull request (D-016); you can still review any PR to learn the code, or when Rasen asks you to. Reviewing is also how all four of us stay able to explain every part of the project at the presentation, so treat it as real work. (With Claude Code: "review PR 12".)
+Rasen reviews and merges every teammate's pull request (D-016); you can still review any PR to learn the code, or when Rasen asks you to. (With Claude Code: "review PR 12".)
 
 1. Open the PR. Read its **Review guide** and **How to test it manually**.
 2. Get the changes: add `.diff` to the end of the PR's URL (works when the repo is public) and copy everything. Otherwise use **Files changed** and copy file by file.
 3. In a new chat, paste:
 
 ```
-I need to review and approve a pull request in our project SkillGraph, and be able to explain it
-afterwards. I'm not the author.
+I want to review a pull request in our project SkillGraph. I'm not the author.
 1. Explain in plain language what it changes and why, file by file.
 2. Explain from scratch any concept or term I might not know.
 3. List anything that looks wrong, risky, untested, or not matching the slice's "Done when" list.

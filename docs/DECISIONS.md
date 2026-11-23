@@ -25,6 +25,7 @@ Two kinds of entry:
 | D-015 | Login: token vs session cookie | Open | M3.1 |
 | D-016 | Who reviews and merges (supersedes part of D-010) | Decided | M0.5 |
 | D-017 | How much Claude Code does on its own for Rasen | Decided | — |
+| D-018 | Only Rasen's review gates teammates' work; no code-explanation rules | Decided | — |
 
 ---
 
@@ -59,7 +60,7 @@ Two kinds of entry:
 - **Candidates:** a hosted free tier (check current limits and terms at decision time) vs a small local model through Ollama (needs a machine with enough RAM/GPU; slower). The provider interface means this can change later at low cost.
 
 ### D-006 · Evidence model (contract)
-- **Status:** Decided (Rasen, 2026-11-23). **Contract owner: Rasen.** M2.3 writes this up in full in `docs/design/evidence-model.md` (with worked examples); teammates sign off on that write-up there (D-010, contract slices). Changes after that need a new D-entry approved by the owner.
+- **Status:** Decided (Rasen, 2026-11-23). **Contract owner: Rasen.** M2.3 writes this up in full in `docs/design/evidence-model.md` (with worked examples); Rasen approves it (D-018). Changes after that need a new D-entry approved by the owner.
 - **Why it matters:** the database (M2.4), the hand labels (M1.6), the rules baseline (M4.4), the agents (M6) and matching all use these exact definitions; if they differ, the evaluation numbers mean nothing.
 - **Choices** (all recommendations accepted):
   1. **Evidence types: a fixed, detailed list.** `cv_skills_list`, `cv_summary`, `cv_experience`, `cv_project`, `cv_education`, `certificate`, `repo_language`, `repo_dependency`, `repo_code`, `repo_readme`, `manual_project`, `user_added`, `assessment`. *Why:* the status rules work per type, and labelers never have to guess which type applies. (`assessment` exists but nothing produces it in the MVP, D-014.)
@@ -87,7 +88,7 @@ Two kinds of entry:
 - **Status:** Decided (Rasen)
 - **Choice:** no fixed roles and no split by tool. Anyone takes any slice whose dependencies are done, by assigning themselves on the board. Assigned = in progress, merged PR = done. A claim with no commit for 3 days can be taken over after a message in the group chat. Every PR is approved by someone other than its author. Slices marked `contract` need the whole team's approval, and later changes need the named contract owner's.
 - **Why:** splitting by who has which tool added complexity without helping. What matters is that every slice is clear on its own: Goal, Why, Read first, Tasks, Done when.
-- **Superseded in part by D-016** (who reviews and merges).
+- **Superseded in part by D-016** (who reviews and merges) **and D-018** (contracts no longer need the whole team's approval).
 
 ### D-011 · Which tools people use
 - **Status:** Decided (Rasen)
@@ -124,13 +125,18 @@ Two kinds of entry:
 - **Status:** Decided (Rasen, 2026-11-23). Supersedes D-010's "every PR is approved by someone other than its author".
 - **Choice:** Rasen's work (done with Claude Code) is committed and pushed straight to `main`, approved by Rasen. Teammates push their work to a branch and open a PR; Rasen reviews and merges it. In M0.5, `main` is protected for everyone except org admins (Rasen): teammates need a PR with 1 approval and green CI; Rasen can push directly.
 - **Why:** Rasen is the only member with a Claude Code subscription and does the reviewing; waiting for approvals on Rasen's own work would only slow the team down.
-- **Watch:** Rasen's pushes get no second reviewer, so CI (M0.5) is the only automatic check on them. Teammates still need to be able to explain that code for the presentation: Claude Code posts a short summary on the slice's issue when it pushes.
+- **Watch:** Rasen's pushes get no second reviewer, so CI (M0.5) is the only automatic check on them. Claude Code posts a short summary on the slice's issue when it pushes. (The earlier requirement that teammates be able to explain that code was removed by D-018.)
 
 ### D-017 · How much Claude Code does on its own for Rasen
 - **Status:** Decided (Rasen, 2026-11-23)
 - **Choice:** in Rasen's sessions, Claude Code picks any unblocked slice and starts work without waiting for a go-ahead. It stops to ask only for big or hard-to-reverse decisions (2 options + trade-offs + a recommendation), and records every answer here. Every smaller choice goes in the technical choices log, and every direct push gets a plain-language summary on its issue (D-016).
 - **Delegation level:** always `Delegate`. Claude Code writes all the code; Rasen doesn't write code by hand. For slices touching agents, evidence or matching, the issue summary also walks through how the logic works, step by step.
 - **Why:** keep the project moving, without it turning into a black box: Rasen must still understand and be able to explain everything, so the written record (this file, the technical choices log, issue summaries) is what keeps the project understandable.
+
+### D-018 · Only Rasen's review gates teammates' work
+- **Status:** Decided (Rasen, 2026-11-23). Supersedes D-010's "slices marked `contract` need the whole team's approval" and D-016's "teammates still need to be able to explain that code".
+- **Choice:** the only thing a teammate's work has to pass is Rasen's PR review (plus green CI). There are no rules that anyone must be able to explain the code. Contracts (evidence model, schema, message format, API, language rules) are owned and approved by Rasen; they don't need the whole team's sign-off. The PR "Review guide" and Rasen's issue summaries stay, as the record of how things work, for whoever wants it.
+- **Why:** this is a startup project: what matters is the product. Technical details are there to understand how it works underneath, not something every member has to master, and extra approvals only slow teammates down.
 
 ---
 

@@ -25,8 +25,8 @@ The project is split into milestones and 77 small **slices** ([docs/MILESTONES.m
 
 Rules:
 - A claim with no commit for 3 days can be taken over after a message in the group chat.
-- Slices marked `contract` (evidence model, schema, message format, API) need the whole team's approval, and later changes need the contract owner's.
-- Nothing is merged that its author can't explain, and the reviewer should be able to explain it too. Read the summaries Rasen posts on issues for direct pushes.
+- Slices marked `contract` (evidence model, schema, message format, API) are approved by Rasen, and later changes need the contract owner's (D-018).
+- Rasen's PR review is the only approval your work needs (D-018). The summaries Rasen posts on issues for direct pushes explain how things work, if you want the details.
 - A slice was unclear? Improve its text in `docs/MILESTONES.md` so the next person doesn't hit the same question.
 - Never commit `.env`, API keys or real people's personal data.
 - Unfamiliar term: [docs/GLOSSARY.md](docs/GLOSSARY.md).
