@@ -393,6 +393,42 @@ Code comments cite entries by number (e.g. "T-033"), so numbers never change. To
 - **Where:** `frontend/src/pages/HealthPage.tsx`, `frontend/src/App.tsx`.
 - **Watch out:** the fr/ar texts are first drafts; a native speaker checks them in M2.8.
 
+### M2.3 · Evidence model
+
+These fill in details D-006 left open. They are part of the contract in `docs/design/evidence-model.md`; changing one needs the owner (Rasen).
+
+#### T-043 · A repo language counts as work at 10 % or more
+- **What:** a `repo_language` link can only be `supports` if the language is ≥ 10 % of the repo's bytes (GitHub's share), the repo is owned by the person's GitHub username, and it isn't a fork.
+- **Why:** D-006 asked for "a share threshold" without a number. 10 % drops incidental files (a build script, a bit of CSS) but keeps real second languages.
+- **Where:** `docs/design/evidence-model.md` §3.2, §9.6.
+- **Watch out:** a guess, not measured. Revisit after M1.6 labels if it disagrees with labelers.
+
+#### T-044 · Forked or not-owned repos never support a skill
+- **What:** the owned-and-not-a-fork condition applies to `repo_code` too, not only `repo_language`.
+- **Why:** code in someone else's project isn't the person's work.
+- **Where:** evidence model §3.2, §9.4.
+
+#### T-045 · Dependency, README and education links are always weak
+- **What:** `repo_dependency`, `repo_readme` and `cv_education` never raise status or confidence; a validator rejects `supports` on them.
+- **Why:** D-006 says they aren't enough for demonstrated, and its worked example keeps PostgreSQL at medium despite `psycopg` in `requirements.txt`. Making them always weak is the reading that matches the example and is simplest to check.
+- **Where:** evidence model §2, §3.2, §7.
+
+#### T-046 · A vague mention in a CV job or project is claimed · low
+- **What:** a `cv_experience` / `cv_project` link marked `weak` (and not inferred) still makes the skill claimed, but adds nothing to confidence.
+- **Why:** D-006 choice 3 says "familiar with Docker" stays claimed; choice 5 says weak evidence gives low confidence. This satisfies both.
+- **Where:** evidence model §4, §5, §9.3.
+
+#### T-047 · "Independent" means a different (source, type) pair
+- **What:** confidence counts supporting links once per distinct (source, type). So a CV skills list plus a concrete CV project is high, even from one CV.
+- **Why:** this follows D-006 choice 5 ("different sources or different types") literally.
+- **Where:** evidence model §5, §9.2.
+- **Watch out:** a CV alone can reach demonstrated · high. If that turns out to be too generous, change it to "different sources" only.
+
+#### T-048 · Links carry a reason code from a fixed starting list
+- **What:** each link has a code such as `concrete_work`, `forked_repo`, `inferred_from_related`. M4.4 and M6.3 may add codes but never reuse one with a new meaning.
+- **Why:** the backend returns codes, not sentences (three languages); the UI translates them.
+- **Where:** evidence model §3.4.
+
 ### Session tooling (no slice)
 
 #### T-042 · A hook tells Claude Code sessions about teammates' new work
