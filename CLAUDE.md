@@ -23,11 +23,17 @@ Full spec: `docs/SPEC.md`. Plan: `docs/MILESTONES.md`. Decisions: `docs/DECISION
 ## Working on a slice
 The user talks normally ("let's do M2.3", "this is done", "review PR 12"). Follow these steps without being asked.
 
+**Every session, before any work** (a slice, a decision, a review, or any change to the repo). Do this unprompted at the start of each new session; teammates push in between, so never assume you've seen the latest state:
+1. `git status`. Uncommitted changes → ask what to do first.
+2. `git switch main && git pull && git fetch --prune`. Say which commits the pull brought in, and by whom (`git log --oneline --format="%h %an %s" ORIG_HEAD..HEAD`; skip if already up to date).
+3. Open PRs: `gh pr list --state open --json number,title,author,headRefName,updatedAt`. Teammates' branches without a PR: `git branch -r --no-merged origin/main` (ignore `origin/HEAD`, and branches that already have a PR).
+4. Give a 2–5 line summary: what's new on `main`, which PRs are waiting for Rasen's review, which branches are in progress. If the planned work touches the same slice or files as an open PR or branch, say so before starting. For Rasen: if teammates' PRs are waiting, offer to review them first, but don't block on it.
+
 **Starting** (the user names a slice, or asks what to work on: then suggest open slices whose `depends` are done):
-1. `git status`, then `git switch main && git pull`. Uncommitted changes → ask what to do first.
+1. Do "Every session, before any work" above.
 2. Read only that slice's section in `docs/MILESTONES.md` and the files in its "Read first". Find its issue: `gh issue list --search "<id> in:title" --json number,title,assignees`. Assigned to someone else → stop and say so. A `depends` slice still open → say which and ask.
 3. Assign it (`gh issue edit <n> --add-assignee @me`), set the board status (`python scripts/github_setup.py status <id> "In Progress"`), create the branch `m<n>.<k>-short-name` (not for Rasen, who works on `main`, D-016).
-4. Restate goal, tasks and "Done when" in a few lines; raise any `Open` decision it needs; ask the delegation level if it touches agents, evidence or matching. List the files and tests you plan to write, then wait for a go-ahead.
+4. Restate goal, tasks and "Done when" in a few lines; raise any `Open` decision it needs. List the files and tests you plan to write, then wait for a go-ahead.
    - **Rasen (`rimRasen`) works autonomously (D-017):** you may pick the next unblocked slice yourself and start right away without waiting for a go-ahead. Stop and ask only for a big or hard-to-reverse decision (anything `Open` in `docs/DECISIONS.md`, a new library choice between real alternatives, schema, protocol, storage, security), with 2 options + trade-offs + a recommendation, then record the answer. Always `Delegate`: you write all the code. Because Rasen doesn't write it, the record is how Rasen keeps understanding it: technical choices log entries plus the issue summary are required, and for slices that touch agents, evidence or matching the summary also walks through how the logic works, step by step.
 
 **Finishing** (the user says it's done or asks for a PR):
