@@ -20,5 +20,19 @@
       "Bash(npm run check)",
       "Bash(npm test)"
     ]
+  },
+  "hooks": {
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"$CLAUDE_PROJECT_DIR/scripts/session_check.py\" 2>/dev/null || python \"$CLAUDE_PROJECT_DIR/scripts/session_check.py\" 2>/dev/null || true",
+            "timeout": 60,
+            "statusMessage": "Checking for teammates' new work..."
+          }
+        ]
+      }
+    ]
   }
 }

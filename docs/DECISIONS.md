@@ -392,3 +392,11 @@ Code comments cite entries by number (e.g. "T-033"), so numbers never change. To
 - **Why:** removes the T-026 workaround.
 - **Where:** `frontend/src/pages/HealthPage.tsx`, `frontend/src/App.tsx`.
 - **Watch out:** the fr/ar texts are first drafts; a native speaker checks them in M2.8.
+
+### Session tooling (no slice)
+
+#### T-042 · A hook tells Claude Code sessions about teammates' new work
+- **What:** every time a prompt is sent, a `UserPromptSubmit` hook runs `scripts/session_check.py`. At most once every 30 minutes it fetches from GitHub and compares with the previous check. It looks for new commits on `origin/main` by someone other than you, new or updated open PRs, and new branches without a PR. If anything changed, a short note appears in the session; otherwise nothing happens. Its memory is `.git/claude-session-check.json`, one per clone and never committed. The first run only records a starting point.
+- **Why:** CLAUDE.md's "Every session, before any work" check only runs when a session starts. A session left open overnight would otherwise never notice teammates' pushes.
+- **Where:** `.claude/settings.json` (`hooks`), `scripts/session_check.py`.
+- **Watch out:** it never blocks a prompt. If you're offline or `gh` is missing, it stays silent and tries again on the next prompt. Run `python scripts/session_check.py --force` to check by hand. To turn it off, remove the hook in `/hooks` or in `.claude/settings.json`. Commits are matched to you by git `user.name`.

@@ -28,6 +28,7 @@ The user talks normally ("let's do M2.3", "this is done", "review PR 12"). Follo
 2. `git switch main && git pull && git fetch --prune`. Say which commits the pull brought in, and by whom (`git log --oneline --format="%h %an %s" ORIG_HEAD..HEAD`; skip if already up to date).
 3. Open PRs: `gh pr list --state open --json number,title,author,headRefName,updatedAt`. Teammates' branches without a PR: `git branch -r --no-merged origin/main` (ignore `origin/HEAD`, and branches that already have a PR).
 4. Give a 2–5 line summary: what's new on `main`, which PRs are waiting for Rasen's review, which branches are in progress. If the planned work touches the same slice or files as an open PR or branch, say so before starting. For Rasen: if teammates' PRs are waiting, offer to review them first, but don't block on it.
+5. Later in a session, a hook (`scripts/session_check.py`, T-042) re-checks at most every 30 minutes and adds a "Teammate activity since the last check" note when something changed. When you see it, tell the user, pull, and re-read anything it affects before continuing.
 
 **Starting** (the user names a slice, or asks what to work on: then suggest open slices whose `depends` are done):
 1. Do "Every session, before any work" above.
