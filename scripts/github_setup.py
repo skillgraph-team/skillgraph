@@ -20,6 +20,7 @@ Commands:
         Add teammates to the repo with write access.
     python scripts/github_setup.py protect
         Require a PR with 1 approval on main, block force-pushes and deletion.
+        Org admins (Rasen) bypass the rule and can push to main directly (D-016).
         Add --check NAME (repeatable) to also require CI jobs to pass.
     python scripts/github_setup.py status M3.5 "In Progress"
         Set a slice's Status on the board (Todo / In Progress / Done).
@@ -450,6 +451,9 @@ def cmd_protect(args: argparse.Namespace) -> None:
         "target": "branch",
         "enforcement": "active",
         "conditions": {"ref_name": {"include": ["~DEFAULT_BRANCH"], "exclude": []}},
+        # D-016: org admins push straight to main; everyone else goes through a reviewed PR.
+        # For OrganizationAdmin, GitHub expects actor_id 1.
+        "bypass_actors": [{"actor_id": 1, "actor_type": "OrganizationAdmin", "bypass_mode": "always"}],
         "rules": rules,
     }
     with tempfile.NamedTemporaryFile("w", suffix=".json", delete=False) as fh:
@@ -458,7 +462,7 @@ def cmd_protect(args: argparse.Namespace) -> None:
     try:
         gh.run("api", "-X", "POST", f"repos/{cfg['repo']}/rulesets", "--input", path)
         print("main is protected: PR + 1 approval" + (", CI checks" if args.check else "")
-              + ", no force-push, no deletion.")
+              + ", no force-push, no deletion. Org admins can bypass.")
     except RuntimeError as err:
         print("Could not create the ruleset. On GitHub Free, rulesets only work on public "
               "repos (see D-002). Keep the 'PR + review' rule by convention.\n" + str(err))

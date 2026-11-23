@@ -19,6 +19,7 @@ One entry per decision. Status is `Open`, `Proposed` (has a recommendation, wait
 | D-013 | Where real participants' CVs and labels live | Decided | M1.5 |
 | D-014 | Is "assessed" produced in the MVP | Decided | M2.3 |
 | D-015 | Login: token vs session cookie | Open | M3.1 |
+| D-016 | Who reviews and merges (supersedes part of D-010) | Decided | M0.5 |
 
 ---
 
@@ -68,7 +69,7 @@ One entry per decision. Status is `Open`, `Proposed` (has a recommendation, wait
 - **Status:** Decided (Rasen)
 - **Choice:** no fixed roles and no split by tool. Anyone takes any slice whose dependencies are done, by assigning themselves on the board. Assigned = in progress, merged PR = done. A claim with no commit for 3 days can be taken over after a message in the group chat. Every PR is approved by someone other than its author. Slices marked `contract` need the whole team's approval, and later changes need the named contract owner's.
 - **Why:** splitting by who has which tool added complexity without helping. What matters is that every slice is clear on its own: Goal, Why, Read first, Tasks, Done when.
-- **Confirmed (Rasen, 2026-11-23):** "everyone can push" means everyone pushes their own branches freely; `main` stays protected (PR + 1 approval from another member + green CI), switched on in M0.5. Until then, the same rule holds by convention. Why: catches broken code before it reaches everyone, whoever or whatever wrote it.
+- **Superseded in part by D-016** (who reviews and merges).
 
 ### D-011 · Which tools people use
 - **Status:** Decided (Rasen)
@@ -100,4 +101,10 @@ One entry per decision. Status is `Open`, `Proposed` (has a recommendation, wait
 ### D-015 · Login: token vs session cookie
 - **Status:** Open — decided in M3.1.
 - **Options:** a signed token (JWT) sent by the frontend in a header (simple API, but storing it safely in the browser takes care) vs a server session in an HttpOnly cookie (safer by default against stolen tokens, but needs CSRF protection and same-site setup).
+
+### D-016 · Who reviews and merges
+- **Status:** Decided (Rasen, 2026-11-23). Supersedes D-010's "every PR is approved by someone other than its author".
+- **Choice:** Rasen's work (done with Claude Code) is committed and pushed straight to `main`, approved by Rasen. Teammates push their work to a branch and open a PR; Rasen reviews and merges it. In M0.5, `main` is protected for everyone except org admins (Rasen): teammates need a PR with 1 approval and green CI; Rasen can push directly.
+- **Why:** Rasen is the only member with a Claude Code subscription and does the reviewing; waiting for approvals on Rasen's own work would only slow the team down.
+- **Watch:** Rasen's pushes get no second reviewer, so CI (M0.5) is the only automatic check on them. Teammates still need to be able to explain that code for the presentation: Claude Code posts a short summary on the slice's issue when it pushes.
 

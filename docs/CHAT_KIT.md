@@ -54,7 +54,7 @@ If your Claude plan has Projects, put SPEC.md, DECISIONS.md and the evidence mod
 3. **Commit changes…** → **Create a new branch for this commit and start a pull request** → name it after the slice (`m1.3-competitors`) → **Propose changes**.
 4. Fill in the PR template, include `Closes #<issue number>`, click **Create pull request**.
 5. To add more files to the same PR, switch to your branch in the branch dropdown first, then **Add file** and commit to that branch.
-6. Ask a teammate to review it (Part C).
+6. Ask Rasen to review and merge it (D-016).
 
 ---
 
@@ -118,12 +118,12 @@ Files I'll change, and examples to follow:
 ### B5. Open the PR
 1. GitHub Desktop: review the changed files on the left (nothing unexpected, no `.env`), write the summary `M3.3: add profile CRUD endpoints`, **Commit**, then **Publish branch**.
 2. Click **Create Pull Request**. Fill in the template, including `Closes #<issue>` and the test results.
-3. A teammate reviews it. If they ask for changes, make them on the same branch, commit and **Push origin**; the PR updates by itself.
+3. Rasen reviews it. If Rasen asks for changes, make them on the same branch, commit and **Push origin**; the PR updates by itself.
 
 ---
 
 ## Part C: review someone else's pull request
-Every pull request needs one approval from someone other than its author. Reviewing is also how all four of us stay able to explain every part of the project at the presentation, so treat it as real work. (With Claude Code: "review PR 12".)
+Rasen reviews and merges every teammate's pull request (D-016); you can still review any PR to learn the code, or when Rasen asks you to. Reviewing is also how all four of us stay able to explain every part of the project at the presentation, so treat it as real work. (With Claude Code: "review PR 12".)
 
 1. Open the PR. Read its **Review guide** and **How to test it manually**.
 2. Get the changes: add `.diff` to the end of the PR's URL (works when the repo is public) and copy everything. Otherwise use **Files changed** and copy file by file.

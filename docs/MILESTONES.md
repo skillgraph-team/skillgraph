@@ -108,7 +108,7 @@ The shared repo, the board, and empty backend and frontend apps with automatic c
 ### M0.5 · Continuous integration and branch protection
 `area:infra` `size:S` `depends:M0.3, M0.4`
 
-**Goal:** GitHub runs all checks automatically on every pull request, and `main` can only change through a reviewed pull request.
+**Goal:** GitHub runs all checks automatically on every pull request and every push to `main`, and teammates can only change `main` through a reviewed pull request (Rasen, an org admin, can push directly; D-016).
 
 **Why:** With four people merging work, this catches broken code before it reaches `main`, whoever wrote it and whatever tool they used.
 
@@ -117,7 +117,7 @@ The shared repo, the board, and empty backend and frontend apps with automatic c
 **Tasks**
 - [ ] `.github/workflows/ci.yml` with a backend job (uv, ruff, mypy, pytest with a PostgreSQL service) and a frontend job (lint, check, test)
 - [ ] Cache dependencies; run on pull requests and on pushes to `main`
-- [ ] Run `python scripts/github_setup.py protect --check backend --check frontend` if D-002 allows it; otherwise write the "always use a reviewed PR" convention in README
+- [ ] Run `python scripts/github_setup.py protect --check backend --check frontend` (org admins bypass the rule, D-016)
 
 **Done when**
 - [ ] A pull request shows both jobs green
@@ -135,7 +135,7 @@ The shared repo, the board, and empty backend and frontend apps with automatic c
 **Tasks**
 - [ ] Each member follows README "Getting started" on their own machine and fixes whatever was wrong or missing in it
 - [ ] Each member adds themselves to `docs/TEAM.md` (name, GitHub handle, strengths, what they want to learn) through their own pull request
-- [ ] Each member reviews one other member's pull request
+- [ ] Rasen reviews and merges each onboarding pull request (D-016)
 
 **Done when**
 - [ ] Four onboarding pull requests merged

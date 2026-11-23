@@ -15,7 +15,7 @@ Full spec: `docs/SPEC.md`. Plan: `docs/MILESTONES.md`. Decisions: `docs/DECISION
 - **Contracts have one owner.** Slices labelled `contract` (evidence model, schema, message envelope, API) define what everyone else codes against. Changing a `Decided` contract needs the owner's approval in the PR.
 - **Delegation level.** At the start of a slice that touches agents, evidence evaluation or matching, ask which level the user wants: `Delegate` (you write, user reviews), `Pair` (you draft and explain the reasoning, user adjusts), `Learn-first` (user writes; you review, ask questions, point out problems).
 - **Explain what you write.** The user must be able to explain everything that gets merged. Flag anything non-obvious. If asked, walk through code line by line.
-- **Write for the reviewer.** Teammates may review with the chatbot and no coding agent. Every PR needs a plain-language "Review guide" and "How to test it manually" section a non-author can follow.
+- **Write for the reviewer.** Teammates may review with the chatbot and no coding agent. Every PR (and every direct push by Rasen, as an issue comment, D-016) needs a plain-language "Review guide" and "How to test it manually" section a non-author can follow.
 - **Keep the codebase easy to work on by hand.** Teammates often work by pasting files into a chatbot, so prefer small files, obvious names, one clear pattern per kind of thing (endpoint, service, test), and a short docstring at the top of each module saying what it's for.
 - **Same approach failed twice → stop.** Diagnose the root cause and propose a different approach instead of stacking fixes.
 - **Say plainly** when something is a workaround, a guess, or untested.
@@ -26,14 +26,16 @@ The user talks normally ("let's do M2.3", "this is done", "review PR 12"). Follo
 **Starting** (the user names a slice, or asks what to work on: then suggest open slices whose `depends` are done):
 1. `git status`, then `git switch main && git pull`. Uncommitted changes → ask what to do first.
 2. Read only that slice's section in `docs/MILESTONES.md` and the files in its "Read first". Find its issue: `gh issue list --search "<id> in:title" --json number,title,assignees`. Assigned to someone else → stop and say so. A `depends` slice still open → say which and ask.
-3. Assign it (`gh issue edit <n> --add-assignee @me`), set the board status (`python scripts/github_setup.py status <id> "In Progress"`), create the branch `m<n>.<k>-short-name`.
+3. Assign it (`gh issue edit <n> --add-assignee @me`), set the board status (`python scripts/github_setup.py status <id> "In Progress"`), create the branch `m<n>.<k>-short-name` (not for Rasen, who works on `main`, D-016).
 4. Restate goal, tasks and "Done when" in a few lines; raise any `Open` decision it needs; ask the delegation level if it touches agents, evidence or matching. List the files and tests you plan to write, then wait for a go-ahead.
 
 **Finishing** (the user says it's done or asks for a PR):
 1. Run every check that applies (Commands below) and show real output. Go through "Done when" item by item and say how each is shown. Anything users see: present in en, fr and ar, and works right-to-left.
 2. Diff too big to review in one sitting (~400+ lines outside generated files)? Say so and propose a split.
 3. Update CLAUDE.md or `docs/DECISIONS.md` only if commands, architecture, conventions or decisions changed.
-4. Commit `<ID>: <summary>`, push, and open the PR with `.github/pull_request_template.md` filled in, including `Closes #<issue>`, a plain-language **Review guide** (which files matter, what each change does, every concept a non-author needs), **How to test it manually**, and a **Handoff** a fresh session could continue from.
+4. Who merges depends on who is working (D-016; check `gh api user --jq .login`):
+   - **Rasen (`rimRasen`)**: no PR. Work on `main` (skip the branch in Starting step 3), commit `<ID>: <summary>` with `Closes #<issue>` in the body, and push to `main`. Then post a comment on the issue with the plain-language **Review guide**, **How to test it manually** and **Handoff** below, so teammates can follow and explain the change.
+   - **Anyone else**: commit `<ID>: <summary>`, push the branch, and open the PR with `.github/pull_request_template.md` filled in, including `Closes #<issue>`, a plain-language **Review guide** (which files matter, what each change does, every concept a non-author needs), **How to test it manually**, and a **Handoff** a fresh session could continue from. Rasen reviews and merges it.
 5. Report: what changed and why, what to review closely, what's unsure or untested, out-of-scope ideas, and the next 1–3 unblocked slices with a recommendation.
 
 **Reviewing a PR** ("review PR 12"): `gh pr view` and `gh pr diff`, check it out, run the checks and `gh pr checks`. Review against its slice's "Done when", the architecture rules, the three-language rules, and tests that were bent to pass. Report a blunt verdict with must-fix items (file and line) separate from suggestions. Post a review only after the user confirms.
