@@ -13,7 +13,7 @@ Two kinds of entry:
 | D-003 | Frontend framework | Decided | M0.4 |
 | D-004 | Backend stack and tooling | Decided | M0.2 |
 | D-005 | Which free LLM (hosted free tier vs local) | Open | M2.1 |
-| D-006 | Evidence model: types, statuses, confidence | Open (contract) | M2.3 |
+| D-006 | Evidence model: types, statuses, confidence | Decided (contract) | M2.3 |
 | D-007 | Agent message envelope | Open (contract) | M2.5 |
 | D-008 | Hosting for the demo | Open | M10.1 |
 | D-009 | GitHub: public username only vs OAuth | Open | M3.6 |
@@ -59,7 +59,18 @@ Two kinds of entry:
 - **Candidates:** a hosted free tier (check current limits and terms at decision time) vs a small local model through Ollama (needs a machine with enough RAM/GPU; slower). The provider interface means this can change later at low cost.
 
 ### D-006 · Evidence model (contract)
-- **Status:** Open — owner: _TBD_. Defined in M2.3, written up in `docs/design/evidence-model.md`.
+- **Status:** Decided (Rasen, 2026-11-23). **Contract owner: Rasen.** M2.3 writes this up in full in `docs/design/evidence-model.md` (with worked examples); teammates sign off on that write-up there (D-010, contract slices). Changes after that need a new D-entry approved by the owner.
+- **Why it matters:** the database (M2.4), the hand labels (M1.6), the rules baseline (M4.4), the agents (M6) and matching all use these exact definitions; if they differ, the evaluation numbers mean nothing.
+- **Choices** (all recommendations accepted):
+  1. **Evidence types: a fixed, detailed list.** `cv_skills_list`, `cv_summary`, `cv_experience`, `cv_project`, `cv_education`, `certificate`, `repo_language`, `repo_dependency`, `repo_code`, `repo_readme`, `manual_project`, `user_added`, `assessment`. *Why:* the status rules work per type, and labelers never have to guess which type applies. (`assessment` exists but nothing produces it in the MVP, D-014.)
+  2. **Statuses form a ladder: unverified < claimed < demonstrated < assessed.** A skill gets the highest step its evidence reaches. *Unverified* = there is a hint, but the person doesn't state the skill and no work shows it (only inferred from related skills, or only weak evidence). A skill with no evidence at all is not stored ("no skill without a source"); the rules still return `unverified` for an empty evidence list (used for job requirements). *Why:* one clear order that labelers can apply and tests can check.
+  3. **A CV project or job description can make a skill demonstrated,** if it names the skill used in concrete work ("built a REST API with FastAPI"). A vague mention ("familiar with Docker") stays claimed. *Why:* students with little GitHub still get credit for real work; confidence (choice 5) keeps one CV description at medium at most.
+  4. **Status follows fixed rules from the evidence; the AI only judges each piece of evidence.** Each evidence link is marked `supports` or `weak` (by rules or an agent). Then: any `assessment` → assessed; at least one supporting work-type link (`repo_code`; `repo_language` above a share threshold in a repo the person wrote that isn't a fork; a concrete `cv_project` / `cv_experience`; `manual_project`) → demonstrated; at least one supporting claim-type link (`cv_skills_list`, `cv_summary`, `certificate`, `user_added`) → claimed; otherwise → unverified. `repo_dependency`, `repo_readme` and `cv_education` alone are not enough for demonstrated. *Why:* the AI can't over-claim, a validator can reject a "demonstrated" that cites no work-type evidence, and the three systems (A, B, C) differ only in how well they judge evidence, which is what the project measures. A certificate counts as claimed (finishing a course isn't doing the work) but raises confidence.
+  5. **Confidence: low / medium / high.** *High* = at least 2 independent supporting links (different sources or different types). *Medium* = exactly one supporting link. *Low* = only weak or inferred evidence; unverified is always low. More supporting evidence never lowers confidence. *Why:* people can label it consistently, it translates as a key, and LLMs report short scales more reliably than 0–100 numbers. For charts, map it to 1/2/3.
+  6. **Each evidence record stores the quote itself,** copied exactly and at most ~300 characters, plus where it came from (CV section or page; repo + file path + lines; dependency file), the source's detected language (`en` / `fr` / `ar` / other) and the source id. Quotes are never translated; the UI shows them as they are, with `lang` and `dir="auto"`. *Why:* stays valid if parsing changes, and agents and explanations can cite it by id. Deleting a user deletes it.
+  7. **Users can hide, dispute or add a skill, but never raise a status.** A skill the user adds becomes `user_added` evidence, so at most claimed. *Why:* keeps statuses honest; the model only needs one type and a hidden/disputed flag. Building the feature is a later slice.
+- **Worked example** (report §4.3): repo `shop-api` (90% Python, FastAPI routes, `psycopg` in requirements, SQL in the code), CV lists "Python, SQL" → Python demonstrated · high; SQL demonstrated · high; REST API development demonstrated · medium; PostgreSQL demonstrated · medium (the dependency alone would be weak); backend development unverified · low (inferred only).
+- **Options considered:** detailed vs broad types; unverified as "inferred only" vs "claimed but checked"; CV descriptions as demonstrated vs claimed only; status by rules vs free agent judgement; three levels vs a 0–1 number vs both; stored quote vs pointer into the source; users can't vs can edit status. Full trade-offs are in the D-006 session notes on issue #17.
 
 ### D-007 · Agent message envelope (contract)
 - **Status:** Open — owner: _TBD_. Defined in M2.5.
