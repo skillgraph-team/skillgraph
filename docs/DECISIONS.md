@@ -118,7 +118,8 @@ Two kinds of entry:
 ### D-017 · How much Claude Code does on its own for Rasen
 - **Status:** Decided (Rasen, 2026-11-23)
 - **Choice:** in Rasen's sessions, Claude Code picks any unblocked slice and starts work without waiting for a go-ahead. It stops to ask only for big or hard-to-reverse decisions (2 options + trade-offs + a recommendation), and records every answer here. Every smaller choice goes in the technical choices log, and every direct push gets a plain-language summary on its issue (D-016).
-- **Why:** keep the project moving, without it turning into a black box: Rasen must still understand and be able to explain everything.
+- **Delegation level:** always `Delegate`. Claude Code writes all the code; Rasen doesn't write code by hand. For slices touching agents, evidence or matching, the issue summary also walks through how the logic works, step by step.
+- **Why:** keep the project moving, without it turning into a black box: Rasen must still understand and be able to explain everything, so the written record (this file, the technical choices log, issue summaries) is what keeps the project understandable.
 
 ---
 
