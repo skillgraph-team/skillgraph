@@ -24,6 +24,7 @@ Two kinds of entry:
 | D-014 | Is "assessed" produced in the MVP | Decided | M2.3 |
 | D-015 | Login: token vs session cookie | Open | M3.1 |
 | D-016 | Who reviews and merges (supersedes part of D-010) | Decided | M0.5 |
+| D-017 | How much Claude Code does on its own for Rasen | Decided | — |
 
 ---
 
@@ -113,6 +114,11 @@ Two kinds of entry:
 - **Choice:** Rasen's work (done with Claude Code) is committed and pushed straight to `main`, approved by Rasen. Teammates push their work to a branch and open a PR; Rasen reviews and merges it. In M0.5, `main` is protected for everyone except org admins (Rasen): teammates need a PR with 1 approval and green CI; Rasen can push directly.
 - **Why:** Rasen is the only member with a Claude Code subscription and does the reviewing; waiting for approvals on Rasen's own work would only slow the team down.
 - **Watch:** Rasen's pushes get no second reviewer, so CI (M0.5) is the only automatic check on them. Teammates still need to be able to explain that code for the presentation: Claude Code posts a short summary on the slice's issue when it pushes.
+
+### D-017 · How much Claude Code does on its own for Rasen
+- **Status:** Decided (Rasen, 2026-11-23)
+- **Choice:** in Rasen's sessions, Claude Code picks any unblocked slice and starts work without waiting for a go-ahead. It stops to ask only for big or hard-to-reverse decisions (2 options + trade-offs + a recommendation), and records every answer here. Every smaller choice goes in the technical choices log, and every direct push gets a plain-language summary on its issue (D-016).
+- **Why:** keep the project moving, without it turning into a black box: Rasen must still understand and be able to explain everything.
 
 ---
 

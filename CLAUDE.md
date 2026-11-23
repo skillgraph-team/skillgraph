@@ -28,6 +28,7 @@ The user talks normally ("let's do M2.3", "this is done", "review PR 12"). Follo
 2. Read only that slice's section in `docs/MILESTONES.md` and the files in its "Read first". Find its issue: `gh issue list --search "<id> in:title" --json number,title,assignees`. Assigned to someone else → stop and say so. A `depends` slice still open → say which and ask.
 3. Assign it (`gh issue edit <n> --add-assignee @me`), set the board status (`python scripts/github_setup.py status <id> "In Progress"`), create the branch `m<n>.<k>-short-name` (not for Rasen, who works on `main`, D-016).
 4. Restate goal, tasks and "Done when" in a few lines; raise any `Open` decision it needs; ask the delegation level if it touches agents, evidence or matching. List the files and tests you plan to write, then wait for a go-ahead.
+   - **Rasen (`rimRasen`) works autonomously (D-017):** you may pick the next unblocked slice yourself and start right away without waiting for a go-ahead. Stop and ask only for a big or hard-to-reverse decision (anything `Open` in `docs/DECISIONS.md`, a new library choice between real alternatives, schema, protocol, storage, security), with 2 options + trade-offs + a recommendation, then record the answer. Still ask the delegation level for slices that touch agents, evidence or matching.
 
 **Finishing** (the user says it's done or asks for a PR):
 1. Run every check that applies (Commands below) and show real output. Go through "Done when" item by item and say how each is shown. Anything users see: present in en, fr and ar, and works right-to-left.
