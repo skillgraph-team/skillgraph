@@ -31,6 +31,8 @@ export default defineConfig(({ mode }) => {
     },
     test: {
       environment: "jsdom",
+      // Starts translations and resets the language after each test.
+      setupFiles: ["./src/test/setup.ts"],
     },
   };
 });

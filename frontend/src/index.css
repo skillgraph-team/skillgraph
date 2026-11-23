@@ -1,0 +1,37 @@
+/*
+ * Global styles. Use CSS logical properties only (margin-inline-start, padding-block,
+ * text-align: start), never left/right, so the layout mirrors by itself in Arabic.
+ */
+
+:root {
+  /* Noto Sans for Latin letters; characters it lacks (Arabic) fall through to Noto Sans Arabic. */
+  font-family: "Noto Sans", "Noto Sans Arabic", system-ui, sans-serif;
+  line-height: 1.5;
+}
+
+body {
+  margin: 0;
+}
+
+/* Form controls don't inherit the page font by default; make them use Noto too. */
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+.app-header {
+  display: flex;
+  justify-content: flex-end;
+  padding-block: 0.5rem;
+  padding-inline: 1rem;
+}
+
+.language-switcher select {
+  margin-inline-start: 0.5rem;
+}
+
+main {
+  padding-inline: 1rem;
+}

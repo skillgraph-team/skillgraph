@@ -2,23 +2,18 @@
  * Health page: shows whether the backend and its database are working.
  *
  * The first screen and the example every later page follows: call the API client in an
- * effect, keep the result in one state value, render one element per state.
+ * effect, keep the result in one state value, render one element per state. Each state's
+ * text is the translation key `health.<state>` in src/locales/{en,fr,ar}.json.
  */
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 
 import { BackendUnreachableError, getHealth } from "../api/client";
 
 type HealthState = "loading" | "ok" | "database-unreachable" | "backend-unreachable";
 
-// TEMPORARY: English only. M0.7 moves these texts into src/locales/{en,fr,ar}.json.
-const LABELS: Record<HealthState, string> = {
-  loading: "Checking the backend…",
-  ok: "Backend and database are working.",
-  "database-unreachable": "The backend is running, but it can't reach the database.",
-  "backend-unreachable": "The backend can't be reached. Is it running?",
-};
-
 export function HealthPage() {
+  const { t } = useTranslation();
   const [state, setState] = useState<HealthState>("loading");
 
   useEffect(() => {
@@ -39,9 +34,9 @@ export function HealthPage() {
 
   return (
     <main>
-      <h1>SkillGraph</h1>
+      <h1>{t("app.name")}</h1>
       <p data-testid="health-status" data-state={state} role="status">
-        {LABELS[state]}
+        {t(`health.${state}`)}
       </p>
     </main>
   );

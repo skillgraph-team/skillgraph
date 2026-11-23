@@ -1,8 +1,11 @@
 /** Tests for the health page: what it shows for each backend answer. */
-import { cleanup, render, screen } from "@testing-library/react";
+import { act, cleanup, render, screen } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
 import * as client from "../api/client";
+import { i18n } from "../i18n";
+import ar from "../locales/ar.json";
+import fr from "../locales/fr.json";
 import { HealthPage } from "./HealthPage";
 
 afterEach(() => {
@@ -39,5 +42,21 @@ describe("HealthPage", () => {
     await vi.waitFor(() =>
       expect(screen.getByTestId("health-status").dataset.state).toBe("backend-unreachable"),
     );
+  });
+
+  it("shows its text in the current language", async () => {
+    vi.spyOn(client, "getHealth").mockReturnValue(new Promise(() => {}));
+    await i18n.changeLanguage("fr");
+    render(<HealthPage />);
+    expect(screen.getByTestId("health-status").textContent).toBe(fr.health.loading);
+  });
+
+  it("follows a language change while open", async () => {
+    vi.spyOn(client, "getHealth").mockReturnValue(new Promise(() => {}));
+    render(<HealthPage />);
+    await act(async () => {
+      await i18n.changeLanguage("ar");
+    });
+    expect(screen.getByTestId("health-status").textContent).toBe(ar.health.loading);
   });
 });

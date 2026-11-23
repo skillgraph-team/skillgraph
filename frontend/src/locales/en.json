@@ -1,0 +1,14 @@
+{
+  "app": {
+    "name": "SkillGraph"
+  },
+  "language": {
+    "label": "Language"
+  },
+  "health": {
+    "loading": "Checking the backend…",
+    "ok": "Backend and database are working.",
+    "database-unreachable": "The backend is running, but it can't reach the database.",
+    "backend-unreachable": "The backend can't be reached. Is it running?"
+  }
+}
