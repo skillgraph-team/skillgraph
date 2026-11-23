@@ -1,4 +1,4 @@
-# SkillGraph — Spec v0.3
+# SkillGraph — Spec v0.4
 
 Changes go through a PR approved by the team. Bump the version and add a line to the changelog at the bottom.
 
@@ -11,6 +11,7 @@ SkillGraph builds evidence-backed skills profiles for students and recent gradua
 - No university integrations.
 - No scraping of job sites; opportunities are curated by hand from legitimate sources.
 - Never calls a skill "verified" because an LLM inferred it. Only an assessment can make a skill `assessed`.
+- No assessments in the MVP (D-014): `assessed` exists in the evidence model, but nothing in the MVP produces it.
 - No languages beyond English, French and Arabic. Users' CVs and evidence are never machine-translated: quotes stay in their original language.
 
 ## Constraints
@@ -21,7 +22,7 @@ SkillGraph builds evidence-backed skills profiles for students and recent gradua
 - All LLM calls go through one provider interface, with recorded responses for repeatable tests and evaluation.
 - Every skill keeps references to its source evidence.
 - Three languages (D-012): English, French and Arabic (right-to-left) for the interface and AI-written text; CVs, repos and postings in any of the three are read correctly. The backend sends codes plus data, not sentences.
-- Personal data: consent before GitHub ingestion, account deletion removes everything, no real people's CVs in tests.
+- Personal data: consent before GitHub ingestion, account deletion removes everything, no real people's CVs in tests. Real participants' CVs and labels are never committed; they stay in a private team folder (D-013).
 
 ## Interfaces
 | Module | Input | Output |
@@ -46,6 +47,7 @@ SkillGraph builds evidence-backed skills profiles for students and recent gradua
 7. Steps 1–3 work with the interface in English, French and Arabic (right-to-left), and for a French CV and an Arabic CV. The evaluation table is also broken down by language.
 
 ## Changelog
+- v0.4: no assessments in the MVP (D-014); real participants' data stays out of the repo (D-013).
 - v0.3: English, French and Arabic support (D-012).
 - v0.2: $0 budget; provider interface + record/replay; open task claiming with one owner per contract; repo/board setup as the first slice.
 - v0.1: first draft from the project report.

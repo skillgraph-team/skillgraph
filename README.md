@@ -12,7 +12,7 @@ Evidence-based skills profiles for students: what you can actually do, the evide
 
 ## How we work
 
-The project is split into milestones and about 70 small **slices** ([docs/MILESTONES.md](docs/MILESTONES.md)). Each slice is a GitHub issue on the board that says what to build, why, what to read first, the steps, and how to know it's done. Anyone can take any slice, with whatever tool they use.
+The project is split into milestones and 77 small **slices** ([docs/MILESTONES.md](docs/MILESTONES.md)). Each slice is a GitHub issue on the board that says what to build, why, what to read first, the steps, and how to know it's done. Anyone can take any slice, with whatever tool they use.
 
 1. **Pick** an unassigned slice on the board whose `Depends on` slices are all Done.
 2. **Claim** it: assign yourself and set Status to *In Progress*.
@@ -37,7 +37,7 @@ Everyone runs the app locally. Install Git, Docker Desktop (or Docker Engine), [
 
 ```bash
 gh auth login
-git clone https://github.com/<owner>/skillgraph.git
+git clone https://github.com/skillgraph-team/skillgraph.git
 cd skillgraph
 cp .env.example .env
 docker compose up -d db          # from M0.3

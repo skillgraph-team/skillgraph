@@ -31,9 +31,9 @@ You don't need to list every step. `docs/KICKOFF.md` and CLAUDE.md give it the d
 - Optional board views: a **Board** view grouped by Status, a **Table** view grouped by Milestone, and a view filtered to `assignee:@me`.
 
 ## 6. Tell the team
-Send them the repo link and this message: "Accept the invite, read README.md and docs/CHAT_KIT.md, then claim any open slice on the board whose dependencies are done. Right now that's M0.2, M0.4, M1.1, M1.3 and M2.8."
+Send them the repo link and this message: "Accept the invite, read README.md and docs/CHAT_KIT.md, then claim any open slice on the board whose dependencies are done. Right now that's M0.2, M0.4, M1.1, M1.3, M2.3 and M2.8."
 
-The first week has five independent starting points (M0.2, M0.4, M1.1, M1.3, M2.8), so everyone can begin at once. Do M0.7 (three languages in the frontend) right after M0.4, before any real screen is built.
+The first week has six independent starting points (M0.2, M0.4, M1.1, M1.3, M2.3, M2.8), so everyone can begin at once. Do M0.7 (three languages in the frontend) right after M0.4, before any real screen is built.
 
 ## Every session after this
 Just talk to it:
