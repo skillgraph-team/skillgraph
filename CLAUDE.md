@@ -3,7 +3,7 @@
 ## What this is
 An evidence-based skills platform for students and recent graduates. It extracts skills from a CV and GitHub, links every skill to the evidence behind it with a status (claimed / demonstrated / assessed / unverified), matches the profile against curated internships, and explains matches and gaps. A small multi-agent system (custom agent loop, no agent framework) does the analysis, and its value is measured against a rule-based baseline and a single-agent version. It works in English, French and Arabic (Arabic is right-to-left).
 
-Full spec: `docs/SPEC.md`. Plan: `docs/MILESTONES.md`. Decisions: `docs/DECISIONS.md`. Terms: `docs/GLOSSARY.md`. Chatbot workflow: `docs/CHAT_KIT.md`. Read those only when the current slice needs them.
+Full spec: `docs/SPEC.md`. Plan: `docs/MILESTONES.md`. Decisions: `docs/DECISIONS.md`. Terms: `docs/GLOSSARY.md`. Chatbot workflow: `docs/CHAT_KIT.md`. How to use the app (for users, kept current): `docs/USER_GUIDE.md`. Read those only when the current slice needs them.
 
 ## How we work (always follow)
 - **One slice per session.** A slice is one GitHub issue (`M<n>.<k>`), one branch, one PR. Follow "Working on a slice" below. Don't start a second slice in the same session; suggest a fresh session (`/clear`) instead.
@@ -33,7 +33,7 @@ The user talks normally ("let's do M2.3", "this is done", "review PR 12"). Follo
 **Finishing** (the user says it's done or asks for a PR):
 1. Run every check that applies (Commands below) and show real output. Go through "Done when" item by item and say how each is shown. Anything users see: present in en, fr and ar, and works right-to-left.
 2. Diff too big to review in one sitting (~400+ lines outside generated files)? Say so and propose a split.
-3. Add every technical choice the slice made (library, file layout, pattern, default value, workaround) to the "Technical choices log" in `docs/DECISIONS.md`: one T-numbered entry each with what, why and where. Rasen wants no black boxes. Update CLAUDE.md only if commands, architecture or conventions changed.
+3. Add every technical choice the slice made (library, file layout, pattern, default value, workaround) to the "Technical choices log" in `docs/DECISIONS.md`: one T-numbered entry each with what, why and where. Rasen wants no black boxes. Update CLAUDE.md only if commands, architecture or conventions changed. If the slice changes anything a user sees or does, update `docs/USER_GUIDE.md` in the same commit (new section, move the feature out of "Coming later", update the "Last updated" line).
 4. Who merges depends on who is working (D-016; check `gh api user --jq .login`):
    - **Rasen (`rimRasen`)**: no PR. Work on `main` (skip the branch in Starting step 3), commit `<ID>: <summary>` with `Closes #<issue>` in the body, and push to `main`. Then post a comment on the issue with the plain-language **Review guide**, **How to test it manually** and **Handoff** below, so teammates can follow and explain the change.
    - **Anyone else**: commit `<ID>: <summary>`, push the branch, and open the PR with `.github/pull_request_template.md` filled in, including `Closes #<issue>`, a plain-language **Review guide** (which files matter, what each change does, every concept a non-author needs), **How to test it manually**, and a **Handoff** a fresh session could continue from. Rasen reviews and merges it.
