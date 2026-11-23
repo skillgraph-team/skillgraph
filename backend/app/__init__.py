@@ -1,0 +1,1 @@
+"""SkillGraph backend application package."""
