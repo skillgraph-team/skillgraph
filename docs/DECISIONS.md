@@ -136,53 +136,253 @@ Two kinds of entry:
 
 ## Technical choices log
 
-Smaller choices made while building: what was chosen, why, and where it lives. Newest at the bottom. If you're wondering "why is it done like this?", look here first.
+The smaller choices made while building, so nobody has to guess why the code looks the way it does. If you're wondering "why is it done like this?", look here first.
 
-### Repo and board setup (M0.1)
-- **T-001 · No due dates on milestones.** The week ranges in MILESTONES.md are targets only; every slice gets done eventually. *Where:* GitHub milestones (setup ran without `--start-date`).
-- **T-002 · One board, made by hand, reused by the script.** The org board "SkillGraph" (#1) was created by hand; `github_setup.py` finds it by its exact title instead of creating a new one. Its number and ID are saved in `scripts/github_project.json`, which the `status` command needs. The board is private to the org; members have Write access. *Where:* `scripts/github_project.json`.
-- **T-003 · Every org member gets write access to repos.** The org's default repository permission is `write`, so new members can push branches and assign issues without a separate invite. `main` itself is protected separately (D-016, M0.5). *Where:* GitHub org settings.
-- **T-004 · The setup script reads `gh` output as UTF-8.** On Windows, Python decoded it as cp1252, which garbled the `·` in titles, so "already exists" checks failed and the script tried to create milestones twice. *Where:* `GH.run` in `scripts/github_setup.py`.
-- **T-005 · Org admins bypass the `main` ruleset.** Rasen pushes to `main` directly (D-016); everyone else needs a PR. *Where:* `bypass_actors` in `cmd_protect`, `scripts/github_setup.py`. *Untested* until M0.5 runs it.
+**How to read it.** Entries are grouped by the slice that made them, oldest first. Each one has:
+- a title that states the choice in one line,
+- **What**: what was done, in plain words,
+- **Why**: the reason,
+- **Where**: the file or setting to look at,
+- sometimes **Watch out**: a limitation or a step you may need to take.
 
-### Backend skeleton (M0.2)
-- **T-006 · The backend is an app, not a library.** `package = false` in `pyproject.toml`: uv installs the dependencies but doesn't try to build or publish `backend` as a package. Python is pinned to 3.12 (`requires-python`, `.python-version`), matching D-004. *Where:* `backend/pyproject.toml`.
-- **T-007 · One `.env` file, in the repo root.** The backend reads the same `.env` as Docker Compose and the frontend, wherever the server is started from. Settings it doesn't know are ignored (`extra="ignore"`), so other tools' settings don't crash it. Settings are read once and reused (`get_settings()`). *Where:* `backend/app/config.py`.
-- **T-008 · `APP_ENV` only accepts `dev`, `test` or `prod`.** A typo stops the app at startup instead of silently running with the wrong setup. *Where:* `Settings.app_env`.
-- **T-009 · Code checks.** ruff with rule sets E, W, F, I, B, UP, N, SIM (style, real bugs, import order, modern syntax, naming, simplifications), line length 100; ruff also formats. mypy in strict mode with the pydantic plugin, on `app/` only (tests are not type-checked). *Where:* `[tool.ruff]` and `[tool.mypy]` in `backend/pyproject.toml`.
-- **T-010 · Test client uses `httpx`.** Starlette prints a deprecation warning suggesting a newer package; we kept `httpx` because the replacement wasn't verified. Revisit when the warning becomes an error. *Where:* dev dependencies.
+Code comments cite entries by number (e.g. "T-033"), so numbers never change. To change a choice, add a new entry and mark the old one "Replaced by T-0xx".
 
-### Database and migrations (M0.3)
-- **T-011 · PostgreSQL driver: psycopg 3.** The current driver, with prebuilt binaries (no compiler needed on Windows). Database URLs must therefore start with `postgresql+psycopg://`. *Where:* `backend/pyproject.toml`, `.env.example`.
-- **T-012 · The test database is a second database in the same container.** `skillgraph_test` sits next to `skillgraph` and is created by `docker/postgres/init/01-create-test-database.sh` when the database volume is first created. Settings refuse to start if `TEST_DATABASE_URL` equals `DATABASE_URL`, so tests can never run on development data. If your volume is older than this script, run `docker compose down -v` once (it wipes local data). *Where:* `docker-compose.yml`, `backend/app/config.py`.
-- **T-013 · Tests build the database by running the real migrations, and undo each test.** The test database is brought up to date with `alembic upgrade head`, not by creating tables straight from the models, so every test run also tests the migrations. Each test runs inside a transaction that is rolled back afterwards; "savepoint" mode means even a `commit()` in the code under test is undone. *Where:* `backend/tests/conftest.py`.
-- **T-014 · `/health` returns codes, not sentences.** `{"status": "ok", "database": "ok"}` with 200, or `{"status": "error", "database": "unreachable"}` with 503, so hosting and CI checks can see a broken database. *Where:* `backend/app/main.py`.
-- **T-015 · Endpoints get the database session through one type, `DbSession`.** Writing `session: DbSession` as an endpoint parameter gives it a session that is always closed after the request, and tests can swap it for the test database. This is FastAPI's recommended `Annotated` style. *Where:* `backend/app/db/session.py`.
-- **T-016 · Migration setup.** Migrations live in `backend/migrations/versions/`, named date-first (`2026_11_23-<id>_<name>.py`) so they list in order. ruff fixes and formats each new migration automatically, so generated files pass the checks. The database URL is not in `alembic.ini`; it comes from the settings (or from the tests). *Where:* `backend/alembic.ini`, `backend/migrations/env.py`.
-- **T-017 · Shell scripts keep Unix line endings.** Git on Windows can convert line endings, which breaks scripts run inside Linux containers. *Where:* `.gitattributes`.
-- **T-018 · Local database login `skillgraph` / `skillgraph`.** Local-only development defaults in code, Compose and `.env.example`; not secrets. Any hosted database (M10.1) must use its own password, set through the environment. *Where:* `docker-compose.yml`, `backend/app/config.py`.
+**Adding an entry** (every slice does this when it finishes): copy the format below, use the next free number, and put it under a heading for your slice.
 
-### Frontend skeleton (M0.4)
-- **T-019 · Frontend files written by hand, not generated.** Same tools as Vite's React + TypeScript template, but without its demo files (logos, counter, CSS), so every file in `frontend/` is used and explained. *Where:* `frontend/`.
-- **T-020 · Frontend checks.** `npm run lint` = ESLint with the recommended JavaScript, TypeScript and React-hooks rules (Vite template's set). `npm run check` = `tsc --noEmit` in strict mode, plus `noUncheckedIndexedAccess` (reading `list[i]` may be `undefined`, so you must handle it). `npm test` = Vitest with jsdom (a fake browser in Node) and React Testing Library. *Where:* `frontend/eslint.config.js`, `frontend/tsconfig.json`, `frontend/vite.config.ts`.
-- **T-021 · jsdom pinned to version 26.** jsdom 27 needs Node 22.12 or newer and failed on Node 22.11 (`ERR_REQUIRE_ESM`). 26 works on every current Node LTS. Can be raised once everyone has Node ≥ 22.12. *Where:* `frontend/package.json`.
-- **T-022 · The browser calls `/api/...`; Vite forwards it to the backend.** In development, `/api/health` on the Vite server (port 5173) is sent to `BACKEND_URL` (default `http://localhost:8000`) with `/api` removed. For the browser it's the same address as the page, so the backend needs no CORS setup. The API client prefixes every call with `VITE_API_BASE_URL` (default `/api`); for a hosted demo (M10.1) it can be set to the backend's real address. If your `.env` was copied before M0.4, change `VITE_API_BASE_URL` to `/api` and add `BACKEND_URL`. *Where:* `frontend/vite.config.ts`, `frontend/src/api/client.ts`, `.env.example`.
-- **T-023 · The frontend reads the same root `.env` as the backend** (`envDir: ".."`, like T-007). Only variables starting with `VITE_` reach the browser; `BACKEND_URL` is used by `vite.config.ts` only. *Where:* `frontend/vite.config.ts`.
-- **T-024 · All backend calls go through `src/api/client.ts`.** One function per endpoint, with a typed result. If the backend can't be reached, or answers with something that isn't the expected shape, it throws `BackendUnreachableError`. A 503 from `/health` counts as a valid answer ("database down"), not an error. *Where:* `frontend/src/api/client.ts`.
-- **T-025 · Page pattern.** Each page lives in `src/pages/<Name>Page.tsx`, with its test next to it as `<Name>Page.test.tsx`. It calls the API client in a `useEffect`, cancels the call if the page closes, and keeps the outcome in one state value. Tests read a `data-state` attribute rather than the text, so they keep passing when the text is translated (M0.7). *Where:* `frontend/src/pages/HealthPage.tsx`.
-- **T-026 · Health page text is English-only for now (workaround).** The four messages live in one `LABELS` object marked TEMPORARY. M0.7 moves them into `src/locales/{en,fr,ar}.json`. *Where:* `frontend/src/pages/HealthPage.tsx`.
-- **T-027 · The setup script always prints UTF-8.** A Windows console uses cp1252, which has no `→`, so `status` and `invite` crashed after the work was done and reported failure. `main()` now switches its output to UTF-8 (the printing side of T-004). *Where:* `main` in `scripts/github_setup.py`.
-- **T-028 · CI is one workflow with two jobs, `backend` and `frontend`.** They run the same commands as CLAUDE.md "Commands", on every pull request and every push to `main`. The job names are the check names the `main` ruleset requires, so renaming a job means re-running `protect` with the new name. A newer push to the same branch cancels the older run. *Where:* `.github/workflows/ci.yml`.
-- **T-029 · CI's PostgreSQL makes only the test database.** The service container is created with `POSTGRES_DB=skillgraph_test`, and `TEST_DATABASE_URL` points at it. Tests never use `DATABASE_URL`, so no dev database is needed. Locally, `docker/postgres/init` still creates both. *Where:* `services.db` in `.github/workflows/ci.yml`.
-- **T-030 · CI installs exactly what the lock files say.** `uv sync --locked` and `npm ci` fail if `uv.lock` or `package-lock.json` is out of date, instead of quietly updating it. Both caches are keyed on those lock files (setup-uv `enable-cache`, setup-node `cache: npm`). *Where:* `.github/workflows/ci.yml`.
-- **T-031 · Action versions: `checkout@v7`, `setup-node@v7`, `setup-uv@v10.4.0`.** These are the latest releases (2026-11-23). setup-uv publishes no moving `v10` tag, so it is pinned to an exact version. The first run failed with "unable to find version v10". *Where:* `.github/workflows/ci.yml`.
-- **T-032 · `main` ruleset `protect-main` (id 27911752).** Created with `python scripts/github_setup.py protect --check backend --check frontend`: PR + 1 approval, `backend` and `frontend` green, no force-push, no deletion. Org admins bypass it (D-016). Running `protect` again would create a second ruleset, so edit the existing one in Settings → Rules instead. *Where:* GitHub repo settings, made by `cmd_protect` in `scripts/github_setup.py`.
-- **T-033 · Translation library: i18next + react-i18next + i18next-browser-languagedetector** (Rasen chose it in M0.7, over react-intl). It is the most widely used, has the most examples for chatbot-assisted work, keeps texts in plain JSON, falls back to English when a text is missing, and has a ready-made plugin for detecting and remembering the language. *Where:* `frontend/src/i18n/index.ts`.
-- **T-034 · How the language is chosen.** First the language saved in this browser (localStorage `skillgraph.language`), then the browser's language reduced to its first part (`fr-CA` → `fr`), then English. Each change is saved. Saving to the user's account (D-012) comes once accounts exist (M3). *Where:* `createI18n` in `frontend/src/i18n/index.ts`.
-- **T-035 · One app instance, with fresh ones for tests.** `createI18n()` builds a new i18next instance. Only the app's own (`connectToPage: true`) connects to React and keeps `<html lang dir>` in sync, so tests can make throwaway instances without affecting the page. Setup is synchronous (`initAsync: false`, texts bundled) because Vite's default build target doesn't allow top-level `await`. *Where:* `frontend/src/i18n/index.ts`.
-- **T-036 · A missing or extra translation key fails `npm run check`.** `fr.json` and `ar.json` must `satisfy` the type of `en.json`, and the reverse, so tsc names the missing or extra key. Keys used in code are typed too (`i18next.d.ts`), so `t("app.nmae")` fails the check instead of showing the raw key. No separate script is needed. *Where:* `frontend/src/i18n/resources.ts`, `frontend/src/i18n/i18next.d.ts`, `resolveJsonModule` in `tsconfig.json`.
-- **T-037 · Translation keys: `<page or area>.<thing>`** (`health.ok`, `language.label`), nested in the JSON files. A page whose state names match its keys can use `` t(`health.${state}`) ``. Language names in the switcher are written in their own language ("Français") and live in `languages.ts`, not the locale files, because they are the same in every language. *Where:* `frontend/src/locales/*.json`, `frontend/src/i18n/languages.ts`.
-- **T-038 · Fonts: Noto Sans + Noto Sans Arabic, self-hosted through @fontsource, weights 400 and 700** (Rasen chose it in M0.7, over system fonts). Noto Sans comes first in the font list, and Arabic letters fall through to Noto Sans Arabic. The browser only downloads the pieces (unicode ranges) a page uses. No request goes to Google's servers. Form controls get `font: inherit` so the language switcher uses Noto too. *Where:* `frontend/src/main.tsx`, `frontend/src/index.css`.
-- **T-039 · Numbers and dates: `formatNumber` and `formatDate`.** They use `Intl` with the locale `<lang>-u-nu-latn`, so the digits are always 0–9, in Arabic too (D-012). Dates default to `dateStyle: "long"`. *Where:* `frontend/src/i18n/format.ts`.
-- **T-040 · Test setup resets the language.** `src/test/setup.ts` (Vitest `setupFiles`) starts translations like the app does. After each test it switches back to English and clears localStorage. *Where:* `frontend/src/test/setup.ts`, `frontend/vite.config.ts`.
-- **T-041 · Health page translated (replaces the T-026 workaround).** Its texts are the keys `health.<state>`, with first-draft fr/ar translations to be checked by a native speaker in M2.8. The app frame (`App.tsx`) holds the header with the language switcher. *Where:* `frontend/src/pages/HealthPage.tsx`, `frontend/src/App.tsx`.
+```
+#### T-0xx · <the choice, in one line>
+- **What:** ...
+- **Why:** ...
+- **Where:** `path/to/file`
+```
+
+---
+
+### M0.1 · Repo and board setup
+
+#### T-001 · Milestones have no due dates
+- **What:** GitHub milestones were created without dates. The week ranges in MILESTONES.md are targets only.
+- **Why:** every slice gets done eventually.
+- **Where:** GitHub milestones (setup ran without `--start-date`).
+
+#### T-002 · There is one project board, made by hand
+- **What:** the org board "SkillGraph" (#1) was created by hand. `github_setup.py` finds it by its exact title instead of creating a new one, and saves its number and ID in `scripts/github_project.json`. The board is private to the org; members have Write access.
+- **Why:** the `status` command needs to know which board to update.
+- **Where:** `scripts/github_project.json`.
+
+#### T-003 · Every org member can push to the repo
+- **What:** the org's default repository permission is `write`.
+- **Why:** new members can push branches and assign issues without a separate invite. `main` is protected separately (D-016, T-032).
+- **Where:** GitHub org settings.
+
+#### T-004 · The setup script reads `gh` output as UTF-8
+- **What:** `GH.run` decodes `gh` output as UTF-8.
+- **Why:** on Windows, Python read it as cp1252, which garbled the `·` in titles. The "already exists" checks then failed, and the script tried to create milestones twice.
+- **Where:** `GH.run` in `scripts/github_setup.py`. (The printing side is T-027.)
+
+#### T-005 · Org admins can push to `main` without a PR
+- **What:** the `main` ruleset lists org admins as allowed to bypass it.
+- **Why:** Rasen pushes to `main` directly (D-016); everyone else needs a PR.
+- **Where:** `bypass_actors` in `cmd_protect`, `scripts/github_setup.py`. Confirmed working in M0.5 (T-032).
+
+### M0.2 · Backend skeleton
+
+#### T-006 · The backend is an app, not a library
+- **What:** `package = false` in `pyproject.toml`. Python is pinned to 3.12 (`requires-python`, `.python-version`).
+- **Why:** uv installs the dependencies but doesn't try to build or publish `backend` as a package. 3.12 matches D-004.
+- **Where:** `backend/pyproject.toml`.
+
+#### T-007 · All settings come from one `.env` file in the repo root
+- **What:** the backend reads the same root `.env` as Docker Compose and the frontend, wherever the server is started from. Unknown settings are ignored (`extra="ignore"`). Settings are read once and reused (`get_settings()`).
+- **Why:** one place to configure everything, and other tools' settings in the same file don't crash the backend.
+- **Where:** `backend/app/config.py`.
+
+#### T-008 · `APP_ENV` only accepts `dev`, `test` or `prod`
+- **What:** any other value stops the app at startup.
+- **Why:** a typo fails loudly instead of silently running with the wrong setup.
+- **Where:** `Settings.app_env` in `backend/app/config.py`.
+
+#### T-009 · Backend code checks: ruff and strict mypy
+- **What:** ruff checks style, likely bugs, import order, modern syntax, naming and simplifications (rule sets E, W, F, I, B, UP, N, SIM), with lines up to 100 characters, and also formats the code. mypy checks types in strict mode (with the pydantic plugin) on `app/` only; tests are not type-checked.
+- **Why:** catches mistakes before review, and gives everyone one code style.
+- **Where:** `[tool.ruff]` and `[tool.mypy]` in `backend/pyproject.toml`.
+
+#### T-010 · The backend test client uses `httpx`
+- **What:** tests call the API through `httpx`, even though Starlette prints a deprecation warning suggesting a newer package.
+- **Why:** the suggested replacement wasn't verified yet.
+- **Where:** dev dependencies in `backend/pyproject.toml`.
+- **Watch out:** revisit when the warning becomes an error.
+
+### M0.3 · Database and migrations
+
+#### T-011 · The PostgreSQL driver is psycopg 3
+- **What:** database URLs start with `postgresql+psycopg://`.
+- **Why:** it's the current driver, and it ships prebuilt (no compiler needed on Windows).
+- **Where:** `backend/pyproject.toml`, `.env.example`.
+
+#### T-012 · Tests use their own database, in the same container
+- **What:** `skillgraph_test` sits next to `skillgraph` and is created by `docker/postgres/init/01-create-test-database.sh` the first time the database volume is created. The settings refuse to start if `TEST_DATABASE_URL` equals `DATABASE_URL`.
+- **Why:** tests can never run on (or wipe) development data.
+- **Where:** `docker-compose.yml`, `backend/app/config.py`.
+- **Watch out:** if your database volume is older than this script, run `docker compose down -v` once. This deletes your local data.
+
+#### T-013 · Tests build the database with the real migrations and undo every test
+- **What:** before the tests, the test database is brought up to date with `alembic upgrade head`. Each test runs inside a transaction that is rolled back afterwards; "savepoint" mode means even a `commit()` in the code under test is undone.
+- **Why:** every test run also tests the migrations, and tests never see each other's data.
+- **Where:** `backend/tests/conftest.py`.
+
+#### T-014 · `/health` returns codes, not sentences
+- **What:** `{"status": "ok", "database": "ok"}` with HTTP 200, or `{"status": "error", "database": "unreachable"}` with HTTP 503.
+- **Why:** hosting and CI checks can see a broken database, and the frontend turns codes into text in the user's language.
+- **Where:** `backend/app/main.py`.
+
+#### T-015 · Endpoints get a database session by asking for `DbSession`
+- **What:** an endpoint parameter `session: DbSession` gives it a session that is always closed after the request.
+- **Why:** one pattern for every endpoint, and tests can swap in the test database. This is FastAPI's recommended `Annotated` style.
+- **Where:** `backend/app/db/session.py`.
+
+#### T-016 · How migrations are set up
+- **What:** migrations live in `backend/migrations/versions/`, named date-first (`2026_11_23-<id>_<name>.py`). ruff fixes and formats each newly generated migration. The database URL comes from the settings (or the tests), not from `alembic.ini`.
+- **Why:** files list in order, generated files pass the checks, and there is one source for the URL.
+- **Where:** `backend/alembic.ini`, `backend/migrations/env.py`.
+
+#### T-017 · Shell scripts keep Unix line endings
+- **What:** `.gitattributes` forces LF line endings for shell scripts.
+- **Why:** Git on Windows can convert them to CRLF, which breaks scripts run inside Linux containers.
+- **Where:** `.gitattributes`.
+
+#### T-018 · The local database login is `skillgraph` / `skillgraph`
+- **What:** the same development defaults appear in the code, Compose and `.env.example`.
+- **Why:** it's for local use only, so it isn't a secret, and setup works out of the box.
+- **Where:** `docker-compose.yml`, `backend/app/config.py`.
+- **Watch out:** any hosted database (M10.1) must use its own password, set through the environment.
+
+### M0.4 · Frontend skeleton
+
+#### T-019 · Frontend files were written by hand, not generated
+- **What:** the same tools as Vite's React + TypeScript template, without its demo files (logos, counter, CSS).
+- **Why:** every file in `frontend/` is used and explained.
+- **Where:** `frontend/`.
+
+#### T-020 · Frontend checks: ESLint, strict TypeScript, Vitest
+- **What:**
+  - `npm run lint` runs ESLint with the recommended JavaScript, TypeScript and React-hooks rules.
+  - `npm run check` runs `tsc --noEmit` in strict mode, plus `noUncheckedIndexedAccess`: reading `list[i]` may give `undefined`, so you must handle that case.
+  - `npm test` runs Vitest with jsdom (a fake browser in Node) and React Testing Library.
+- **Why:** the same safety net as the backend (T-009).
+- **Where:** `frontend/eslint.config.js`, `frontend/tsconfig.json`, `frontend/vite.config.ts`.
+
+#### T-021 · jsdom is pinned to version 26
+- **What:** the test browser jsdom stays on version 26.
+- **Why:** jsdom 27 needs Node 22.12 or newer and failed on Node 22.11 (`ERR_REQUIRE_ESM`). Version 26 works on every current Node LTS.
+- **Where:** `frontend/package.json`.
+- **Watch out:** can be raised once everyone has Node ≥ 22.12.
+
+#### T-022 · The browser calls `/api/...`, and Vite forwards it to the backend
+- **What:** in development, a call to `/api/health` on the Vite server (port 5173) is sent to `BACKEND_URL` (default `http://localhost:8000`) with `/api` removed. The API client puts `VITE_API_BASE_URL` (default `/api`) in front of every call.
+- **Why:** to the browser it's the same address as the page, so the backend needs no CORS setup. For a hosted demo (M10.1), `VITE_API_BASE_URL` can point at the backend's real address.
+- **Where:** `frontend/vite.config.ts`, `frontend/src/api/client.ts`, `.env.example`.
+- **Watch out:** if your `.env` was copied before M0.4, set `VITE_API_BASE_URL=/api` and add `BACKEND_URL`.
+
+#### T-023 · The frontend reads the same root `.env` as the backend
+- **What:** `envDir: ".."` in the Vite config. Only variables starting with `VITE_` reach the browser; `BACKEND_URL` is used by `vite.config.ts` only.
+- **Why:** one configuration file for everything (like T-007), without leaking server settings to the browser.
+- **Where:** `frontend/vite.config.ts`.
+
+#### T-024 · Every backend call goes through `src/api/client.ts`
+- **What:** one function per endpoint, each with a typed result. If the backend can't be reached, or answers with an unexpected shape, it throws `BackendUnreachableError`. A 503 from `/health` is a valid answer ("database down"), not an error.
+- **Why:** pages never deal with raw HTTP, and there's one place to change how calls work.
+- **Where:** `frontend/src/api/client.ts`.
+
+#### T-025 · How a page is built
+- **What:** each page is `src/pages/<Name>Page.tsx`, with its test next to it as `<Name>Page.test.tsx`. It calls the API client in a `useEffect`, cancels the call if the page closes, and keeps the outcome in one state value. Tests check a `data-state` attribute instead of the visible text.
+- **Why:** one pattern to copy for every page, and tests keep passing when the text is translated.
+- **Where:** `frontend/src/pages/HealthPage.tsx` (the example to copy).
+
+#### T-026 · Health page text was English-only (temporary)
+- **What:** the four messages lived in one `LABELS` object marked TEMPORARY.
+- **Why:** translations didn't exist until M0.7.
+- **Where:** `frontend/src/pages/HealthPage.tsx`.
+- **Replaced by T-041.**
+
+#### T-027 · The setup script always prints UTF-8
+- **What:** `main()` switches the script's output to UTF-8.
+- **Why:** a Windows console uses cp1252, which has no `→`, so `status` and `invite` crashed after finishing their work and reported a failure. (The reading side is T-004.)
+- **Where:** `main` in `scripts/github_setup.py`.
+
+### M0.5 · CI and branch protection
+
+#### T-028 · CI is one workflow with two jobs, `backend` and `frontend`
+- **What:** both jobs run the same commands as CLAUDE.md "Commands", on every pull request and every push to `main`. A newer push to the same branch cancels the older run.
+- **Why:** CI checks exactly what you check locally. The job names are the check names the `main` ruleset requires.
+- **Where:** `.github/workflows/ci.yml`.
+- **Watch out:** renaming a job means updating the ruleset's required checks (see T-032).
+
+#### T-029 · CI's database only has the test database
+- **What:** CI's PostgreSQL service is created with `POSTGRES_DB=skillgraph_test`, and `TEST_DATABASE_URL` points at it.
+- **Why:** tests never use `DATABASE_URL` (T-012), so CI needs no development database. Locally, `docker/postgres/init` still creates both.
+- **Where:** `services.db` in `.github/workflows/ci.yml`.
+
+#### T-030 · CI installs exactly what the lock files say
+- **What:** `uv sync --locked` and `npm ci` fail if `uv.lock` or `package-lock.json` is out of date, instead of quietly updating it. Both download caches are keyed on those lock files.
+- **Why:** CI tests the same versions everyone has locally, and a forgotten lock-file update is caught.
+- **Where:** `.github/workflows/ci.yml`.
+
+#### T-031 · Pinned GitHub Action versions
+- **What:** `checkout@v7`, `setup-node@v7`, `setup-uv@v10.4.0`, the latest releases on 2026-11-23.
+- **Why:** setup-uv has no moving `v10` tag (the first run failed with "unable to find version v10"), so it's pinned to an exact release.
+- **Where:** `.github/workflows/ci.yml`.
+
+#### T-032 · `main` is protected by the ruleset `protect-main` (id 27911752)
+- **What:** created with `python scripts/github_setup.py protect --check backend --check frontend`. It requires a PR with 1 approval and green `backend` and `frontend` checks, and blocks force-pushes and deletion. Org admins bypass it (D-016, T-005).
+- **Why:** teammates' work is reviewed and tested before it reaches `main`.
+- **Where:** GitHub repo Settings → Rules (made by `cmd_protect` in `scripts/github_setup.py`).
+- **Watch out:** running `protect` again would create a second ruleset. Edit the existing one in Settings → Rules instead.
+
+### M0.7 · Three languages in the frontend
+
+#### T-033 · Translation library: i18next + react-i18next + i18next-browser-languagedetector
+- **What:** Rasen chose this in M0.7, over react-intl.
+- **Why:** it's the most widely used and has the most examples (which helps chatbot-assisted work). It keeps texts in plain JSON, falls back to English when a text is missing, and has a ready-made plugin to detect and remember the language.
+- **Where:** `frontend/src/i18n/index.ts`.
+
+#### T-034 · How the interface language is chosen
+- **What:** first the language saved in this browser (localStorage `skillgraph.language`), then the browser's language reduced to its first part (`fr-CA` → `fr`), then English. Every change is saved.
+- **Why:** follows D-012. Saving it to the user's account comes once accounts exist (M3).
+- **Where:** `createI18n` in `frontend/src/i18n/index.ts`.
+
+#### T-035 · One translation setup for the app, fresh ones for tests
+- **What:** `createI18n()` builds a new i18next instance. Only the app's own instance (`connectToPage: true`) connects to React and keeps `<html lang dir>` in sync. Setup is synchronous (`initAsync: false`, texts bundled into the app).
+- **Why:** tests can make throwaway instances without affecting the page. Synchronous because Vite's default build target doesn't allow top-level `await`.
+- **Where:** `frontend/src/i18n/index.ts`.
+
+#### T-036 · A missing or extra translation fails `npm run check`
+- **What:** `fr.json` and `ar.json` must have the same keys as `en.json` (and the other way round), and TypeScript names the missing or extra key. Keys used in code are typed too, so a typo like `t("app.nmae")` fails the check.
+- **Why:** no text can be forgotten in one language, and no separate script is needed.
+- **Where:** `frontend/src/i18n/resources.ts`, `frontend/src/i18n/i18next.d.ts`, `resolveJsonModule` in `tsconfig.json`.
+
+#### T-037 · How translation keys are named
+- **What:** `<page or area>.<thing>` (`health.ok`, `language.label`), nested in the JSON files. A page whose state names match its keys can use `` t(`health.${state}`) ``. Language names in the switcher are written in their own language ("Français") and live in `languages.ts`, not the locale files.
+- **Why:** keys are easy to find, and language names are the same in every language.
+- **Where:** `frontend/src/locales/*.json`, `frontend/src/i18n/languages.ts`.
+
+#### T-038 · Fonts: Noto Sans + Noto Sans Arabic, self-hosted
+- **What:** Rasen chose this in M0.7, over system fonts. Installed through @fontsource, weights 400 and 700. Noto Sans comes first, and Arabic letters fall through to Noto Sans Arabic. Form controls use `font: inherit`, so the language switcher gets Noto too.
+- **Why:** the browser downloads only the parts of the font a page uses, and no request goes to Google's servers.
+- **Where:** `frontend/src/main.tsx`, `frontend/src/index.css`.
+
+#### T-039 · Numbers and dates go through `formatNumber` and `formatDate`
+- **What:** both use `Intl` with the locale `<lang>-u-nu-latn`. Dates default to `dateStyle: "long"`.
+- **Why:** digits are always 0–9, in Arabic too (D-012).
+- **Where:** `frontend/src/i18n/format.ts`.
+
+#### T-040 · Each test starts in English
+- **What:** `src/test/setup.ts` (Vitest `setupFiles`) starts translations the way the app does. After each test it switches back to English and clears localStorage.
+- **Why:** one test changing the language can't break the next one.
+- **Where:** `frontend/src/test/setup.ts`, `frontend/vite.config.ts`.
+
+#### T-041 · The health page is translated (replaces T-026)
+- **What:** its texts are the keys `health.<state>`. The app frame (`App.tsx`) holds the header with the language switcher.
+- **Why:** removes the T-026 workaround.
+- **Where:** `frontend/src/pages/HealthPage.tsx`, `frontend/src/App.tsx`.
+- **Watch out:** the fr/ar texts are first drafts; a native speaker checks them in M2.8.
