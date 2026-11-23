@@ -10,7 +10,7 @@ Two kinds of entry:
 |---|---|---|---|
 | D-001 | How work is split into sessions and PRs | Decided | — |
 | D-002 | Who owns the repo, and public or private | Decided | M0.1 |
-| D-003 | Frontend framework | Open | M0.4 |
+| D-003 | Frontend framework | Decided | M0.4 |
 | D-004 | Backend stack and tooling | Decided | M0.2 |
 | D-005 | Which free LLM (hosted free tier vs local) | Open | M2.1 |
 | D-006 | Evidence model: types, statuses, confidence | Open (contract) | M2.3 |
@@ -42,7 +42,9 @@ Two kinds of entry:
 - **Recommendation:** A, unless the team or supervisor wants the code private.
 
 ### D-003 · Frontend framework
-- **Status:** Open
+- **Status:** Decided (Rasen, 2026-11-23)
+- **Choice:** React + Vite + TypeScript.
+- **Why:** the most examples and the most teammates able to review it, which matters for chatbot-assisted work; mature translation libraries with right-to-left support (D-012). The translation library itself is chosen in M0.7.
 - **Options:** React + Vite + TypeScript (largest ecosystem, most examples, most likely known by teammates) vs SvelteKit + TypeScript (less code, simpler state, smaller ecosystem).
 - **Recommendation:** React + Vite + TypeScript, mainly because more of the team can review it. Whichever is chosen needs a mature translation library with right-to-left support (D-012).
 
