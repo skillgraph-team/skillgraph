@@ -15,7 +15,7 @@ from alembic import context
 from sqlalchemy import create_engine, pool
 
 from app.config import get_settings
-from app.db.base import Base
+from app.db.models import Base  # imports every model, so autogenerate sees all tables
 
 config = context.config
 if config.config_file_name is not None:

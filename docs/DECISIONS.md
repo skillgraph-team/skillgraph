@@ -26,6 +26,7 @@ Two kinds of entry:
 | D-016 | Who reviews and merges (supersedes part of D-010) | Decided | M0.5 |
 | D-017 | How much Claude Code does on its own for Rasen | Decided | — |
 | D-018 | Only Rasen's review gates teammates' work; no code-explanation rules | Decided | — |
+| D-019 | Database schema v1 conventions (ids, fixed values, sub-records, skill names) | Decided (contract) | M2.4 |
 
 ---
 
@@ -137,6 +138,14 @@ Two kinds of entry:
 - **Status:** Decided (Rasen, 2026-11-23). Supersedes D-010's "slices marked `contract` need the whole team's approval" and D-016's "teammates still need to be able to explain that code".
 - **Choice:** the only thing a teammate's work has to pass is Rasen's PR review (plus green CI). There are no rules that anyone must be able to explain the code. Contracts (evidence model, schema, message format, API, language rules) are owned and approved by Rasen; they don't need the whole team's sign-off. The PR "Review guide" and Rasen's issue summaries stay, as the record of how things work, for whoever wants it.
 - **Why:** this is a startup project: what matters is the product. Technical details are there to understand how it works underneath, not something every member has to master, and extra approvals only slow teammates down.
+
+### D-019 · Database schema v1 conventions (contract)
+- **Status:** Decided (Rasen, 2026-11-23). **Contract owner: Rasen.** Full write-up: `docs/design/schema.md`.
+- **Choices** (all recommendations accepted):
+  1. **Row ids are UUIDs.** Skills keep the readable text id from skills.csv (`postgresql`). *Why:* ids in URLs can't be guessed or counted, and they exist before saving, so agents can cite evidence ids. *Rejected:* integers (short, but guessable).
+  2. **Fixed value lists are text columns with a CHECK**, listed once in `app/db/values.py`. *Why:* adding or removing a value is a simple migration. *Rejected:* PostgreSQL ENUM types (hard to change).
+  3. **Mixed storage for sub-records:** education, experience and manual projects get their own tables; gaps and recommendations are JSON on `matches`; GitHub consent is a timestamp on `profiles`. *Why:* the first three are edited one at a time and a manual project is an evidence source, while gaps and recommendations are computed and read as a whole. *Rejected:* all tables (more migrations for data rewritten in one go); all JSON (no ids, no checks).
+  4. **Skill names in three columns:** `name_en`, `name_fr`, `name_ar`. *Why:* matches the skills.csv plan and needs no join. *Rejected:* a translations table (any number of languages, but joins and easy-to-miss gaps).
 
 ---
 
@@ -428,6 +437,66 @@ These fill in details D-006 left open. They are part of the contract in `docs/de
 - **What:** each link has a code such as `concrete_work`, `forked_repo`, `inferred_from_related`. M4.4 and M6.3 may add codes but never reuse one with a new meaning.
 - **Why:** the backend returns codes, not sentences (three languages); the UI translates them.
 - **Where:** evidence model §3.4.
+
+### M2.4 · Database schema v1
+
+#### T-049 · Every constraint has a predictable name
+- **What:** `Base.metadata` has a naming convention, so names look like `ck_evidence_type`, `uq_users_email`, `fk_<table>_<columns>_<target>`.
+- **Why:** later migrations can drop or change a constraint by name without looking it up in the database.
+- **Where:** `backend/app/db/base.py`.
+
+#### T-050 · Models: one file per area; allowed values in one list
+- **What:** `app/db/models/{users,sources,skills,user_skills,opportunities,agent_runs}.py`, all re-exported from `app/db/models/__init__.py`. The allowed values are `Literal` types in `app/db/values.py`; `one_of("status", Status)` turns one into a CHECK. Shared column types (`uuid_pk`, `created_at`, `user_ref`) are in `app/db/models/_columns.py`.
+- **Why:** small files for chatbot-pasting; pydantic models can reuse the same `Literal` types later, so the lists can't drift apart.
+- **Where:** `backend/app/db/`.
+- **Watch out:** autogenerate doesn't notice a changed CHECK list. Write those migration lines by hand (see `docs/design/schema.md`).
+
+#### T-051 · A link can only join a skill and evidence of the same user
+- **What:** `user_skill_evidence` stores `user_id` and uses it in both foreign keys (to `user_skills (id, user_id)` and `evidence (id, user_id)`).
+- **Why:** a bug in an agent or service can never make one person's profile cite another person's CV. The database refuses.
+- **Where:** `backend/app/db/models/user_skills.py`.
+
+#### T-052 · The 300-character quote limit is enforced by the database
+- **What:** `CHECK (char_length(quote) <= 300)`. Code that cuts quotes must fit the `…` inside the 300.
+- **Why:** turns the evidence model's "~300" into one exact number everyone can test against.
+- **Where:** `backend/app/db/models/sources.py` (`QUOTE_MAX_CHARS`).
+
+#### T-053 · A manual project's source points to the project, not the other way round
+- **What:** `sources.manual_project_id` (unique, ON DELETE CASCADE), required exactly when `kind = 'manual_project'`.
+- **Why:** deleting a project then also deletes its source and evidence, and every evidence record still has a normal `source_id`.
+- **Where:** `backend/app/db/models/sources.py`.
+
+#### T-054 · Deletes rely on the database, and there are no ORM relationships yet
+- **What:** every personal table cascades from `users` in PostgreSQL. Models declare no `relationship()`s yet.
+- **Why:** deleting the account works the same from SQL, the ORM or an admin tool. Relationships get added when a slice needs them.
+- **Where:** all models.
+- **Watch out:** when adding a `relationship()` to a parent, use `passive_deletes=True`, or SQLAlchemy may try to set children's foreign keys to NULL instead of letting the database delete them.
+
+#### T-055 · Deleting a skill is refused while it's used; deleting a run keeps its results
+- **What:** `user_skills.skill_id` and `opportunity_requirements.skill_id` are ON DELETE RESTRICT. `agent_run_id` on `user_skills` and `matches` is ON DELETE SET NULL.
+- **Why:** reloading the skill list can't silently wipe profiles, and clearing old run logs doesn't delete a user's results.
+- **Where:** `backend/app/db/models/user_skills.py`, `opportunities.py`.
+
+#### T-056 · Messages keep the whole envelope as JSON until D-007
+- **What:** `agent_messages.envelope` is JSONB, plus columns for ordering and listing (`sequence`, `sender`, `recipient`, `task`, `status`, `attempt`, tokens, duration). No CHECK on `status` yet.
+- **Why:** the envelope is still open (M2.5); this works whatever it becomes. M2.5 can add columns in a new migration.
+- **Where:** `backend/app/db/models/agent_runs.py`.
+
+#### T-057 · Emails are stored lowercase
+- **What:** `CHECK (email = lower(email))` plus a unique rule. Signup code must lowercase the email first.
+- **Why:** `Ana@x.com` and `ana@x.com` can't become two accounts. Simpler than the `citext` extension.
+- **Where:** `backend/app/db/models/users.py`.
+
+#### T-058 · A test checks that the models and the migrations agree
+- **What:** `test_models_match_the_migrations` runs Alembic's `compare_metadata` against the migrated test database and expects no difference. The migration test also checks the exact table list after upgrade, and that downgrade leaves only `alembic_version`. `migrations/env.py` now imports `app.db.models`, so autogenerate sees every table.
+- **Why:** catches a model change without a migration.
+- **Where:** `backend/tests/test_migrations.py`, `backend/migrations/env.py`.
+- **Watch out:** it doesn't compare CHECK contents (see T-050).
+
+#### T-059 · Test rows come from small factory functions
+- **What:** `tests/db/factories.py` has one `make_<table>(session, …, **overrides)` per table, with made-up defaults. Constraint tests wrap each bad insert in a savepoint (`assert_rejected`), so a test can check several rules.
+- **Why:** one clear pattern, no new dependency (no factory_boy).
+- **Where:** `backend/tests/db/`.
 
 ### Session tooling (no slice)
 
