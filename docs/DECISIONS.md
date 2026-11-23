@@ -2,6 +2,10 @@
 
 One entry per decision. Status is `Open`, `Proposed` (has a recommendation, waiting for a yes) or `Decided`. Work through one in its own session ("let's decide D-005"). Once `Decided`, change it only with a new entry that supersedes it.
 
+Two kinds of entry:
+- **D-numbers** (below): big or hard-to-reverse decisions, made by Rasen.
+- **T-numbers** ([Technical choices log](#technical-choices-log), at the end): every smaller choice made while building, so nobody has to guess why the code looks the way it does. Each slice adds its own. To change one, add a new entry that replaces it.
+
 | ID | Question | Status | Needed by |
 |---|---|---|---|
 | D-001 | How work is split into sessions and PRs | Decided | — |
@@ -107,4 +111,34 @@ One entry per decision. Status is `Open`, `Proposed` (has a recommendation, wait
 - **Choice:** Rasen's work (done with Claude Code) is committed and pushed straight to `main`, approved by Rasen. Teammates push their work to a branch and open a PR; Rasen reviews and merges it. In M0.5, `main` is protected for everyone except org admins (Rasen): teammates need a PR with 1 approval and green CI; Rasen can push directly.
 - **Why:** Rasen is the only member with a Claude Code subscription and does the reviewing; waiting for approvals on Rasen's own work would only slow the team down.
 - **Watch:** Rasen's pushes get no second reviewer, so CI (M0.5) is the only automatic check on them. Teammates still need to be able to explain that code for the presentation: Claude Code posts a short summary on the slice's issue when it pushes.
+
+---
+
+## Technical choices log
+
+Smaller choices made while building: what was chosen, why, and where it lives. Newest at the bottom. If you're wondering "why is it done like this?", look here first.
+
+### Repo and board setup (M0.1)
+- **T-001 · No due dates on milestones.** The week ranges in MILESTONES.md are targets only; every slice gets done eventually. *Where:* GitHub milestones (setup ran without `--start-date`).
+- **T-002 · One board, made by hand, reused by the script.** The org board "SkillGraph" (#1) was created by hand; `github_setup.py` finds it by its exact title instead of creating a new one. Its number and ID are saved in `scripts/github_project.json`, which the `status` command needs. The board is private to the org; members have Write access. *Where:* `scripts/github_project.json`.
+- **T-003 · Every org member gets write access to repos.** The org's default repository permission is `write`, so new members can push branches and assign issues without a separate invite. `main` itself is protected separately (D-016, M0.5). *Where:* GitHub org settings.
+- **T-004 · The setup script reads `gh` output as UTF-8.** On Windows, Python decoded it as cp1252, which garbled the `·` in titles, so "already exists" checks failed and the script tried to create milestones twice. *Where:* `GH.run` in `scripts/github_setup.py`.
+- **T-005 · Org admins bypass the `main` ruleset.** Rasen pushes to `main` directly (D-016); everyone else needs a PR. *Where:* `bypass_actors` in `cmd_protect`, `scripts/github_setup.py`. *Untested* until M0.5 runs it.
+
+### Backend skeleton (M0.2)
+- **T-006 · The backend is an app, not a library.** `package = false` in `pyproject.toml`: uv installs the dependencies but doesn't try to build or publish `backend` as a package. Python is pinned to 3.12 (`requires-python`, `.python-version`), matching D-004. *Where:* `backend/pyproject.toml`.
+- **T-007 · One `.env` file, in the repo root.** The backend reads the same `.env` as Docker Compose and the frontend, wherever the server is started from. Settings it doesn't know are ignored (`extra="ignore"`), so other tools' settings don't crash it. Settings are read once and reused (`get_settings()`). *Where:* `backend/app/config.py`.
+- **T-008 · `APP_ENV` only accepts `dev`, `test` or `prod`.** A typo stops the app at startup instead of silently running with the wrong setup. *Where:* `Settings.app_env`.
+- **T-009 · Code checks.** ruff with rule sets E, W, F, I, B, UP, N, SIM (style, real bugs, import order, modern syntax, naming, simplifications), line length 100; ruff also formats. mypy in strict mode with the pydantic plugin, on `app/` only (tests are not type-checked). *Where:* `[tool.ruff]` and `[tool.mypy]` in `backend/pyproject.toml`.
+- **T-010 · Test client uses `httpx`.** Starlette prints a deprecation warning suggesting a newer package; we kept `httpx` because the replacement wasn't verified. Revisit when the warning becomes an error. *Where:* dev dependencies.
+
+### Database and migrations (M0.3)
+- **T-011 · PostgreSQL driver: psycopg 3.** The current driver, with prebuilt binaries (no compiler needed on Windows). Database URLs must therefore start with `postgresql+psycopg://`. *Where:* `backend/pyproject.toml`, `.env.example`.
+- **T-012 · The test database is a second database in the same container.** `skillgraph_test` sits next to `skillgraph` and is created by `docker/postgres/init/01-create-test-database.sh` when the database volume is first created. Settings refuse to start if `TEST_DATABASE_URL` equals `DATABASE_URL`, so tests can never run on development data. If your volume is older than this script, run `docker compose down -v` once (it wipes local data). *Where:* `docker-compose.yml`, `backend/app/config.py`.
+- **T-013 · Tests build the database by running the real migrations, and undo each test.** The test database is brought up to date with `alembic upgrade head`, not by creating tables straight from the models, so every test run also tests the migrations. Each test runs inside a transaction that is rolled back afterwards; "savepoint" mode means even a `commit()` in the code under test is undone. *Where:* `backend/tests/conftest.py`.
+- **T-014 · `/health` returns codes, not sentences.** `{"status": "ok", "database": "ok"}` with 200, or `{"status": "error", "database": "unreachable"}` with 503, so hosting and CI checks can see a broken database. *Where:* `backend/app/main.py`.
+- **T-015 · Endpoints get the database session through one type, `DbSession`.** Writing `session: DbSession` as an endpoint parameter gives it a session that is always closed after the request, and tests can swap it for the test database. This is FastAPI's recommended `Annotated` style. *Where:* `backend/app/db/session.py`.
+- **T-016 · Migration setup.** Migrations live in `backend/migrations/versions/`, named date-first (`2026_11_23-<id>_<name>.py`) so they list in order. ruff fixes and formats each new migration automatically, so generated files pass the checks. The database URL is not in `alembic.ini`; it comes from the settings (or from the tests). *Where:* `backend/alembic.ini`, `backend/migrations/env.py`.
+- **T-017 · Shell scripts keep Unix line endings.** Git on Windows can convert line endings, which breaks scripts run inside Linux containers. *Where:* `.gitattributes`.
+- **T-018 · Local database login `skillgraph` / `skillgraph`.** Local-only development defaults in code, Compose and `.env.example`; not secrets. Any hosted database (M10.1) must use its own password, set through the environment. *Where:* `docker-compose.yml`, `backend/app/config.py`.
 
