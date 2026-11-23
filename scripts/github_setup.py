@@ -494,6 +494,12 @@ def cmd_status(args: argparse.Namespace) -> None:
 
 
 def main() -> None:
+    # Output contains "→" and "·". A Windows console defaults to cp1252, which has no "→",
+    # so print() crashed (after the work was already done). Always write UTF-8 instead.
+    for stream in (sys.stdout, sys.stderr):
+        if hasattr(stream, "reconfigure"):
+            stream.reconfigure(encoding="utf-8")
+
     parser = argparse.ArgumentParser(description=__doc__,
                                      formatter_class=argparse.RawDescriptionHelpFormatter)
     sub = parser.add_subparsers(dest="cmd", required=True)
