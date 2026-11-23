@@ -20,6 +20,8 @@ build/
 .svelte-kit/
 
 # app data
+# real participants' CVs and labels (D-013), never committed
+backend/eval/data/private/
 backend/uploads/
 backend/storage/
 *.sqlite3

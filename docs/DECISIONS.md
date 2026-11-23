@@ -7,7 +7,7 @@ One entry per decision. Status is `Open`, `Proposed` (has a recommendation, wait
 | D-001 | How work is split into sessions and PRs | Decided | — |
 | D-002 | Who owns the repo, and public or private | Decided | M0.1 |
 | D-003 | Frontend framework | Open | M0.4 |
-| D-004 | Backend stack and tooling | Proposed | M0.2 |
+| D-004 | Backend stack and tooling | Decided | M0.2 |
 | D-005 | Which free LLM (hosted free tier vs local) | Open | M2.1 |
 | D-006 | Evidence model: types, statuses, confidence | Open (contract) | M2.3 |
 | D-007 | Agent message envelope | Open (contract) | M2.5 |
@@ -16,6 +16,9 @@ One entry per decision. Status is `Open`, `Proposed` (has a recommendation, wait
 | D-010 | How work is split and claimed | Decided | — |
 | D-011 | Which tools people use | Decided | — |
 | D-012 | Languages: English, French, Arabic | Decided (details Proposed) | M0.7, M2.8 |
+| D-013 | Where real participants' CVs and labels live | Decided | M1.5 |
+| D-014 | Is "assessed" produced in the MVP | Decided | M2.3 |
+| D-015 | Login: token vs session cookie | Open | M3.1 |
 
 ---
 
@@ -39,8 +42,8 @@ One entry per decision. Status is `Open`, `Proposed` (has a recommendation, wait
 - **Recommendation:** React + Vite + TypeScript, mainly because more of the team can review it. Whichever is chosen needs a mature translation library with right-to-left support (D-012).
 
 ### D-004 · Backend stack and tooling
-- **Status:** Proposed
-- **Proposal:** Python 3.12, uv, FastAPI, pydantic v2 + pydantic-settings, SQLAlchemy 2 + Alembic, PostgreSQL 16 in Docker Compose, pytest, ruff, mypy.
+- **Status:** Decided (Rasen, 2026-11-23)
+- **Choice:** Python 3.12, uv, FastAPI, pydantic v2 + pydantic-settings, SQLAlchemy 2 + Alembic, PostgreSQL 16 in Docker Compose, pytest, ruff, mypy.
 - **Why:** matches the project report, all free, and agents + API live in one Python codebase.
 
 ### D-005 · LLM provider
@@ -65,6 +68,7 @@ One entry per decision. Status is `Open`, `Proposed` (has a recommendation, wait
 - **Status:** Decided (Rasen)
 - **Choice:** no fixed roles and no split by tool. Anyone takes any slice whose dependencies are done, by assigning themselves on the board. Assigned = in progress, merged PR = done. A claim with no commit for 3 days can be taken over after a message in the group chat. Every PR is approved by someone other than its author. Slices marked `contract` need the whole team's approval, and later changes need the named contract owner's.
 - **Why:** splitting by who has which tool added complexity without helping. What matters is that every slice is clear on its own: Goal, Why, Read first, Tasks, Done when.
+- **Confirmed (Rasen, 2026-11-23):** "everyone can push" means everyone pushes their own branches freely; `main` stays protected (PR + 1 approval from another member + green CI), switched on in M0.5. Until then, the same rule holds by convention. Why: catches broken code before it reaches everyone, whoever or whatever wrote it.
 
 ### D-011 · Which tools people use
 - **Status:** Decided (Rasen)
@@ -82,3 +86,18 @@ One entry per decision. Status is `Open`, `Proposed` (has a recommendation, wait
   - Technical names (Python, Docker, PostgreSQL) stay in Latin letters in all three languages.
 - **Why:** local CVs and postings are often in French or Arabic. A skills platform that only reads and speaks English would miss much of the evidence and many of the users.
 - **Risk:** small free LLMs are often much weaker in Arabic than in English. M2.1 measures this per language. If Arabic output is poor, options are: a larger free model for Arabic only, or generating in French/English with a clear note in the Arabic interface.
+
+### D-013 · Where real participants' CVs and labels live
+- **Status:** Decided (Rasen, 2026-11-23)
+- **Choice:** only made-up profiles (and their labels) are committed, under `backend/eval/data/`. Real, consented CVs, their GitHub usernames and their labels live outside the repo in a private team folder, and each member copies them into `backend/eval/data/private/` (git-ignored). Evaluation results report made-up and real profiles separately, and committed results contain only scores, never text from real profiles.
+- **Why:** the repo is public (D-002), and a GitHub username identifies its owner, so "anonymized" real data can't be committed safely.
+
+### D-014 · "Assessed" in the MVP
+- **Status:** Decided (Rasen, 2026-11-23)
+- **Choice:** the MVP builds no assessments. "Assessed" stays in the evidence model as a status, but nothing in the MVP produces it, and rules and agents must never output it (already a guardrail in M4.4 and M6.3).
+- **Why:** the report's MVP list has no assessments, and building one is a feature of its own; keeping the status in the model leaves room to add it later without a contract change.
+
+### D-015 · Login: token vs session cookie
+- **Status:** Open — decided in M3.1.
+- **Options:** a signed token (JWT) sent by the frontend in a header (simple API, but storing it safely in the browser takes care) vs a server session in an HttpOnly cookie (safer by default against stolen tokens, but needs CSRF protection and same-site setup).
+

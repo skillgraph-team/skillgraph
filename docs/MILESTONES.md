@@ -247,10 +247,11 @@ Check the problem with real students, and build the test data every later milest
 **Tasks**
 - [ ] Collect consented CVs and public GitHub usernames; write realistic made-up profiles to fill gaps (different fields, levels, amounts of evidence and languages: at least 5 in French and 3 in Arabic, plus some that mix languages)
 - [ ] Remove names, emails, phone numbers and addresses
-- [ ] Store under `backend/eval/data/profiles/` with a README explaining where each came from
+- [ ] Commit only the made-up profiles, under `backend/eval/data/profiles/`, with a README explaining how they were written
+- [ ] Keep real, consented profiles (CV text and GitHub username) out of the repo (D-013): in the team's private folder, copied by each member into `backend/eval/data/private/profiles/` (git-ignored); the README says where to get them
 
 **Done when**
-- [ ] At least 15 profiles committed, including French and Arabic ones, none containing personal data
+- [ ] At least 15 profiles in total, including French and Arabic ones; nothing from a real person is committed (`git status` shows `backend/eval/data/private/` ignored)
 
 ### M1.6 · Labeling guide and correct answers
 `area:data` `size:L` `depends:M1.5, M2.3`
@@ -265,7 +266,7 @@ Check the problem with real students, and build the test data every later milest
 - [ ] Labeling guide: which skills count and how to decide each status, with examples
 - [ ] French and Arabic profiles are labeled by members fluent in that language
 - [ ] Two members label each profile separately; then compare, discuss disagreements and settle them; record how often they agreed at first
-- [ ] Save labels as JSON in `backend/eval/data/labels/`, with the format described in a README
+- [ ] Save labels as JSON in `backend/eval/data/labels/` (made-up profiles) and `backend/eval/data/private/labels/` (real profiles, never committed, D-013), with the format described in a README
 
 **Done when**
 - [ ] Every profile labeled by two people, disagreements settled, agreement rate recorded
@@ -362,6 +363,7 @@ Agree on the definitions everyone builds on (evidence, database tables, agent me
 
 **Tasks**
 - [ ] Tables: users, profiles, sources, evidence, skills, skill_aliases, skill_relations, user_skills, user_skill_evidence, opportunities, opportunity_requirements, matches, agent_runs, agent_messages
+- [ ] Also decide where these live (own tables or fields), since later slices need them: education, experience and manual projects (M3.3), GitHub consent (M3.9), gaps and recommendations (M8.1–M8.3)
 - [ ] Language fields (D-012): each user's preferred language, each source's detected language, skill names in three languages
 - [ ] Diagram and short notes in `docs/design/schema.md`
 - [ ] Alembic migration; tests for the important constraints and for deleting a user
@@ -1144,6 +1146,7 @@ For a chosen posting, show what's missing and what to do about it, run the whole
 
 **Tasks**
 - [ ] Report view with progress while the workflow runs; print-friendly (including in Arabic); link to the run timeline
+- [ ] Fill the dashboard's placeholder sections (M3.8) with real data: skills, top matches, gaps, next steps
 
 **Done when**
 - [ ] Works end to end for a test user
