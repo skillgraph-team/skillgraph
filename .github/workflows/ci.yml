@@ -46,7 +46,7 @@ jobs:
       TEST_DATABASE_URL: postgresql+psycopg://skillgraph:skillgraph@localhost:5432/skillgraph_test
     steps:
       - uses: actions/checkout@v7
-      - uses: astral-sh/setup-uv@v10
+      - uses: astral-sh/setup-uv@v10.4.0  # setup-uv publishes no moving major tag (v10), only exact versions
         with:
           working-directory: backend
           enable-cache: true
