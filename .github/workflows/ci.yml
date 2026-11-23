@@ -1,0 +1,77 @@
+# CI: runs every check from CLAUDE.md "Commands" on each pull request and each push to main.
+#
+# Two jobs, named `backend` and `frontend`. Those names are what the `main` ruleset
+# requires to be green (`python scripts/github_setup.py protect --check backend --check frontend`),
+# so renaming a job means updating the ruleset too.
+
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+# A newer push to the same branch or PR cancels the run that is still going.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  backend:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend
+    services:
+      # Throwaway PostgreSQL for the tests. Only the test database is needed, so it is
+      # created directly (locally, docker/postgres/init creates it next to the dev one).
+      db:
+        image: postgres:16
+        env:
+          POSTGRES_USER: skillgraph
+          POSTGRES_PASSWORD: skillgraph
+          POSTGRES_DB: skillgraph_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U skillgraph -d skillgraph_test"
+          --health-interval 2s
+          --health-timeout 5s
+          --health-retries 15
+    env:
+      APP_ENV: test
+      TEST_DATABASE_URL: postgresql+psycopg://skillgraph:skillgraph@localhost:5432/skillgraph_test
+    steps:
+      - uses: actions/checkout@v7
+      - uses: astral-sh/setup-uv@v10
+        with:
+          working-directory: backend
+          enable-cache: true
+          cache-dependency-glob: backend/uv.lock
+      # --locked: fail if uv.lock is out of date with pyproject.toml instead of silently updating it.
+      - run: uv sync --locked
+      - run: uv run ruff check .
+      - run: uv run ruff format --check .
+      - run: uv run mypy app
+      - run: uv run pytest
+
+  frontend:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      # npm ci installs exactly what package-lock.json says (npm install may change it).
+      - run: npm ci
+      - run: npm run lint
+      - run: npm run check
+      - run: npm test
