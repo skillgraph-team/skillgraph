@@ -2,7 +2,7 @@
 
 How to work on SkillGraph with **Google Antigravity** (Google's free agent IDE).
 
-The rules are the same for everyone (D-011): one slice = one issue = one branch = one PR, tests first, Rasen reviews and merges. This file only explains how to apply them in Antigravity. For the Claude chatbot, see `docs/CHAT_KIT.md`.
+The rules are the same for everyone (D-011): one slice = one issue = one branch = one PR, tests first. This file only explains how to apply them in Antigravity. For the Claude chatbot, see `docs/CHAT_KIT.md`.
 
 > Antigravity changes often. If a menu or setting below has a different name in your version, look for the closest one, then fix this file in your next PR.
 
@@ -12,7 +12,7 @@ The rules are the same for everyone (D-011): one slice = one issue = one branch 
 
 - Antigravity's agent automatically reads `AGENTS.md` at the root of the repo. That file sends it to **`CLAUDE.md`**, which holds the project's rules, architecture, commands and the step-by-step workflow ("Working on a slice"). It was written for Claude Code, but it applies to any agent.
 - A few lines in `CLAUDE.md` **don't apply to you**:
-  - Everything that says "Rasen works on `main`" or "Rasen works autonomously". You are not Rasen: you always work on a branch, open a PR, and approve the plan before the agent writes code.
+  - Anything about working directly on `main` or starting without a go-ahead. You always work on a branch, open a PR, and approve the plan before the agent writes code.
   - The 30-minute hook that checks for teammates' work (T-042) only runs in Claude Code. You do the check yourself: pull `main` at the start of every session.
 - Unlike the chatbot, the agent sees your files and runs commands itself. That's faster, but **you** are responsible for every command it runs and every file it changes. Read before you approve.
 
@@ -52,8 +52,8 @@ Open a **new conversation** in the agent panel and paste this, replacing `M3.5` 
 We're doing slice M3.5 of SkillGraph. Read AGENTS.md and CLAUDE.md first and follow them.
 
 Important differences from what CLAUDE.md says:
-- I am NOT Rasen. Always work on a branch (m<n>.<k>-short-name), never commit or push to main,
-  and open a pull request at the end. Rasen reviews and merges it.
+- I'm a teammate: always work on a branch (m<n>.<k>-short-name), never commit or push to main,
+  and open a pull request at the end.
 - Don't start writing code until I approve your plan.
 - There's no session hook in this tool: do the "Every session, before any work" checks yourself now.
 
@@ -87,25 +87,24 @@ never open, print or change .env; never read anything outside this repo folder.
 ## 6. Finishing: the prompt
 
 ```
-The slice is done. Follow CLAUDE.md "Working on a slice" → "Finishing", for a teammate (not Rasen):
+The slice is done. Follow CLAUDE.md "Working on a slice" → "Finishing", the teammate path (branch + PR):
 1. Run every check that applies (CLAUDE.md "Commands") and show me the real output.
 2. Go through "Done when" item by item and say how each is shown.
 3. If the diff is over ~400 lines outside generated files, tell me and propose a split.
 4. Add every technical choice to the "Technical choices log" in docs/DECISIONS.md (next free
    T-number). If users see or do anything new, update docs/USER_GUIDE.md.
 5. Commit as "M3.5: <imperative summary>", push the branch, and open the PR with
-   .github/pull_request_template.md filled in: "Closes #<issue>", a plain-language Review guide,
-   How to test it manually, and a Handoff. Show me the PR text before you create it.
+   .github/pull_request_template.md filled in, including "Closes #<issue>".
+   Show me the PR text before you create it.
 6. Report what's unsure or untested.
 ```
 
-Then tell Rasen in the group chat that the PR is ready. If Rasen asks for changes, make them **on the same branch** (same conversation if it's still short, otherwise a new one with the handoff), commit and push: the PR updates by itself.
+Then post the PR link in the group chat. To change something afterwards, commit and push **to the same branch**: the PR updates by itself.
 
 ## 7. Never
 
 - Paste or let the agent read **secrets** (`.env`, API keys, tokens) or **real people's data**. Real participants' CVs and labels stay in the private team folder (D-013). **Keep that folder outside the repo folder**, so the agent can't read it by accident.
 - Commit to `main`. It's protected for teammates anyway: a direct push will fail.
-- Merge your own PR.
 
 ## 8. Problems
 
