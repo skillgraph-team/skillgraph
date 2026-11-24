@@ -19,6 +19,7 @@ The project is split into milestones and 77 small **slices** ([docs/MILESTONES.m
 3. **Do it**, one slice per session or chat:
    - Claude Code: just say "let's do M3.5"; CLAUDE.md tells it the steps
    - Claude chatbot: [docs/CHAT_KIT.md](docs/CHAT_KIT.md)
+   - Google Antigravity: [docs/CHAT_KIT_ANTIGRAVITY.md](docs/CHAT_KIT_ANTIGRAVITY.md) (English and Algerian Darija)
    - Any other coding agent: it reads `AGENTS.md`
 4. **Open a pull request** that closes the issue, with the template filled in, including a plain-language review guide.
 5. **Review:** Rasen reviews and merges teammates' pull requests ("review PR 12" in Claude Code). Rasen's own work goes straight to `main`, with a summary on the issue (D-016). Merging or closing moves the card to Done.

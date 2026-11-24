@@ -1,6 +1,6 @@
 # Chat kit: doing a slice with the Claude chatbot
 
-Anyone can take any slice. This is how to do one with the Claude chatbot. (With Claude Code, just tell it which slice; CLAUDE.md gives it the steps. With another tool, follow the same steps in spirit.)
+Anyone can take any slice. This is how to do one with the Claude chatbot. (With Claude Code, just tell it which slice; CLAUDE.md gives it the steps. With Google Antigravity, see `docs/CHAT_KIT_ANTIGRAVITY.md`. With another tool, follow the same steps in spirit.)
 
 - **Part A**: slices that only produce documents or data (research, labels, prompts, sketches, docs). Chatbot + GitHub website.
 - **Part B**: slices that change code. Chatbot + your computer + GitHub Desktop.
