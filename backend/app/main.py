@@ -8,11 +8,15 @@ from fastapi.responses import JSONResponse
 from sqlalchemy import text
 from sqlalchemy.exc import OperationalError
 
-from app.api import auth
+from app.api import auth, education, experience, profile, projects
 from app.db.session import DbSession
 
 app = FastAPI(title="SkillGraph API")
 app.include_router(auth.router)
+app.include_router(profile.router)
+app.include_router(education.router)
+app.include_router(experience.router)
+app.include_router(projects.router)
 
 
 @app.get("/health")

@@ -575,6 +575,43 @@ These fill in details D-006 left open. They are part of the contract in `docs/de
 - **Why:** development works with no setup, and production can't run on a known key by accident.
 - **Where:** `backend/app/config.py`, `.env.example`.
 
+### M3.3 · Profile API
+
+#### T-071 · Profile endpoints: one file per list, one shared service
+- **What:** `app/api/profile.py` (`GET`/`PATCH`/`DELETE /profile`), and `education.py`, `experience.py`, `projects.py`, each with the same four endpoints (`GET` list, `POST`, `PUT /{id}`, `DELETE /{id}` under `/profile/...`). Shared input types are in `app/api/_fields.py`. All database work goes through `app/services/profiles.py`, whose functions take the model class (`Education`, `Experience`, `ManualProject`).
+- **Why:** each endpoint file shows the whole pattern and can be pasted into a chatbot on its own. The ownership check is written once, in the service. A router factory would have saved about 100 lines, but it's harder to read and type-check.
+- **Where:** `backend/app/api/`, `backend/app/services/profiles.py`.
+
+#### T-072 · Another user's entry answers 404 `not_found`, not 403
+- **What:** the service looks an entry up by id *and* by the caller's profile (`_owned_entry`). An id on someone else's profile is treated exactly like an id that doesn't exist.
+- **Why:** 403 would confirm that the id exists. Nobody can learn anything about other users' data.
+- **Where:** `backend/app/services/profiles.py`.
+
+#### T-073 · The profile row is created empty on first use
+- **What:** every profile call uses `get_or_create_profile`, so there's no "create profile" endpoint. `GET /profile` commits that empty row.
+- **Why:** each user has exactly one profile (unique `user_id`), so a separate create step would only add an error case. Doing it in sign-up would have changed M3.1.
+- **Where:** `backend/app/services/profiles.py`, `backend/app/api/profile.py`.
+
+#### T-074 · `PATCH` for the profile, `PUT` for list entries
+- **What:** `PATCH /profile` changes only the fields sent (null empties a text field; `preferred_language` can be left out but not set to null). `PUT` on an entry replaces every field; if `position` is left out, the entry keeps its place. New entries without a `position` go last (highest + 1). Lists are sorted by `position`, then creation time.
+- **Why:** the profile is often changed one field at a time (e.g. only the language). Entries are edited as a whole form, so replacing everything avoids "is null a change or not?".
+- **Where:** `backend/app/api/profile.py`, `backend/app/services/profiles.py`.
+
+#### T-075 · `preferred_language` is edited through `/profile`
+- **What:** it's stored on `users` (D-012, schema v1) but read and changed with the profile. `DELETE /profile` keeps it.
+- **Why:** one screen for "about me" settings. It's an account setting, so clearing profile content shouldn't reset the interface language.
+- **Where:** `backend/app/api/profile.py`, `backend/app/services/profiles.py`.
+
+#### T-076 · Profile input rules
+- **What:** text is trimmed. Names and titles: 1–200 characters. Descriptions: up to 5000 (required for projects). Blank optional text is stored as null. An end date can't be before the start date. A project `url` must start with `http://` or `https://` (max 2048). `position` is 0–10000. Unknown fields are refused (422). GitHub fields can't be edited here; they belong to M3.6 / M3.9.
+- **Why:** the columns have no length limit, so the API sets one. The URL rule keeps `javascript:` links out of pages that will show them.
+- **Where:** `backend/app/api/_fields.py`, the `*In` models in each endpoint file.
+
+#### T-077 · Manual projects don't create their `sources` row yet
+- **What:** saving a project only writes `manual_projects`. The `sources` row of kind `manual_project` (which turns the project into evidence) is left to the evidence slices. Deleting a project already deletes that source and its evidence, through the database cascade.
+- **Why:** the slice is about storing the user's entries. Deciding when a project gets re-read as evidence (on every edit? on analysis?) belongs with the extraction code.
+- **Where:** `backend/app/api/projects.py` (docstring).
+
 ### Session tooling (no slice)
 
 #### T-042 · A hook tells Claude Code sessions about teammates' new work
