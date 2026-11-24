@@ -14,7 +14,7 @@ Two kinds of entry:
 | D-004 | Backend stack and tooling | Decided | M0.2 |
 | D-005 | Which free LLM (hosted free tier vs local) | Open | M2.1 |
 | D-006 | Evidence model: types, statuses, confidence | Decided (contract) | M2.3 |
-| D-007 | Agent message envelope | Open (contract) | M2.5 |
+| D-007 | Agent message envelope | Decided (contract) | M2.5 |
 | D-008 | Hosting for the demo | Open | M10.1 |
 | D-009 | GitHub: public username only vs OAuth | Open | M3.6 |
 | D-010 | How work is split and claimed | Decided | — |
@@ -75,7 +75,14 @@ Two kinds of entry:
 - **Options considered:** detailed vs broad types; unverified as "inferred only" vs "claimed but checked"; CV descriptions as demonstrated vs claimed only; status by rules vs free agent judgement; three levels vs a 0–1 number vs both; stored quote vs pointer into the source; users can't vs can edit status. Full trade-offs are in the D-006 session notes on issue #17.
 
 ### D-007 · Agent message envelope (contract)
-- **Status:** Open — owner: _TBD_. Defined in M2.5.
+- **Status:** Decided (2026-11-24, by Claude Code under Rasen's standing instruction to keep working and take the recommended option; **Rasen to confirm or overturn**). **Contract owner: Rasen.** Code: `backend/app/agents/runtime/messages.py`.
+- **Choices:**
+  1. **One immutable message per task, copied at each status change.** `start()`, `succeed()`, `fail()` and `retry()` return a new copy; the run log saves each copy. *Why:* the whole life of a task can be replayed, and no code can change a message behind another's back. *Rejected:* separate request and reply messages (two shapes to keep in sync); one mutable object (history lost).
+  2. **Status rules:** pending → running → succeeded / failed / retrying, and retrying → running (attempt + 1). succeeded and failed are final; any other move raises `InvalidTransitionError`.
+  3. **`expected_schema` is the name of the answer model** (e.g. `evidence_judgements_v1`), not an inline JSON Schema. *Why:* short logs; the runtime looks the model up and builds the JSON Schema for the LLM when needed. *Rejected:* inline schema (huge, repeated in every log row).
+  4. **Senders and recipients are a fixed list:** orchestrator, profile, evidence, opportunity, matching, development, single_agent (System B). *Why:* typos fail at once. *Rejected:* free text.
+  5. **`context` and `result` are plain JSON; errors are a code + developer note + `retryable` flag.** *Why:* agents only see what they're given (no database objects), the log stores the envelope as is, and users never see raw error text.
+- **Fields:** task_id, parent_task_id, sender, recipient, task, context, expected_schema, status, result | error, attempt, language, created_at, updated_at (as in SPEC).
 
 ### D-008 · Hosting
 - **Status:** Open — decided in M10.1. Options: a free hosting tier (verify current limits then) vs a reproducible local demo (Docker Compose).
@@ -497,6 +504,33 @@ These fill in details D-006 left open. They are part of the contract in `docs/de
 - **What:** `tests/db/factories.py` has one `make_<table>(session, …, **overrides)` per table, with made-up defaults. Constraint tests wrap each bad insert in a savepoint (`assert_rejected`), so a test can check several rules.
 - **Why:** one clear pattern, no new dependency (no factory_boy).
 - **Where:** `backend/tests/db/`.
+
+### M2.5 · Agent message format
+
+#### T-060 · Messages are frozen pydantic models; every transition re-validates
+- **What:** `AgentMessage` and `TaskError` use `frozen=True, extra="forbid"`. A transition builds the new copy with `model_validate(...)`, not `model_copy(...)`, which would skip the checks.
+- **Why:** a message can't end up "succeeded without a result" or "failed without an error", whatever code produced it.
+- **Where:** `backend/app/agents/runtime/messages.py`.
+
+#### T-061 · Task, schema and error names are snake_case codes
+- **What:** `task`, `expected_schema` and `TaskError.code` must match `^[a-z][a-z0-9_]*$`. Schema names end in a version (`_v1`).
+- **Why:** they're identifiers, not sentences (three-language rule); a version suffix lets an answer shape change without breaking old logs.
+- **Where:** `backend/app/agents/runtime/messages.py`.
+
+#### T-062 · The retry counter goes up when a retrying task starts again
+- **What:** `retry()` keeps `attempt`; the next `start()` makes it `attempt + 1` and clears the error. The maximum number of attempts is a runtime limit (M5.3 / M5.4), not part of the message.
+- **Why:** `attempt` always says which try the current run is.
+- **Where:** `backend/app/agents/runtime/messages.py`.
+
+#### T-063 · Two classes are called `AgentMessage`
+- **What:** `app.agents.runtime.messages.AgentMessage` (the envelope) and `app.db.models.AgentMessage` (the log table row). The service that saves messages (M5.4) should import one under another name, e.g. `from app.db.models import AgentMessage as AgentMessageRow`.
+- **Why:** both names come from the spec and the slice task lists; renaming the table model would be a drive-by change.
+- **Where:** see above.
+
+#### T-064 · Language codes come from `app/db/values.py`
+- **What:** the envelope's `language` uses the same `Language` type as the database.
+- **Why:** one list of languages in the whole backend. It's a plain constants module, so importing it doesn't give agents database access.
+- **Where:** `backend/app/agents/runtime/messages.py`.
 
 ### Session tooling (no slice)
 
