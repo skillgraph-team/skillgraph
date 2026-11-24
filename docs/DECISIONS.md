@@ -22,7 +22,7 @@ Two kinds of entry:
 | D-012 | Languages: English, French, Arabic | Decided (details Proposed) | M0.7, M2.8 |
 | D-013 | Where real participants' CVs and labels live | Decided | M1.5 |
 | D-014 | Is "assessed" produced in the MVP | Decided | M2.3 |
-| D-015 | Login: token vs session cookie | Open | M3.1 |
+| D-015 | Login: token vs session cookie | Decided | M3.1 |
 | D-016 | Who reviews and merges (supersedes part of D-010) | Decided | M0.5 |
 | D-017 | How much Claude Code does on its own for Rasen | Decided | — |
 | D-018 | Only Rasen's review gates teammates' work; no code-explanation rules | Decided | — |
@@ -126,8 +126,12 @@ Two kinds of entry:
 - **Why:** the report's MVP list has no assessments, and building one is a feature of its own; keeping the status in the model leaves room to add it later without a contract change.
 
 ### D-015 · Login: token vs session cookie
-- **Status:** Open — decided in M3.1.
-- **Options:** a signed token (JWT) sent by the frontend in a header (simple API, but storing it safely in the browser takes care) vs a server session in an HttpOnly cookie (safer by default against stolen tokens, but needs CSRF protection and same-site setup).
+- **Status:** Decided (2026-11-24, by Claude Code under Rasen's standing instruction to keep working and take the recommended option; **Rasen to confirm or overturn**).
+- **Choice:** **a signed token (JWT) carried in an HttpOnly, SameSite=Lax cookie** (Secure in production). The token holds the user id and expires after `LOGIN_LIFETIME_HOURS` (24 h). There's no session table.
+- **Why:** browser scripts can't read the cookie, so an XSS bug can't steal the login (the weak point of a token in a header). SameSite=Lax blocks cross-site form and fetch requests, which covers CSRF for our JSON API without extra tokens. No new table or migration. The frontend already calls the API on the same origin through the Vite proxy, so cookies just work.
+- **Options considered:** (1) JWT in an `Authorization` header: simple API, but the frontend must store the token somewhere scripts can read; (2) server-side session in a cookie: logout can revoke at once, but needs a sessions table and a database lookup for each request; (3) **chosen**: JWT in a cookie, a mix of both.
+- **Trade-off accepted:** logging out deletes the cookie, but a copied token stays valid until it expires. If revocation becomes necessary (e.g. "log out everywhere"), add a per-user token version later.
+- **Libraries:** `pwdlib[argon2]` (argon2id password hashes) and `PyJWT` (tokens), the pair the current FastAPI docs use. *Rejected:* `passlib` (unmaintained) and `python-jose` (unmaintained).
 
 ### D-016 · Who reviews and merges
 - **Status:** Decided (Rasen, 2026-11-23). Supersedes D-010's "every PR is approved by someone other than its author".
@@ -531,6 +535,45 @@ These fill in details D-006 left open. They are part of the contract in `docs/de
 - **What:** the envelope's `language` uses the same `Language` type as the database.
 - **Why:** one list of languages in the whole backend. It's a plain constants module, so importing it doesn't give agents database access.
 - **Where:** `backend/app/agents/runtime/messages.py`.
+
+### M3.1 · Sign-up and login (backend)
+
+#### T-065 · Auth code is split into blocks, a service and endpoints
+- **What:**
+  - `app/auth/`: `passwords.py` (argon2), `tokens.py` (JWT create/read), `cookies.py` (cookie settings). No database or HTTP code.
+  - `app/services/accounts.py`: `sign_up`, `log_in`, raising `EmailTakenError` / `InvalidCredentialsError`.
+  - `app/api/auth.py`: the endpoints.
+  - `app/api/current_user.py`: the `CurrentUser` check.
+- **Why:** this is the first endpoint, service and API module, so it sets the pattern: services raise domain errors and flush; endpoints map errors to HTTP and commit.
+- **Where:** `backend/app/auth/`, `backend/app/services/`, `backend/app/api/`.
+
+#### T-066 · Protect an endpoint by adding `user: CurrentUser`
+- **What:** the check reads the `skillgraph_login` cookie, verifies the token and loads the user with a fresh query. Otherwise it answers 401 `not_authenticated`, `token_expired` or `token_invalid` (forged token, or the account was deleted).
+- **Why:** one line per endpoint, and every failure has a code the frontend can translate.
+- **Where:** `backend/app/api/current_user.py`.
+
+#### T-067 · API errors are `{"detail": {"code": "..."}}`
+- **What:** endpoints raise `HTTPException(status, detail={"code": ...})`. FastAPI's own 422 validation answer is left as it is for now.
+- **Why:** the backend returns codes, not sentences (three-language rule). M2.6 (API contract) may standardise the 422 shape too.
+- **Where:** `backend/app/api/`.
+
+#### T-068 · Login gives the same answer for an unknown email and a wrong password
+- **What:** both get 401 `invalid_credentials`, and an unknown email still runs a dummy password check, so it takes as long.
+- **Why:** nobody can find out which emails have an account.
+- **Where:** `backend/app/services/accounts.py`, `backend/app/auth/passwords.py`.
+
+#### T-069 · Email and password rules
+- **What:** the email is trimmed and lowercased, must look like `a@b.c`, at most 320 characters. The password must be 8–128 characters. The preferred language at sign-up is en/fr/ar, default en.
+- **Why:** 8 characters is the usual minimum (NIST); the 128 cap stops huge inputs wasting hashing time. There's no email verification in the MVP.
+- **Where:** `backend/app/api/auth.py`.
+
+#### T-070 · New settings: `SECRET_KEY`, `LOGIN_LIFETIME_HOURS`, `COOKIE_SECURE`
+- **What:**
+  - `SECRET_KEY`: at least 32 characters. With `APP_ENV=prod`, the settings refuse to start if it's a known placeholder.
+  - `LOGIN_LIFETIME_HOURS`: default 24.
+  - `COOKIE_SECURE`: default false for http://localhost; set it to true behind HTTPS.
+- **Why:** development works with no setup, and production can't run on a known key by accident.
+- **Where:** `backend/app/config.py`, `.env.example`.
 
 ### Session tooling (no slice)
 

@@ -46,3 +46,18 @@ def test_rejects_test_database_equal_to_dev_database(monkeypatch: pytest.MonkeyP
 
     with pytest.raises(ValidationError):
         Settings(_env_file=None)
+
+
+def test_production_refuses_the_development_secret_key(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setenv("APP_ENV", "prod")
+    monkeypatch.delenv("SECRET_KEY", raising=False)
+
+    with pytest.raises(ValidationError):
+        Settings(_env_file=None)
+
+
+def test_secret_key_must_be_long(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setenv("SECRET_KEY", "short")
+
+    with pytest.raises(ValidationError):
+        Settings(_env_file=None)
