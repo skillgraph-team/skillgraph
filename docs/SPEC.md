@@ -1,11 +1,12 @@
-# SkillGraph — Spec v0.5
+# SkillGraph — Spec v0.6
 
 Changes go through a PR approved by Rasen (D-018). Bump the version and add a line to the changelog at the bottom.
 
 ## Goal
 SkillGraph builds evidence-backed skills profiles for students and recent graduates. It extracts skills from a CV and GitHub, records the evidence behind each skill with a status (claimed / demonstrated / assessed / unverified) and a confidence, matches the profile against a curated set of internships, and explains each match and gap with concrete next steps. A small set of specialized agents, coordinated by an orchestrator, does the analysis, and the project measures whether that multi-agent design beats a rule-based baseline and a single-agent version. It works in English, French and Arabic: the interface, the AI's explanations, and the CVs and postings it reads.
 
-## Non-goals (MVP)
+## Non-goals of the MVP (M0–M10)
+These are limits of the MVP. Some are lifted by the milestones in "Beyond the MVP" below.
 - No recruiter portal, job marketplace, payments or automated hiring decisions.
 - No graph database (skill relations live in relational tables).
 - No university integrations.
@@ -14,8 +15,23 @@ SkillGraph builds evidence-backed skills profiles for students and recent gradua
 - No assessments in the MVP (D-014): `assessed` exists in the evidence model, but nothing in the MVP produces it.
 - No languages beyond English, French and Arabic. Users' CVs and evidence are never machine-translated: quotes stay in their original language.
 
+## Never, at any stage
+- No automated hiring decisions: SkillGraph explains matches; people decide.
+- No scraping of sites against their terms.
+- A skill is `assessed` only through an assessment; an LLM never decides it.
+- No personal data shared with recruiters or institutions without the student's explicit, revocable consent.
+
+## Beyond the MVP (M11–M16, D-029)
+Full milestones, scheduled alongside M7–M10. M9 and M10 never depend on them.
+- **M11 · Practical assessments:** timed quizzes and practical tasks checked by tests, in English and French only; passing produces `assessment` evidence and the `assessed` status (D-020, supersedes D-014).
+- **M12 · More evidence sources:** certificates (with link checks), portfolio websites, LinkedIn PDF exports; weekly re-sync and profile history ("continuously updated profile").
+- **M13 · Opportunities at scale:** legitimate sources and employer submissions with moderation, duplicates and expiry, search, notifications and email.
+- **M14 · Recruiter side:** opt-in visibility, candidate search and comparison with evidence, contact requests, audit log of views.
+- **M15 · Institutions:** consented student linking, aggregate cohort analytics with a minimum group size, training recommendations.
+- **M16 · Product:** free and premium plans, payments decision, skill graph view, graph-database check, phone and accessibility pass, landing page, privacy-respecting usage numbers.
+
 ## Constraints
-- 4 people, one semester (14 weeks). Working prototype before week 9.
+- 4 people, one semester (14 weeks). Working prototype before week 9. The graded work (M9, M10) comes first if time runs short.
 - **$0 budget.** Free tools, free hosting or a local demo, free or local LLM.
 - Custom agent loop and orchestration in Python; no large agent framework.
 - The backend owns validation, permissions and every database write. Agents read through tools and return results; they never write.
@@ -38,6 +54,8 @@ SkillGraph builds evidence-backed skills profiles for students and recent gradua
 | Agent message envelope | — | task_id, parent_task_id, sender, recipient, task, context, expected_schema, status, result \| error, attempt, language |
 
 ## Definition of done (MVP)
+For the full product, each of M11–M16 has its own demo in `docs/MILESTONES.md`.
+
 1. A student signs up, uploads a CV, connects a GitHub username, and gets a profile where every skill has a status, a confidence and linked evidence they can inspect.
 2. For a curated internship, they get a match report: matched, missing and weakly supported skills, and an explanation that cites evidence.
 3. They get a gap analysis with at least one concrete recommendation per missing required skill.
@@ -47,6 +65,7 @@ SkillGraph builds evidence-backed skills profiles for students and recent gradua
 7. Steps 1–3 work with the interface in English, French and Arabic (right-to-left), and for a French CV and an Arabic CV. The evaluation table is also broken down by language.
 
 ## Changelog
+- v0.6: the plan now covers the full product (D-029): M11–M16; "Never, at any stage" rules; MVP non-goals marked as MVP-only.
 - v0.5: spec changes are approved by Rasen, not the whole team (D-018).
 - v0.4: no assessments in the MVP (D-014); real participants' data stays out of the repo (D-013).
 - v0.3: English, French and Arabic support (D-012).

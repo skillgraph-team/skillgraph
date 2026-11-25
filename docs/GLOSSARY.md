@@ -63,6 +63,21 @@ Plain-language meanings of the terms used in this repo. Add a term whenever some
 - **Text normalization**: making different spellings of the same word comparable before matching: lowercase, French accents removed (`données` → `donnees`), Arabic letter variants and diacritics unified.
 - **Term list**: the agreed translation of each SkillGraph concept in all three languages (`docs/design/localization.md`).
 
+## Beyond the MVP
+- **Assessment**: a test a student takes to prove a skill: a timed quiz or a practical task. Passing is the only way to reach the `assessed` status.
+- **Practical task**: a small programming exercise with automated tests; the student's solution passes when all tests pass.
+- **Sandbox**: an isolated place to run code someone else wrote, so it can't reach our secrets, our database or other users.
+- **Template repository**: a GitHub repo students copy to start a practical task; GitHub Actions can run its tests on GitHub's machines.
+- **GitHub Actions**: GitHub's service that runs commands (like tests) automatically when code is pushed.
+- **SSRF (server-side request forgery)**: tricking our server into fetching an address it shouldn't, like `localhost` or a private network. Any feature that fetches a URL a user gave us must block this.
+- **robots.txt**: a file where a website says which pages automated tools may read. We respect it.
+- **Role**: what an account is allowed to do (student, organization member, organization admin, platform admin).
+- **Moderation**: a person checking content (here, employer postings) before it goes public.
+- **Audit log**: a permanent record of sensitive actions, such as who viewed which profile and when.
+- **Minimum group size**: the smallest group for which an aggregate figure is shown; smaller groups are hidden so no one can be singled out.
+- **Transactional email**: an email sent because of something a user did (password reset, notification), not marketing.
+- **Accessibility**: making the app usable by everyone, including with a keyboard only, a screen reader, or low vision.
+
 ## Evaluation
 - **Precision**: of the skills the system found, the share that were correct.
 - **Recall**: of the correct skills, the share the system found.

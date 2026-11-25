@@ -6,7 +6,14 @@ The whole project as a list of small, self-contained pieces of work.
 - A **slice** is one piece of work: one GitHub issue, one branch, one pull request. Anyone can take any slice whose `depends` are done, with whatever tool they use (Claude Code, the Claude chatbot, or by hand). See README "How we work".
 - Weeks are targets for a 14-week semester. Milestones overlap on purpose.
 - Unfamiliar word? See [GLOSSARY.md](GLOSSARY.md).
-- **Three languages.** SkillGraph works in English, French and Arabic (Arabic is right-to-left). Rules: `docs/design/localization.md` (M2.8). Any slice that adds text users see adds it in all three languages, and any screen is checked in Arabic before it counts as done.
+- **Three languages.** SkillGraph works in English, French and Arabic (Arabic is right-to-left). Rules: `docs/design/localization.md` (M2.8). Any slice that adds text users see adds it in all three languages, and any screen is checked in Arabic before it counts as done. One exception: assessment content (questions, tasks, their explanations) is in English and French only (D-020); the screens around it are in all three.
+
+**MVP and beyond.** M0–M10 build the MVP and the graded deliverables (evaluation, deployed demo, report, presentation). M11–M16 build the rest of the product described in `docs/PROJECT_REPORT.md`: assessments, more evidence sources, opportunities at scale, the recruiter side, institutions, and the business layer. They are full milestones, not extras.
+- **They run alongside M7–M10, not after them.** Their week ranges overlap on purpose. Start a slice when its `depends` are done and someone is free.
+- **They never block the graded work.** No slice in M9 (evaluation) or M10 (deploy and demo) depends on them. If time runs short, the evaluation and the presentation still happen, and the presentation shows whatever of M11–M16 is merged.
+- **Numbers are ids, not order.** M11 isn't "after M10"; the weeks and `depends` give the order.
+- **Each of them starts with a decision or contract slice.** Do that one first; the rest build on it.
+- **New personal data is deleted with the account.** Any slice that adds a table holding a user's data (attempts, history, notifications, visibility, contact requests, institution links) makes it cascade from `users` and adds it to `tests/db/test_delete_user.py`, so account deletion (M3.9) keeps removing everything.
 
 Every slice answers five questions:
 - **Goal:** what exists when it's done.
@@ -1444,3 +1451,904 @@ A version others can use, real feedback, documentation and the final presentatio
 
 **Done when**
 - [ ] The final rehearsal fits the time limit
+
+---
+
+## M11 · Practical assessments
+<!-- weeks: 9-12 -->
+Students prove a skill by taking an assessment: a timed quiz or a practical coding task checked by automated tests. Passing creates `assessment` evidence, which is the only thing that can make a skill **assessed**. This is the status the MVP leaves empty (D-014).
+**Demo:** a student opens a claimed skill, takes its assessment in French, passes, and the skill moves to "assessed" with the result as its evidence.
+
+### M11.1 · Assessment design
+`area:ai` `size:M` `depends:M2.3` `contract:yes`
+
+**Goal:** A short document that defines exactly what an assessment is, what passing means, and how a result becomes evidence and changes a skill's status.
+
+**Why:** "Assessed" is the strongest status SkillGraph gives, so it must mean something precise. Every assessment slice, the evidence rules and the agents build on this definition. It replaces D-014 ("no assessments in the MVP").
+
+**Read first:** `docs/design/evidence-model.md` (sections 2–5, the `assessment` type); D-014; `docs/PROJECT_REPORT.md` sections 2 (Objective 2) and 4.5; GLOSSARY: assessment, practical task.
+
+**Tasks**
+- [ ] Decide D-020 (2–3 options + recommendation): which formats exist, at least (a) a timed knowledge quiz and (b) a practical task checked by automated tests; which formats can produce `assessed` and which only add confidence
+- [ ] What passing means for each format (score threshold, all tests green), how many attempts and how long between them, and whether a result expires
+- [ ] Be honest about cheating: assessments are unproctored. Write what they can and can't prove, and how the interface says so in plain words
+- [ ] Languages: assessment content (questions, tasks, explanations) is in English and French only. With the interface in Arabic, the student picks English or French for the assessment. Add this exception to `docs/design/localization.md`
+- [ ] How a result becomes evidence: an `assessment` evidence record with reason code `assessment_passed` / `assessment_failed`, pointing to the attempt; a failed attempt never lowers an existing status
+- [ ] Update `docs/design/evidence-model.md` (remove the "nothing produces this in the MVP" notes, add any new reason codes) and mark D-014 "Superseded by D-020"
+
+**Done when**
+- [ ] `docs/design/assessments.md` committed, approved by Rasen; D-020 Decided; evidence model updated
+
+### M11.2 · How to run students' code safely
+`area:infra` `size:M` `depends:M11.1`
+
+**Goal:** A tested decision on where a student's submitted code runs when a practical task is checked, without putting our server at risk and without paying anything.
+
+**Why:** Running code written by someone else on our own server is one of the most dangerous things a web app can do: it can read secrets, attack other users or mine cryptocurrency. This has to be settled before any practical task is built.
+
+**Read first:** `docs/design/assessments.md`; GLOSSARY: sandbox, template repository, GitHub Actions.
+
+**Tasks**
+- [ ] Decide D-021 with 2–3 options, for example: (a) the student creates a repo from our template and GitHub Actions runs the tests on GitHub's machines, and we only read the result through the GitHub API; (b) a locked-down container on our own host; (c) no code execution, quizzes only
+- [ ] Spike for the recommended option in `spikes/`: one tiny task, one passing and one failing submission, and reading the result back
+- [ ] Write down what a student could fake (e.g. editing the tests in their own repo) and how the design limits it (e.g. checking the test files are unchanged)
+
+**Done when**
+- [ ] `docs/spikes/code-execution.md` with the spike results committed; D-021 Decided
+
+### M11.3 · Question bank format and first questions
+`area:data` `size:L` `depends:M11.1, M4.1, M2.8, M1.7`
+
+**Goal:** A reviewed set of quiz questions, in English and French, for the skills the curated postings ask for most.
+
+**Why:** Quizzes are only as good as their questions. Wrong answer keys or ambiguous wording would mark people "assessed" for the wrong reasons.
+
+**Read first:** `docs/design/assessments.md`; `docs/design/localization.md` (term list); `backend/app/skills/data/skills.csv`.
+
+**Tasks**
+- [ ] A file format under `backend/app/assessments/data/` (one file per skill): question, options, correct answer, short explanation, difficulty, in English and French
+- [ ] Questions for the 20 skills most required by the curated postings (M1.7): at least 8 per skill across three difficulty levels
+- [ ] Every question checked by a second member who knows the skill; French checked by a fluent speaker
+- [ ] Write original questions; never copy from copyrighted question banks or certification exams
+- [ ] A check that fails on a missing English or French version, a missing answer key or a duplicate question
+
+**Done when**
+- [ ] 20 skills × ≥8 questions committed, every one reviewed; the check passes
+
+### M11.4 · Assessment tables and API
+`area:backend` `size:M` `depends:M11.1, M2.4, M3.1`
+
+**Goal:** The backend can list the assessments available for a skill, start an attempt, accept answers, grade them, and store the result.
+
+**Why:** Grading must happen on the server. If the browser knew the answers or the timer, anyone could cheat with the browser's developer tools.
+
+**Read first:** `docs/design/assessments.md`; `docs/design/schema.md` ("Changing the schema").
+
+**Tasks**
+- [ ] Tables for assessment definitions, attempts and answers (migration), following D-019's conventions; attempts deleted with the user
+- [ ] Endpoints: list assessments for a skill, start an attempt (random draw of questions, server-side start time), submit, get the result
+- [ ] The answer key is never sent to the browser; a submission after the time limit is graded as incomplete
+- [ ] Attempt limits and waiting time between attempts as D-020 defines; errors as codes (`attempt_limit_reached`, `assessment_expired`)
+
+**Done when**
+- [ ] Tests: a full attempt is graded correctly; a late submission isn't accepted as a pass; the answer key never appears in any response; limits are enforced
+
+### M11.5 · Quiz screens
+`area:frontend` `size:M` `depends:M11.4, M0.7`
+
+**Goal:** A student starts a quiz from a skill's page, answers with a visible timer, and sees the result with explanations.
+
+**Why:** It's the part of assessments students actually touch. It has to be clear and calm, and correct right-to-left.
+
+**Read first:** `docs/design/wireframes/`; the assessment endpoints in `openapi.json`.
+
+**Tasks**
+- [ ] "Take the assessment" on a skill's page, with the rules shown first (time, attempts, what passing means, that it's unproctored)
+- [ ] Question screen with a timer and progress; results with explanations after submitting; when the next attempt is allowed
+- [ ] The screens around the questions follow the interface language (all three, right-to-left in Arabic); the questions themselves are in English or French, chosen by the student before starting
+- [ ] Usable with the keyboard alone
+
+**Done when**
+- [ ] A full quiz works end to end in English and in French, including with the interface in Arabic; frontend checks pass
+
+### M11.6 · Practical tasks
+`area:backend` `size:L` `depends:M11.2, M11.4, M3.6`
+
+**Goal:** Practical tasks a student can take: they get the task, submit their solution the way D-021 defines, and the backend records pass or fail from the automated tests.
+
+**Why:** A practical task is the strongest proof of a skill SkillGraph can offer, much closer to "can actually do it" than a quiz.
+
+**Read first:** `docs/spikes/code-execution.md`; `docs/design/assessments.md`; GitHub import code (M3.6).
+
+**Tasks**
+- [ ] A task format: statement in English and French, starting files, tests, time allowed, the skill(s) it assesses
+- [ ] At least 3 tasks for the most requested skills (e.g. Python, SQL, a REST API)
+- [ ] Submission and checking exactly as D-021 decided; the submitting GitHub account must be the one on the student's profile
+- [ ] Detect the tricks listed in M11.2 (e.g. changed test files) and grade them as failed with a reason code
+
+**Done when**
+- [ ] Tests (on recorded GitHub responses): a correct solution passes, a wrong one fails, a solution with edited tests fails
+
+### M11.7 · Practical task screens
+`area:frontend` `size:S` `depends:M11.6, M0.7`
+
+**Goal:** A student reads a task, gets the starting files, submits, and follows the checking until the result appears.
+
+**Why:** Checking can take minutes; the student needs to see what's happening instead of a frozen page.
+
+**Read first:** `docs/design/wireframes/`; practical task endpoints in `openapi.json`.
+
+**Tasks**
+- [ ] Task page with statement, starting files link, submit step and live status (waiting, checking, passed, failed with the reason)
+
+**Done when**
+- [ ] Works end to end against recorded results; the page follows the interface language and shows the task statement in English or French; frontend checks pass
+
+### M11.8 · Assessment results as evidence
+`area:ai` `size:M` `depends:M11.4, M4.4`
+
+**Goal:** A passed assessment creates `assessment` evidence, and the existing status and confidence rules turn it into **assessed**, in all three systems.
+
+**Why:** This connects assessments to the rest of SkillGraph: profiles, matching and gaps start using the strongest status.
+
+**Read first:** `docs/design/evidence-model.md`; `docs/design/assessments.md`; status rules code (M4.4).
+
+**Tasks**
+- [ ] A service turns a graded attempt into an evidence record and a link (`supports` / `weak` by result) and rebuilds the user's profile
+- [ ] Update the validator: `assessed` is now allowed, but **only** when the skill has a supporting `assessment` link. Agents still never decide `assessed` on their own
+- [ ] Property tests: a failed attempt never lowers a status; passing always gives `assessed`; removing the assessment evidence removes `assessed`
+
+**Done when**
+- [ ] All rule and property tests pass; a test user who passes a quiz shows the skill as assessed through the API
+
+### M11.9 · Assessment Agent: drafting questions with human approval
+`area:agents` `size:M` `depends:M11.3, M5.3`
+
+**Goal:** An agent that drafts new quiz questions for a skill in English and French, which go live only after a person approves them.
+
+**Why:** Writing hundreds of good questions by hand doesn't scale. The project report also asks for human approval of consequential actions: an agent-written question that marks people "assessed" is exactly that.
+
+**Read first:** question bank format (M11.3); agent loop (M5.1); `docs/design/localization.md`.
+
+**Tasks**
+- [ ] The agent drafts questions in the M11.3 format for a given skill and difficulty, using the term list
+- [ ] Drafts are stored as `pending`; a review screen (or command, for a start) lets a reviewer approve, edit or reject each one; only approved questions are ever used
+- [ ] Guardrails tested: exactly one correct option, no near-duplicate of an existing question, both English and French present
+
+**Done when**
+- [ ] Tests (recorded LLM answers) pass; no `pending` question can appear in an attempt (test)
+
+### M11.10 · Assessments in matching and recommendations
+`area:ai` `size:S` `depends:M11.8, M8.2`
+
+**Goal:** The Development Agent recommends a specific assessment when a skill is only claimed or weak, and matching treats assessed skills as the strongest evidence.
+
+**Why:** Assessments only help students if the product points them to the right one at the right time.
+
+**Read first:** Development Agent (M8.2); matching code (M7.3, M7.5).
+
+**Tasks**
+- [ ] Recommendations can name an available assessment for a gap; never one that doesn't exist (tested)
+- [ ] The rule-based matcher and the Matching Agent's explanation account for `assessed`
+
+**Done when**
+- [ ] Tests on example profiles pass in all three languages
+
+### M11.11 · Assessment pilot
+`area:research` `size:S` `depends:M11.5, M11.8`
+
+**Goal:** At least 5 students take real assessments and their results and feedback are written up.
+
+**Why:** Only real attempts show whether questions are too easy, too hard or confusing.
+
+**Read first:** `docs/research/interview-guide.md`; `docs/design/assessments.md`.
+
+**Tasks**
+- [ ] 5+ students take at least two assessments each; record pass rates and time taken per question, never names
+- [ ] Remove or fix questions that almost everyone gets right or wrong, or that confused people
+
+**Done when**
+- [ ] `docs/research/assessment-pilot.md` committed; flagged questions fixed or removed
+
+---
+
+## M12 · More evidence sources and a living profile
+<!-- weeks: 8-11 -->
+Profiles built from more than a CV and GitHub: certificates (with link checks where possible), portfolio websites and LinkedIn's PDF export. The profile then keeps itself up to date and shows what changed.
+**Demo:** add a certificate and a portfolio site, watch the profile update, and see "Recent profile updates" on the dashboard after a weekly re-sync.
+
+### M12.1 · Evidence model update for new sources
+`area:ai` `size:S` `depends:M2.3` `contract:yes`
+
+**Goal:** The evidence model covers certificates as their own source (with a "link checked" flag), portfolio websites and LinkedIn PDF exports.
+
+**Why:** Every finder, rule and agent that handles these sources must agree on their types and levels before anyone writes one.
+
+**Read first:** `docs/design/evidence-model.md`; `docs/design/schema.md`; D-019.
+
+**Tasks**
+- [ ] New source kinds and evidence types, with levels (e.g. a portfolio project is a work type, like `manual_project`; a LinkedIn export reuses the CV types)
+- [ ] Whether a checked certificate link changes anything (e.g. counts towards confidence but stays a claim), with reason codes
+- [ ] Worked examples for each new source; update `docs/design/schema.md` with the columns needed
+- [ ] Add the new values to `backend/app/db/values.py` with a new migration; write the CHECK changes by hand (autogenerate misses them, see schema.md "Changing the schema")
+
+**Done when**
+- [ ] Evidence model and schema docs updated and approved by Rasen; the migration applies and rolls back cleanly
+
+### M12.2 · Certificate upload and reading
+`area:backend` `size:M` `depends:M12.1, M3.5`
+
+**Goal:** A user uploads a certificate (PDF or image) and the backend extracts its title, issuer, date, credential link or id, and the skills it's about.
+
+**Why:** Certificates are a common way students show learning, especially when they have no work experience yet.
+
+**Read first:** `docs/design/evidence-model.md` (certificates); CV upload code (M3.5).
+
+**Tasks**
+- [ ] Upload with size and type limits; reading text from images needs an OCR library: a new dependency, so 2 options + trade-offs, $0
+- [ ] Extract title, issuer, date and credential link/id; map to skills with the normalizer (M4.2)
+- [ ] Tests with made-up certificates in all three languages
+
+**Done when**
+- [ ] A test certificate in each language becomes a source with correct fields and certificate evidence
+
+### M12.3 · Certificate link check
+`area:backend` `size:M` `depends:M12.2`
+
+**Goal:** For issuers that publish credential pages, the backend opens the credential link and checks it matches the certificate (name, title), then marks it "link checked".
+
+**Why:** Anyone can make a fake certificate PDF. A credential page on the issuer's own site is much harder to fake.
+
+**Read first:** `docs/design/evidence-model.md`; GLOSSARY: SSRF.
+
+**Tasks**
+- [ ] A short list of supported issuers (e.g. platforms with public credential pages), each with its terms checked and recorded in DECISIONS
+- [ ] Fetch only from those issuers' domains, with timeouts and size limits (no free-form URLs: SSRF)
+- [ ] A check never makes a skill `assessed`; the UI says "link checked", not "verified skill"
+
+**Done when**
+- [ ] Tests on recorded pages: a matching credential passes, a mismatched name fails, an unsupported domain is refused
+
+### M12.4 · Portfolio website import
+`area:backend` `size:M` `depends:M12.1, M3.6, M3.9`
+
+**Goal:** A user gives the address of their portfolio website, and the backend reads it and turns the projects it describes into evidence.
+
+**Why:** Designers and front-end developers often show their work on a personal site, not on GitHub.
+
+**Read first:** `docs/design/evidence-model.md` (portfolio type); GLOSSARY: SSRF, robots.txt.
+
+**Tasks**
+- [ ] Fetch the page (and a few linked pages on the same site) with strict limits: public addresses only (block internal and private IP ranges: SSRF), timeouts, size cap, respect robots.txt
+- [ ] Ask for consent first, as for GitHub (M3.9)
+- [ ] Extract project descriptions into evidence with their quotes and page addresses
+
+**Done when**
+- [ ] Tests on saved example pages pass; addresses pointing to `localhost` or private networks are refused (test)
+
+### M12.5 · LinkedIn PDF import
+`area:backend` `size:S` `depends:M12.1, M3.5`
+
+**Goal:** A user uploads the PDF that LinkedIn's "Save to PDF" produces, and it's read like a CV with LinkedIn's known layout.
+
+**Why:** Many students keep LinkedIn more up to date than their CV. The export is theirs to share; we never scrape LinkedIn.
+
+**Read first:** CV upload code (M3.5); `docs/design/evidence-model.md`.
+
+**Tasks**
+- [ ] Recognize LinkedIn's export layout and map its sections (Experience, Skills, Certifications…) to the CV evidence types
+- [ ] Tests with made-up exports in all three languages
+
+**Done when**
+- [ ] A made-up export produces the expected evidence; a normal CV is not mistaken for one
+
+### M12.6 · Weekly re-sync
+`area:backend` `size:M` `depends:M3.6, M5.7`
+
+**Goal:** Once a week, each user's GitHub and portfolio sources are re-imported and their profile rebuilt, unless they turned it off.
+
+**Why:** The project report promises "a continuously updated skills profile". A student's new repo should show up without them doing anything.
+
+**Read first:** background runs (M5.7); GitHub import (M3.6).
+
+**Tasks**
+- [ ] Choose what starts the weekly job (e.g. a scheduler inside the backend vs a scheduled GitHub Actions call): 2 options + trade-offs, $0. Check it still runs if the free host (D-008) sleeps when idle
+- [ ] A scheduled job that re-imports and rebuilds, spread out over time to stay within GitHub's and the LLM's free limits
+- [ ] A per-user setting to turn it off; nothing runs for users who never gave consent
+
+**Done when**
+- [ ] Tests: a changed repo is picked up on the next run; a user who turned it off is skipped; a failed import doesn't break other users' runs
+
+### M12.7 · Profile history
+`area:backend` `size:M` `depends:M12.6, M4.5`
+
+**Goal:** Every profile rebuild records what changed (skill added or removed, status or confidence up or down) and why, and the API returns that history.
+
+**Why:** Users trust changes they can see explained. The report's dashboard also lists "recent profile updates".
+
+**Read first:** profile build service (M4.5); `docs/design/schema.md`.
+
+**Tasks**
+- [ ] A table of changes per rebuild, with the cause (new source, re-sync, assessment, user correction) and the evidence behind it, as codes plus data
+- [ ] `GET` history endpoint, newest first, paginated
+
+**Done when**
+- [ ] Tests: each kind of change is recorded once with its cause; deleting the account deletes the history
+
+### M12.8 · Sources and history screens
+`area:frontend` `size:M` `depends:M12.2, M12.3, M12.4, M12.5, M12.7, M0.7`
+
+**Goal:** Users add certificates, a portfolio site and a LinkedIn export from the sources page, and see "Recent profile updates" on the dashboard.
+
+**Why:** Without screens, the new sources only exist in tests.
+
+**Read first:** `docs/design/wireframes/`; the new endpoints in `openapi.json`.
+
+**Tasks**
+- [ ] Add-source flows for the three new kinds, with consent where needed and clear errors
+- [ ] "Recent profile updates" section on the dashboard and a full history page
+
+**Done when**
+- [ ] Each flow works end to end in all three languages; frontend checks pass
+
+### M12.9 · Finders and agents for the new sources
+`area:ai` `size:M` `depends:M12.1, M6.3, M4.4`
+
+**Goal:** The rule-based finders and the Profile and Evidence agents handle certificates, portfolio projects and LinkedIn exports.
+
+**Why:** New sources only help if all three systems use them, so the comparison in M9 stays fair.
+
+**Read first:** `docs/design/evidence-model.md`; `docs/design/prompts/`.
+
+**Tasks**
+- [ ] Finders for the new types; golden examples for the agents, including French and Arabic ones
+- [ ] Re-record cassettes; run the evaluation and note any change
+
+**Done when**
+- [ ] Tests pass offline; results for the new sources recorded in `eval/results/`
+
+---
+
+## M13 · Opportunities at scale
+<!-- weeks: 10-13 -->
+Opportunities stop being a hand-curated list: they come from legitimate sources and from employers who post directly, they stay fresh, and students can search them and get told about new matches.
+**Demo:** an employer posts an internship, it's approved, a matching student gets a notification, and finds it again through search.
+
+### M13.1 · Where opportunities come from
+`area:research` `size:M` `depends:M1.7`
+
+**Goal:** A decision on which sources of postings SkillGraph uses beyond hand curation, with each one's terms checked.
+
+**Why:** Scraping job sites against their terms is a legal risk the spec rules out. We need sources we're allowed to use, ideally with local (Algerian) and remote internships.
+
+**Read first:** `docs/SPEC.md` (non-goals); `docs/research/competitors.md`.
+
+**Tasks**
+- [ ] List candidate sources: public job APIs, RSS feeds, partner employers, university career offices; for each, coverage, format, terms and cost
+- [ ] Decide D-022: which to use first (2–3 options + recommendation, $0)
+
+**Done when**
+- [ ] `docs/research/opportunity-sources.md` committed; D-022 Decided
+
+### M13.2 · Roles and organizations
+`area:backend` `size:M` `depends:M3.1, M2.4` `contract:yes`
+
+**Goal:** Accounts can belong to an organization (employer, university, training center) with a role, and every endpoint checks roles the same way.
+
+**Why:** Employers (M13), recruiters (M14) and institutions (M15) all need accounts that aren't students. One shared role system avoids three different, inconsistent ones. This replaces the MVP's "no admin role" rule in M7.1.
+
+**Read first:** auth code (M3.1); `docs/design/schema.md`; GLOSSARY: role, audit log.
+
+**Tasks**
+- [ ] Decide D-023: roles (student, organization member, organization admin, platform admin) and what each may do; how an organization is created and verified
+- [ ] Tables for organizations and memberships (migration); a reusable permission check for endpoints
+- [ ] An audit log of sensitive actions (approvals, profile views by organizations)
+
+**Done when**
+- [ ] Tests: each role can do exactly what D-023 says and nothing more; audit entries are written
+
+### M13.3 · Employer posting submission and moderation
+`area:backend` `size:M` `depends:M13.2, M7.2`
+
+**Goal:** A verified employer submits a posting; a platform admin approves or rejects it; approved postings go through the same requirement extraction as curated ones.
+
+**Why:** The project report suggests letting organizations submit opportunities directly. Moderation keeps out scams and spam, which would destroy students' trust.
+
+**Read first:** roles (M13.2); requirement extraction (M7.2).
+
+**Tasks**
+- [ ] Submit, edit, withdraw; statuses pending / approved / rejected / expired, with a reason code on rejection
+- [ ] Approval runs requirement extraction and makes the posting visible to matching
+
+**Done when**
+- [ ] Tests: only approved postings are ever matched; only admins approve; withdrawing hides a posting
+
+### M13.4 · Importers for the chosen sources
+`area:backend` `size:L` `depends:M13.1, M7.2, M5.7`
+
+**Goal:** Scheduled importers that bring in postings from the D-022 sources, normalize them and run requirement extraction.
+
+**Why:** A matching platform with 30 postings isn't useful for long. Importers keep the list current without manual work.
+
+**Read first:** `docs/research/opportunity-sources.md`; Opportunity Agent (M7.2).
+
+**Tasks**
+- [ ] One importer per chosen source, running in the background within each source's limits; the source and original link are kept on every posting
+- [ ] Tests on saved responses; no live calls in tests
+
+**Done when**
+- [ ] Each importer passes its tests and imported postings show up in matching
+
+### M13.5 · Duplicates, expiry and quality checks
+`area:backend` `size:S` `depends:M13.4`
+
+**Goal:** The same posting from two sources appears once, expired postings disappear, and incomplete ones are flagged.
+
+**Why:** Duplicates and dead postings make the product look broken and waste students' time.
+
+**Read first:** importers (M13.4).
+
+**Tasks**
+- [ ] Duplicate detection (same employer, title and close text), expiry dates and an "unknown expiry" rule, a minimum-quality check
+- [ ] Students already matched to a removed posting see it marked as closed, not silently gone
+
+**Done when**
+- [ ] Tests: a duplicate is merged, an expired posting is hidden, a closed match is labeled
+
+### M13.6 · Search and filters API
+`area:backend` `size:S` `depends:M7.6`
+
+**Goal:** Search postings by text and filter by skill, location, remote, kind, posting language and match category, with pagination.
+
+**Why:** Once there are hundreds of postings, a list isn't enough.
+
+**Read first:** opportunities and matching endpoints in `openapi.json`.
+
+**Tasks**
+- [ ] Search endpoint with filters and pagination; text search works in all three languages (normalization from M4.2)
+
+**Done when**
+- [ ] Tests for each filter and for French and Arabic search terms
+
+### M13.7 · Search screens
+`area:frontend` `size:M` `depends:M13.6, M7.7, M0.7`
+
+**Goal:** Search and filter postings in the browser.
+
+**Why:** It's how students will actually find opportunities once the list is long.
+
+**Read first:** `docs/design/wireframes/`; search endpoint in `openapi.json`.
+
+**Tasks**
+- [ ] Search box, filters, results with match category, pagination; filters kept in the page address so a search can be shared
+
+**Done when**
+- [ ] Works end to end in all three languages; frontend checks pass
+
+### M13.8 · Employer screens
+`area:frontend` `size:M` `depends:M13.3, M0.7`
+
+**Goal:** Employers create and manage their postings; platform admins see a moderation queue.
+
+**Why:** Employers won't use an API; they need simple forms.
+
+**Read first:** `docs/design/wireframes/`; posting endpoints.
+
+**Tasks**
+- [ ] Organization sign-up request, posting form, "my postings" with statuses; admin queue with approve / reject and a reason
+
+**Done when**
+- [ ] Both flows work end to end in all three languages
+
+### M13.9 · Email sending
+`area:backend` `size:S` `depends:M3.1`
+
+**Goal:** The backend can send email through a free provider, with templates in three languages, and uses it for password reset.
+
+**Why:** Notifications (M13.10) need it, and password reset is the one account feature the MVP is missing (M3.10 only changes a known password).
+
+**Read first:** auth code (M3.1); GLOSSARY: transactional email.
+
+**Tasks**
+- [ ] Decide D-024: which email provider ($0 tier, sending limits, deliverability) vs none
+- [ ] Email templates in en/fr/ar; "forgot password" flow with a one-time, expiring link
+- [ ] Email verification: emails aren't checked at sign-up in the MVP (T-069), so send nothing but the verification and reset emails to an address until its owner has confirmed it. Otherwise digests could go to someone who never signed up
+- [ ] In tests and development, emails are written to a file instead of sent
+
+**Done when**
+- [ ] Tests: a reset link works once and expires; no real email is sent in tests
+
+### M13.10 · New-match notifications
+`area:backend` `size:M` `depends:M13.4, M13.9, M7.5`
+
+**Goal:** When a new posting matches a student well, they get an in-app notification and, if they chose it, a weekly email digest.
+
+**Why:** Students won't check the site every day. Being told about a good match at the right time is a core reason to come back.
+
+**Read first:** matching (M7.5); email sending (M13.9).
+
+**Tasks**
+- [ ] Match new postings against opted-in profiles in the background, within LLM limits (rule-based matcher first, agent only for strong candidates)
+- [ ] Notifications table and API; email digest with an unsubscribe link; per-user preferences
+
+**Done when**
+- [ ] Tests: a strong new match creates one notification; preferences are respected; unsubscribing works
+
+### M13.11 · Notification screens
+`area:frontend` `size:S` `depends:M13.10, M0.7`
+
+**Goal:** A notification bell, a notifications page, and notification preferences in settings.
+
+**Why:** Notifications only help if they're visible and easy to control.
+
+**Read first:** notification endpoints in `openapi.json`.
+
+**Tasks**
+- [ ] Bell with unread count, list with links to the postings, preference toggles
+
+**Done when**
+- [ ] Works end to end in all three languages; frontend checks pass
+
+---
+
+## M14 · Recruiter side
+<!-- weeks: 11-14 -->
+Employers can find students by evidenced skills, but only students who chose to be visible, only to the level they chose, and every view is logged. This is the first paying-customer side from the business model.
+**Demo:** a recruiter searches for "Python, demonstrated or better", compares three opted-in candidates with evidence-based explanations, and sends a contact request that a student accepts.
+
+### M14.1 · Privacy rules for sharing profiles
+`area:docs` `size:M` `depends:M13.2` `contract:yes`
+
+**Goal:** Clear rules for what recruiters may see, when, and how a student controls and withdraws it.
+
+**Why:** The project report says private profile information must never go to recruiters without authorization. These rules are what every recruiter feature is checked against, and the presentation will be asked about them.
+
+**Read first:** `docs/PROJECT_REPORT.md` section 12 (privacy); `docs/SPEC.md`; D-023.
+
+**Tasks**
+- [ ] Decide D-025: visibility levels (hidden, skills only, skills with evidence summaries), what's never shared (the CV file, contact details until the student accepts), how long views are logged
+- [ ] What happens when a student turns visibility off or deletes their account: what organizations keep (e.g. nothing but anonymous audit entries), and what's removed at once (contact requests, cached profile data)
+- [ ] Check what Algeria's personal data protection law (Law 18-07) requires for this kind of sharing, and write down the steps we follow; note where professional advice would be needed for a real launch
+- [ ] Consent text and settings wording in all three languages
+
+**Done when**
+- [ ] `docs/design/sharing.md` committed and approved by Rasen; D-025 Decided
+
+### M14.2 · Student visibility settings
+`area:backend` `size:S` `depends:M14.1`
+
+**Goal:** Students choose their visibility level, per D-025; it's off by default, and turning it off hides them immediately.
+
+**Why:** Opt-in with an instant off switch is the base of trust for the whole recruiter side.
+
+**Read first:** `docs/design/sharing.md`.
+
+**Tasks**
+- [ ] Settings stored per user; endpoints to read and change them; everything recruiter-facing reads them
+
+**Done when**
+- [ ] Tests: a hidden student never appears anywhere on the recruiter side
+
+### M14.3 · Candidate search
+`area:backend` `size:M` `depends:M14.2, M13.2`
+
+**Goal:** Recruiters search opted-in students by required skills with a minimum status and confidence, ranked by evidence.
+
+**Why:** "Find people who have actually shown Python" is what makes SkillGraph different from keyword search on CVs.
+
+**Read first:** `docs/design/sharing.md`; matching code (M7.3).
+
+**Tasks**
+- [ ] Search by skills with minimum status/confidence; returns only what the visibility level allows
+- [ ] Every result view and profile view written to the audit log; rate limits per organization
+
+**Done when**
+- [ ] Tests: visibility levels respected; audit entries written; results ranked as specified
+
+### M14.4 · Candidate comparison
+`area:ai` `size:M` `depends:M14.3, M7.5`
+
+**Goal:** Compare 2–5 candidates against one posting, with an explanation for each that cites their evidence.
+
+**Why:** Recruiters need to see why one profile fits better, not just a score.
+
+**Read first:** `docs/design/match-explanations.md`; `docs/design/sharing.md`.
+
+**Tasks**
+- [ ] Reuse the Matching Agent per candidate; a summary table of matched, missing and weak skills
+- [ ] Guardrails: never a "hire / don't hire" verdict (the spec rules out automated hiring decisions); nothing about age, gender, origin or other personal traits; tested
+
+**Done when**
+- [ ] Tests (recorded answers) pass, including the guardrails
+
+### M14.5 · Contact requests
+`area:backend` `size:S` `depends:M14.2, M13.10`
+
+**Goal:** A recruiter sends a contact request through SkillGraph; the student accepts or declines; contact details are shared only after accepting.
+
+**Why:** Students stay in control of who can reach them.
+
+**Read first:** `docs/design/sharing.md`; notifications (M13.10).
+
+**Tasks**
+- [ ] Request, accept, decline, expire; the student is notified; declining reveals nothing
+
+**Done when**
+- [ ] Tests: no contact detail leaks before acceptance
+
+### M14.6 · Recruiter screens
+`area:frontend` `size:L` `depends:M14.3, M14.4, M14.5, M0.7`
+
+**Goal:** Recruiters search, open candidate profiles at their allowed level, compare candidates and send contact requests.
+
+**Why:** It's the product a paying customer would use.
+
+**Read first:** `docs/design/wireframes/`; recruiter endpoints in `openapi.json`.
+
+**Tasks**
+- [ ] Search with filters, candidate view, comparison view, contact request; checked in all three languages and right-to-left
+
+**Done when**
+- [ ] The demo scenario works end to end; frontend checks pass
+
+### M14.7 · Student privacy screens
+`area:frontend` `size:M` `depends:M14.2, M14.5, M0.7`
+
+**Goal:** Students set their visibility, see which organizations viewed their profile, and answer contact requests.
+
+**Why:** Showing students who looked at them is what makes "opt-in" trustworthy in practice.
+
+**Read first:** `docs/design/sharing.md`.
+
+**Tasks**
+- [ ] Visibility settings with plain explanations, "who viewed my profile", contact requests inbox
+
+**Done when**
+- [ ] Works end to end in all three languages
+
+### M14.8 · Recruiter pilot
+`area:research` `size:S` `depends:M14.6`
+
+**Goal:** 1–3 recruiters or employers try the recruiter side; their feedback and willingness to pay are written up.
+
+**Why:** The business model depends on recruiters paying. Their reaction is evidence for the presentation, either way.
+
+**Read first:** `docs/research/interview-guide.md` (recruiter questions).
+
+**Tasks**
+- [ ] Recruit testers, observe them using it, ask the recruiter questions and what they would pay for
+
+**Done when**
+- [ ] `docs/research/recruiter-pilot.md` committed
+
+---
+
+## M15 · Universities and training organizations
+<!-- weeks: 12-14 -->
+Institutions see anonymous, aggregate skills data for their students: what skills they have, which gaps keep appearing against real postings, and what training would help.
+**Demo:** a university sees its students' most common gaps for backend internships, with numbers, and a training recommendation.
+
+### M15.1 · Institution data rules
+`area:docs` `size:S` `depends:M14.1` `contract:yes`
+
+**Goal:** Rules for how students link to an institution and what aggregate data institutions may see.
+
+**Why:** Aggregates can still identify people when the group is small ("the one student in the class who…"). The rules must prevent that before any dashboard exists.
+
+**Read first:** `docs/design/sharing.md`; GLOSSARY: minimum group size.
+
+**Tasks**
+- [ ] Decide D-026: students link with a code and explicit consent; institutions see aggregates only; minimum group size (e.g. no figure for fewer than 10 students); no individual data without the student's separate consent
+
+**Done when**
+- [ ] `docs/design/institutions.md` committed and approved by Rasen; D-026 Decided
+
+### M15.2 · Institution accounts and student linking
+`area:backend` `size:M` `depends:M15.1, M13.2`
+
+**Goal:** An institution gets an organization account and invite codes; students link with consent and can unlink at any time.
+
+**Why:** Linking is how an institution's data is defined, and consent is the legal and ethical basis for it.
+
+**Read first:** `docs/design/institutions.md`; roles (M13.2).
+
+**Tasks**
+- [ ] Invite codes per institution (and per cohort, e.g. "M2 Computer Science 2026"); link and unlink endpoints
+
+**Done when**
+- [ ] Tests: linking needs consent; unlinking removes the student from every aggregate
+
+### M15.3 · Cohort analytics
+`area:backend` `size:M` `depends:M15.2, M8.1`
+
+**Goal:** For a cohort: how many students have each skill at each status, the most common gaps against selected postings, and changes over time.
+
+**Why:** This is the information universities said they lack in the report: which skills their students have or need.
+
+**Read first:** `docs/design/institutions.md`; gap analysis (M8.1).
+
+**Tasks**
+- [ ] Analytics endpoints; every figure for a group below the minimum size is withheld (test)
+
+**Done when**
+- [ ] Tests on a generated cohort: correct figures; small groups hidden; no individual can be singled out by combining filters (tested on a known case)
+
+### M15.4 · Training recommendations for a cohort
+`area:ai` `size:M` `depends:M15.3, M8.2`
+
+**Goal:** An agent turns a cohort's aggregate gaps into prioritized training suggestions, citing the figures behind each one.
+
+**Why:** Numbers alone don't tell a department what to do next; a short, evidence-cited recommendation does.
+
+**Read first:** cohort analytics (M15.3); Development Agent (M8.2); `backend/app/skills/data/resources.csv`.
+
+**Tasks**
+- [ ] Input is aggregates only, never individual profiles (tested); links only from the resources list
+
+**Done when**
+- [ ] Tests (recorded answers) pass in all three languages
+
+### M15.5 · Institution dashboard
+`area:frontend` `size:M` `depends:M15.3, M15.4, M0.7`
+
+**Goal:** Charts and tables of a cohort's skills and gaps, the training recommendations, and an export.
+
+**Why:** It's what an institution would actually look at and share internally.
+
+**Read first:** `docs/design/wireframes/`; analytics endpoints.
+
+**Tasks**
+- [ ] Dashboard with charts, filters by cohort and posting set, export to PDF and CSV; withheld figures shown as "too few students"
+
+**Done when**
+- [ ] Works end to end in all three languages and right-to-left
+
+### M15.6 · Institution pilot
+`area:research` `size:S` `depends:M15.5`
+
+**Goal:** One department or club tries the dashboard with a consenting group of students; feedback is written up.
+
+**Why:** Shows whether institutions are a real customer group, as the business model assumes.
+
+**Read first:** `docs/design/institutions.md`.
+
+**Tasks**
+- [ ] Find a willing teacher or club, run it with consenting students, collect feedback and whether they'd pay or partner
+
+**Done when**
+- [ ] `docs/research/institution-pilot.md` committed
+
+---
+
+## M16 · Product: plans, skill graph and polish
+<!-- weeks: 12-14 -->
+The pieces that turn a working app into a product: free and premium plans, a visual skill graph, a phone-friendly and accessible interface, a public landing page, and privacy-respecting usage numbers for the business case.
+**Demo:** a visitor lands on the public page, signs up on a phone, explores their skill graph, and hits the free plan's limit with a clear upgrade option.
+
+### M16.1 · Plans and usage limits
+`area:backend` `size:M` `depends:M5.7, M13.2`
+
+**Goal:** Free and premium plans with clear limits (e.g. agent runs per week, number of sources), enforced on the server, for students and organizations.
+
+**Why:** The business model has a free and a premium tier. Limits also protect the team's free LLM allowance from heavy users.
+
+**Read first:** `docs/PROJECT_REPORT.md` section 11 (business model); background runs (M5.7).
+
+**Tasks**
+- [ ] Decide D-027: what each plan includes for students and for organizations
+- [ ] Plan on each account, limits checked in one place, errors as codes (`plan_limit_reached`) with the limit and reset time
+
+**Done when**
+- [ ] Tests: each limit is enforced and resets as specified
+
+### M16.2 · Payments: what's possible
+`area:research` `size:S` `depends:M16.1`
+
+**Goal:** A decision on how upgrades are paid for, given what payment providers actually support in Algeria and that the project has no company or budget yet.
+
+**Why:** Many international payment providers don't serve Algeria; local options have their own requirements. Building a payment flow on a provider we can't use would be wasted work.
+
+**Read first:** M16.1 decisions.
+
+**Tasks**
+- [ ] Research local and international options (requirements, fees, test modes), checking current information
+- [ ] Decide D-028 (2–3 options + recommendation), e.g. a provider in test mode for the demo, or activation codes handed out manually during the pilot
+
+**Done when**
+- [ ] `docs/research/payments.md` committed; D-028 Decided
+
+### M16.3 · Upgrade flow
+`area:frontend` `size:M` `depends:M16.2, M0.7`
+
+**Goal:** Users see their plan and usage, and can upgrade the way D-028 decided (test mode or activation code).
+
+**Why:** Shows the business model working end to end in the demo, without real money changing hands.
+
+**Read first:** D-027, D-028.
+
+**Tasks**
+- [ ] Plan and usage page; upgrade flow; clear messages when a limit is reached, in all three languages
+- [ ] Backend part of the upgrade (webhook or code redemption) with tests
+
+**Done when**
+- [ ] An upgrade raises the limits immediately (end-to-end test in test mode)
+
+### M16.4 · Skill graph view
+`area:frontend` `size:M` `depends:M4.5, M0.7`
+
+**Goal:** An interactive graph of a user's profile: skills, how they group (PostgreSQL → SQL → databases), and the projects and evidence behind them.
+
+**Why:** The report's core idea is a skills graph; a picture of it explains SkillGraph faster than any list, especially in the presentation.
+
+**Read first:** `docs/PROJECT_REPORT.md` sections 4.1 and 5.4; skills API (M4.5).
+
+**Tasks**
+- [ ] Choose a graph drawing library ($0; 2 options + trade-offs)
+- [ ] Nodes colored by status, sized by confidence; clicking a node shows its evidence; works right-to-left and has a list view for screen readers
+
+**Done when**
+- [ ] Works for test users with small and large profiles; frontend checks pass
+
+### M16.5 · Is a graph database worth it?
+`area:backend` `size:S` `depends:M14.3, M16.4`
+
+**Goal:** A measured answer to whether SkillGraph should move skill relations to a graph database, now that recruiter search and the graph view exist.
+
+**Why:** The report says a graph database "can be considered later if justified". This slice is the "later": decide with numbers, not fashion.
+
+**Read first:** `docs/PROJECT_REPORT.md` section 5.4; D-019.
+
+**Tasks**
+- [ ] Time the heaviest relational queries (candidate search, graph view, cohort analytics) on generated data at 10× and 100× the demo size
+- [ ] Recommend keep or switch; if switch, what it would cost to migrate
+
+**Done when**
+- [ ] `docs/spikes/graph-database.md` committed with measurements and a recommendation
+
+### M16.6 · Phone and accessibility pass
+`area:frontend` `size:M` `depends:M8.4, M9.5`
+
+**Goal:** Every screen works on a phone-sized screen and with a keyboard and screen reader, in all three languages.
+
+**Why:** Many students will open SkillGraph on their phone first. Accessibility is also expected of any real product.
+
+**Read first:** `docs/design/localization.md`; GLOSSARY: accessibility.
+
+**Tasks**
+- [ ] Check every screen at phone width; fix layouts
+- [ ] Keyboard navigation, visible focus, labels for screen readers, color contrast; start from the problems M9.5 found, and fix what fails
+
+**Done when**
+- [ ] A checklist per screen, each item passed, committed in `docs/qa/`
+
+### M16.7 · Public landing page and onboarding
+`area:frontend` `size:M` `depends:M3.2, M0.7`
+
+**Goal:** A public page that explains SkillGraph to a visitor, and a guided first run after sign-up (upload a CV → connect GitHub → see your profile).
+
+**Why:** Users who don't understand the product in the first minute leave. The landing page is also the first thing examiners and pilot users see.
+
+**Read first:** `docs/research/findings.md`; `docs/SPEC.md` (goal).
+
+**Tasks**
+- [ ] Landing page in three languages: the problem, how evidence works, privacy promise, sign-up
+- [ ] First-run steps with progress, skippable
+
+**Done when**
+- [ ] A new user reaches their first profile following only the on-screen steps (tested by someone outside the team)
+
+### M16.8 · Usage numbers without tracking people
+`area:backend` `size:S` `depends:M3.1, M13.2`
+
+**Goal:** Counts of key product events (sign-ups, sources added, profiles built, matches opened, assessments taken) for the business case, without third-party trackers or personal data.
+
+**Why:** The presentation needs real usage numbers to argue the startup case; students' privacy rules out ad-style tracking.
+
+**Read first:** `docs/SPEC.md` (personal data constraints).
+
+**Tasks**
+- [ ] Event counts per day stored without user ids; an admin-only summary endpoint
+- [ ] No cookies or scripts from other companies (tested by checking the page loads nothing from other domains)
+
+**Done when**
+- [ ] Tests pass; the summary shows the pilot's numbers

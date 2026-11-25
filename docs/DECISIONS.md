@@ -27,6 +27,16 @@ Two kinds of entry:
 | D-017 | How much Claude Code does on its own for Rasen | Decided | — |
 | D-018 | Only Rasen's review gates teammates' work; no code-explanation rules | Decided | — |
 | D-019 | Database schema v1 conventions (ids, fixed values, sub-records, skill names) | Decided (contract) | M2.4 |
+| D-020 | Assessments: formats, passing, how "assessed" is produced (supersedes D-014) | Open (contract) | M11.1 |
+| D-021 | Where students' submitted code runs | Open | M11.2 |
+| D-022 | Where opportunities come from beyond hand curation | Open | M13.1 |
+| D-023 | Roles and organizations | Open (contract) | M13.2 |
+| D-024 | Email provider | Open | M13.9 |
+| D-025 | What recruiters may see, and student consent | Open (contract) | M14.1 |
+| D-026 | Institution data: linking, aggregates, minimum group size | Open (contract) | M15.1 |
+| D-027 | Free and premium plans | Open | M16.1 |
+| D-028 | How upgrades are paid for | Open | M16.2 |
+| D-029 | MVP plus full product: M11–M16 are full milestones | Decided | — |
 
 ---
 
@@ -124,6 +134,7 @@ Two kinds of entry:
 - **Status:** Decided (Rasen, 2026-11-23)
 - **Choice:** the MVP builds no assessments. "Assessed" stays in the evidence model as a status, but nothing in the MVP produces it, and rules and agents must never output it (already a guardrail in M4.4 and M6.3).
 - **Why:** the report's MVP list has no assessments, and building one is a feature of its own; keeping the status in the model leaves room to add it later without a contract change.
+- **Later:** assessments are now planned in M11 (D-029). This entry stays in force until D-020 is Decided in M11.1, which supersedes it.
 
 ### D-015 · Login: token vs session cookie
 - **Status:** Decided (2026-11-24, by Claude Code under Rasen's standing instruction to keep working and take the recommended option; **Rasen to confirm or overturn**).
@@ -157,6 +168,49 @@ Two kinds of entry:
   2. **Fixed value lists are text columns with a CHECK**, listed once in `app/db/values.py`. *Why:* adding or removing a value is a simple migration. *Rejected:* PostgreSQL ENUM types (hard to change).
   3. **Mixed storage for sub-records:** education, experience and manual projects get their own tables; gaps and recommendations are JSON on `matches`; GitHub consent is a timestamp on `profiles`. *Why:* the first three are edited one at a time and a manual project is an evidence source, while gaps and recommendations are computed and read as a whole. *Rejected:* all tables (more migrations for data rewritten in one go); all JSON (no ids, no checks).
   4. **Skill names in three columns:** `name_en`, `name_fr`, `name_ar`. *Why:* matches the skills.csv plan and needs no join. *Rejected:* a translations table (any number of languages, but joins and easy-to-miss gaps).
+
+### D-020 · Assessments (contract)
+- **Status:** Open — decided in M11.1. Will supersede D-014 ("no assessments in the MVP") once Decided.
+- **Already set (Rasen, 2026-11-25):** assessment content is in English and French only, not Arabic. With the interface in Arabic, the student picks English or French for the assessment.
+- **Question:** which assessment formats exist (at least a timed quiz and a practical task checked by tests), which of them can produce `assessed` and which only add confidence, what passing means, attempt limits, expiry, and how honest the product is about unproctored tests.
+
+### D-021 · Where students' submitted code runs
+- **Status:** Open — decided in M11.2, after a spike.
+- **Options to compare:** (a) GitHub Actions in a repo the student creates from our template, with us reading only the result; (b) a locked-down container on our own host; (c) no code execution (quizzes only). Must cost $0 and never run untrusted code next to our secrets.
+
+### D-022 · Where opportunities come from
+- **Status:** Open — decided in M13.1.
+- **Constraint:** only sources whose terms allow it (no scraping against terms, SPEC non-goal). Candidates: public job APIs, RSS feeds, partner employers, university career offices, direct employer submissions (M13.3).
+
+### D-023 · Roles and organizations (contract)
+- **Status:** Open — decided in M13.2. Replaces M7.1's "no admin role in the MVP" once Decided.
+- **Question:** the roles (student, organization member, organization admin, platform admin), what each may do, and how an organization is created and verified. Used by M13–M16.
+
+### D-024 · Email provider
+- **Status:** Open — decided in M13.9.
+- **Question:** a free email provider (sending limits, deliverability, sign-up requirements) or no email. Used for password reset and notification digests.
+
+### D-025 · What recruiters may see (contract)
+- **Status:** Open — decided in M14.1.
+- **Question:** visibility levels, what is never shared (CV file, contact details before acceptance), how long profile views are logged, and what Algeria's personal data law (Law 18-07) requires.
+
+### D-026 · Institution data (contract)
+- **Status:** Open — decided in M15.1.
+- **Question:** how students link to an institution (code + consent), what aggregates institutions see, and the minimum group size below which no figure is shown.
+
+### D-027 · Free and premium plans
+- **Status:** Open — decided in M16.1.
+- **Question:** what the free and premium plans include, for students and for organizations; limits also protect the free LLM allowance.
+
+### D-028 · How upgrades are paid for
+- **Status:** Open — decided in M16.2, after checking current options.
+- **Question:** which payment options actually work for a team in Algeria with no company yet; fallbacks are a provider's test mode for the demo or activation codes during pilots.
+
+### D-029 · MVP plus full product
+- **Status:** Decided (Rasen, 2026-11-25)
+- **Choice:** the plan covers the whole product from the project report, not only the MVP. M11–M16 (assessments, more evidence sources, opportunities at scale, recruiter side, institutions, plans and polish) are full milestones, scheduled alongside M7–M10.
+- **Guard:** nothing in M9 (evaluation) or M10 (deploy and demo) depends on M11–M16, so the graded work can't be held up by them.
+- **Why:** working with a strong coding agent makes a larger scope realistic; the report describes these parts, and the startup case is stronger with them.
 
 ---
 
