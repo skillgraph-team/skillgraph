@@ -19,7 +19,7 @@ Two kinds of entry:
 | D-009 | GitHub: public username only vs OAuth | Open | M3.6 |
 | D-010 | How work is split and claimed | Decided | — |
 | D-011 | Which tools people use | Decided | — |
-| D-012 | Languages: English, French, Arabic | Decided (details Proposed) | M0.7, M2.8 |
+| D-012 | Languages: English, French, Arabic | Decided | M0.7, M2.8 |
 | D-013 | Where real participants' CVs and labels live | Decided | M1.5 |
 | D-014 | Is "assessed" produced in the MVP | Decided | M2.3 |
 | D-015 | Login: token vs session cookie | Decided | M3.1 |
@@ -114,14 +114,16 @@ Two kinds of entry:
 - **Watch:** chatbot coding is slower and more error-prone on slices that touch many files. If one stalls, anyone can pick it up or pair on it.
 
 ### D-012 · Languages: English, French and Arabic
-- **Status:** Decided (Rasen) for the three languages. The details below are Proposed until M2.8 is approved.
+- **Status:** Decided (Rasen) for the three languages; details Decided in M2.8 (2026-11-25, recommendations taken under Rasen's standing instruction; Rasen approves the M2.8 commit). Full rules and term list: `docs/design/localization.md` (contract, owner Rasen).
 - **Choice:** the interface, the AI's explanations and the recommendations are available in English, French and Arabic, with Arabic right-to-left. CVs, repos and postings written in any of the three are read correctly.
-- **Proposed details:**
+- **Details:**
   - English is the source language and the fallback when a translation is missing.
   - On a first visit, use the browser's language if it is one of the three, otherwise English. Users can switch at any time; the choice is saved to their account.
   - Western digits (0–9) in all three languages.
   - The backend sends codes plus data; the frontend turns them into sentences. Agents write directly in the user's language. Quotes from evidence are never translated.
   - Technical names (Python, Docker, PostgreSQL) stay in Latin letters in all three languages.
+  - French uses "vous". Arabic is Modern Standard Arabic and avoids assuming the user's gender (verbal nouns for actions, impersonal messages). *Why:* a career tool shown to employers reads better formal; MSA works across every Arabic-speaking country.
+  - Assessment content is the one exception: English and French only (D-020).
 - **Why:** local CVs and postings are often in French or Arabic. A skills platform that only reads and speaks English would miss much of the evidence and many of the users.
 - **Risk:** small free LLMs are often much weaker in Arabic than in English. M2.1 measures this per language. If Arabic output is poor, options are: a larger free model for Arabic only, or generating in French/English with a clear note in the Arabic interface.
 
@@ -665,6 +667,24 @@ These fill in details D-006 left open. They are part of the contract in `docs/de
 - **What:** saving a project only writes `manual_projects`. The `sources` row of kind `manual_project` (which turns the project into evidence) is left to the evidence slices. Deleting a project already deletes that source and its evidence, through the database cascade.
 - **Why:** the slice is about storing the user's entries. Deciding when a project gets re-read as evidence (on every edit? on analysis?) belongs with the extraction code.
 - **Where:** `backend/app/api/projects.py` (docstring).
+
+### M2.8 · Language rules and term list
+
+#### T-079 · Backend codes map to translation keys by name
+- **What:** the frontend key for a backend code is a fixed group plus the code exactly as sent: `skills.status.<code>`, `skills.confidence.<code>`, `evidence.judgement.<code>`, `matches.category.<code>`, `opportunities.importance.<code>`, `errors.<code>`.
+- **Why:** no mapping table to keep in sync; a new code only needs its three translations.
+- **Where:** `docs/design/localization.md` §4.
+
+#### T-080 · Statuses are translated as feminine adjectives
+- **What:** `claimed` → déclarée / مُصرَّح بها, and so on, agreeing with "compétence" and «مهارة».
+- **Why:** statuses are almost always shown next to a skill, so one form per language is enough and avoids gender-agreement keys.
+- **Where:** `docs/design/localization.md` §5.
+- **Watch out:** if a status is ever shown next to a masculine noun, it needs its own key rather than reusing these.
+
+#### T-081 · Match category codes `strong` / `partial` / `weak` are proposed here
+- **What:** the term list uses the categories from M7.3's tasks as codes, before any code defines them.
+- **Why:** the words had to be agreed now; M7.3 should use these exact codes, or update §4 and §5 in its PR.
+- **Where:** `docs/design/localization.md` §4, §5.
 
 ### Repo setup script (no slice)
 
