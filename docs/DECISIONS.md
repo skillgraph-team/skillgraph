@@ -666,6 +666,15 @@ These fill in details D-006 left open. They are part of the contract in `docs/de
 - **Why:** the slice is about storing the user's entries. Deciding when a project gets re-read as evidence (on every edit? on analysis?) belongs with the extraction code.
 - **Where:** `backend/app/api/projects.py` (docstring).
 
+### Repo setup script (no slice)
+
+#### T-078 · `github_setup.py` creates only missing labels
+- **What:** `ensure_labels` first lists the repo's labels (`gh label list --json name --limit 200`) and creates only the ones not there yet, like milestones and issues already do. Existing labels keep their current color and description.
+- **Why:** `gh label create --force` on an existing label started returning HTTP 500 from GitHub, which stopped the whole setup before it reached the new M11–M16 milestones and issues. Skipping existing labels avoids that call entirely.
+- **Also:** `--dry-run` now runs the read calls for real (they change nothing) and skips only the writes. Before, it skipped the reads too, so every dry run listed all labels, milestones and issues as "would create" and couldn't show what was actually new.
+- **Where:** `scripts/github_setup.py` (`ensure_labels`, `GH.run`).
+- **Watch out:** changing a label's color or description in the script no longer updates GitHub. Edit it on the website (Issues → Labels) instead.
+
 ### Session tooling (no slice)
 
 #### T-042 · A hook tells Claude Code sessions about teammates' new work

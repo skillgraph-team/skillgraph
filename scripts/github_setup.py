@@ -224,8 +224,9 @@ class GH:
         if self.dry_run and not read:
             print("  [dry-run] gh " + " ".join(_quote(a) for a in args))
             return ""
-        if self.dry_run and read:
-            return ""
+        if self.dry_run and read and shutil.which("gh") is None:
+            return ""  # without gh, a dry run can't see what exists and lists everything
+        # Reads run even in a dry run (they change nothing), so it shows only what's new.
         # gh always prints UTF-8; without an explicit encoding Windows decodes it
         # as cp1252, which garbles "·" in titles and breaks the "already exists" checks.
         proc = subprocess.run(["gh", *args], capture_output=True, text=True, encoding="utf-8")
@@ -254,13 +255,22 @@ def resolve_owner(gh: GH, owner: str) -> str:
 
 
 def ensure_labels(gh: GH, repo: str) -> None:
+    """Create only the labels the repo doesn't have yet (T-078).
+
+    Existing labels are left as they are, even if their color or description differ:
+    `gh label create --force` on an existing label started failing with HTTP 500.
+    """
     print("Labels")
-    for area, color in AREA_COLORS.items():
-        gh.run("label", "create", f"area:{area}", "--repo", repo, "--color", color,
-               "--description", f"{area} work", "--force")
-    for name, (color, desc) in EXTRA_LABELS.items():
-        gh.run("label", "create", name, "--repo", repo, "--color", color,
-               "--description", desc, "--force")
+    existing = gh.json("label", "list", "--repo", repo, "--json", "name", "--limit", "200") or []
+    names = {label["name"] for label in existing}  # type: ignore[index]
+    wanted = {f"area:{area}": (color, f"{area} work") for area, color in AREA_COLORS.items()}
+    wanted |= EXTRA_LABELS
+    for name, (color, desc) in wanted.items():
+        if name in names:
+            print(f"  exists: {name}")
+            continue
+        gh.run("label", "create", name, "--repo", repo, "--color", color, "--description", desc)
+        print(f"  {'would create' if gh.dry_run else 'created'}: {name}")
 
 
 def ensure_milestones(gh: GH, repo: str, milestones: list[Milestone], start: dt.date | None) -> None:
