@@ -37,6 +37,7 @@ Two kinds of entry:
 | D-027 | Free and premium plans | Open | M16.1 |
 | D-028 | How upgrades are paid for | Open | M16.2 |
 | D-029 | MVP plus full product: M11–M16 are full milestones | Decided | — |
+| D-030 | CVs and postings: English and French only; Arabic is interface-only (narrows D-012) | Decided | — |
 
 ---
 
@@ -114,7 +115,7 @@ Two kinds of entry:
 - **Watch:** chatbot coding is slower and more error-prone on slices that touch many files. If one stalls, anyone can pick it up or pair on it.
 
 ### D-012 · Languages: English, French and Arabic
-- **Status:** Decided (Rasen) for the three languages; details Decided in M2.8 (2026-11-25, recommendations taken under Rasen's standing instruction; Rasen approves the M2.8 commit). Full rules and term list: `docs/design/localization.md` (contract, owner Rasen).
+- **Status:** Decided (Rasen) for the three languages; details Decided in M2.8 (2026-11-25, recommendations taken under Rasen's standing instruction; Rasen approves the M2.8 commit). Full rules and term list: `docs/design/localization.md` (contract, owner Rasen). **Narrowed by D-030:** content (CVs, postings) only needs English and French.
 - **Choice:** the interface, the AI's explanations and the recommendations are available in English, French and Arabic, with Arabic right-to-left. CVs, repos and postings written in any of the three are read correctly.
 - **Details:**
   - English is the source language and the fallback when a translation is missing.
@@ -213,6 +214,13 @@ Two kinds of entry:
 - **Choice:** the plan covers the whole product from the project report, not only the MVP. M11–M16 (assessments, more evidence sources, opportunities at scale, recruiter side, institutions, plans and polish) are full milestones, scheduled alongside M7–M10.
 - **Guard:** nothing in M9 (evaluation) or M10 (deploy and demo) depends on M11–M16, so the graded work can't be held up by them.
 - **Why:** working with a strong coding agent makes a larger scope realistic; the report describes these parts, and the startup case is stronger with them.
+
+### D-030 · Content languages: English and French only
+- **Status:** Decided (Rasen, 2026-11-25). Narrows D-012.
+- **Choice:** Arabic is a small addition for the interface only: the interface text, the AI's explanations and the recommendations stay available in en, fr and ar, right-to-left included. CVs, repos and postings only need to work in English and French. No slice spends effort on Arabic CVs (skill extraction, Arabic eval profiles, Arabic postings).
+- **Why:** Arabic isn't a professional language for this audience; their CVs and job postings are in French or English.
+- **What already exists:** M3.5 was built before this decision and handles Arabic CVs (language `ar`, Arabic test files). That code stays: it's small, tested and costs nothing to keep. An Arabic CV still uploads and is tagged `ar`; nothing later has to support it.
+- **To update:** `docs/SPEC.md` still says content in all three languages. The change is proposed in the M3.5 report (SPEC changes need Rasen's approval).
 
 ---
 
