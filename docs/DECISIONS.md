@@ -686,6 +686,59 @@ These fill in details D-006 left open. They are part of the contract in `docs/de
 - **Why:** the words had to be agreed now; M7.3 should use these exact codes, or update §4 and §5 in its PR.
 - **Where:** `docs/design/localization.md` §4, §5.
 
+### M3.5 · CV upload and text extraction
+
+#### T-082 · A CV's text is stored in a new `sources.text` column
+- **What:** a new migration (`c5d1e7f20a94`) adds a nullable `text` column to `sources`, the plain text read from an uploaded CV, in its original language. Other kinds (repos, manual projects) leave it empty for now.
+- **Why:** skill extraction (M4, M6) needs the text, and reading the file again each time is slow and repeats the extraction rules. A column is easy to query and is deleted with the source. The other options were a `.txt` file next to the upload (two places to keep in sync) or a key in `details` (JSON meant for small facts).
+- **Contract note:** this extends schema v1 (contract owner: Rasen). It was decided under the autonomous-mode instruction; overturn it in review if you prefer another place.
+- **Where:** `backend/app/db/models/sources.py`, `backend/migrations/versions/2026_11_25-c5d1e7f20a94_sources_text.py`, `docs/design/schema.md`.
+
+#### T-083 · PDFs are read with pypdf, Word files with python-docx
+- **What:** `pypdf` (default "plain" mode, page by page) and `python-docx` (paragraphs and tables in document order). Both are pure Python with no system packages.
+- **Why:** the slice asked to check Arabic. On an Arabic PDF with shaped, right-to-left text (as Word's "Save as PDF" makes), pypdf gave every line back exactly. pdfminer.six (tried, not added) and pypdf's own `layout` mode gave every Arabic word back to front. PyMuPDF wasn't considered: its AGPL licence would apply to the whole app.
+- **Watch out:** on a line that mixes Arabic with a Latin word (e.g. Arabic text, then `PostgreSQL`, then more Arabic), pypdf keeps every word intact but can move the Latin word to another place in the line. Quotes stay readable; the word order around English tool names may be off. This was tested on PDFs we generated (fpdf2 with HarfBuzz shaping), not on PDFs from Word itself, because there is no Word on the build machine. Try a real Word-made Arabic CV when one is available.
+- **Where:** `backend/app/ingestion/cv_text.py`.
+
+#### T-084 · The CV's language is guessed with two simple signals, no library
+- **What:** `ar` if at least 30 % of the letters are Arabic. Otherwise count common short words (English: "the", "with"…; French: "le", "avec"…), leaving out the ones both languages use ("a", "on", "as"). The language with at least 2 hits, and 1.5 times more than the other, wins. Anything else gives `other`.
+- **Why:** only three very different languages matter, and these two signals separate them reliably on CVs. A library (langdetect, lingua) would be a new dependency for a three-way choice. langdetect is also random unless seeded, and lingua is large. 30 % and not 50 %, because Arabic CVs are full of Latin tool names.
+- **Watch out:** a Spanish or Italian CV may come out as `fr` (they share "de", "la", "en"). A CV that is only a list of tools gives `other`.
+- **Where:** `backend/app/ingestion/language.py`.
+
+#### T-085 · The file type is read from the bytes; limits on size, pages and unzipped size
+- **What:** a PDF is recognised by `%PDF-` in its first 1024 bytes. A `.docx` is recognised as a zip file containing `word/document.xml`. The file name and the type the browser sends are ignored. Old `.doc` files are refused. Limits: `CV_MAX_BYTES` (default 5 MB), at most 20 PDF pages, and a `.docx` must not unzip to more than 50 MB.
+- **Why:** names and browser types are easy to fake. The page and unzip limits stop one small upload from keeping the server busy (a "zip bomb" is a few KB that unzips to gigabytes).
+- **Also:** `python-multipart` is added because FastAPI needs it to receive uploaded files.
+- **Watch out:** FastAPI receives the whole upload before our size check runs, so a huge upload still travels to the server. In production, also cap the request size in the web server in front of it (M10).
+- **Where:** `backend/app/ingestion/cv_text.py`, `backend/app/api/sources.py`, `backend/app/config.py`.
+
+#### T-086 · Uploaded files live in `UPLOAD_DIR/<user id>/<source id>.<pdf|docx>`
+- **What:** a new setting, `UPLOAD_DIR`, which defaults to `backend/storage/uploads` (already git-ignored and not served by anything). `sources.storage_path` holds the path relative to it, e.g. `<user id>/<source id>.pdf`. The name the browser sent is only kept as the `title` (any folders in it are cut off, at most 200 characters, `cv` if empty).
+- **Why:** naming files by id means a name like `../../x.pdf` can't choose where the file goes. One folder per user makes deleting an account's files (M3.9) one folder removal. A relative path keeps working if the folder moves.
+- **Watch out:** if the database commit fails after the file is written, the file stays without a row. That's rare and harmless; a clean-up job could remove such files later.
+- **Where:** `backend/app/services/cv_uploads.py`, `backend/app/config.py`, `.env.example`.
+
+#### T-087 · Each upload is a new source; earlier CVs are kept
+- **What:** `POST /sources/cv` always adds a new `sources` row and never replaces an earlier one.
+- **Why:** the plan (`GET /sources`, `DELETE /sources/{id}`, M4.10) defines "replace a CV" as "upload the new one, delete the old one". This slice doesn't add list or delete endpoints.
+- **Where:** `backend/app/services/cv_uploads.py`.
+
+#### T-088 · Extracted text is tidied but its words are never changed
+- **What:** Unicode NFKC normalisation, which turns Arabic presentation-form letters, the one-character "fi" ligature and non-breaking spaces into plain characters. Control characters (including NUL, which PostgreSQL can't store) are removed. Each line is trimmed, runs of spaces are squeezed, and at most one empty line is kept in a row. A file with no text left gives `no_text_found`.
+- **Why:** some PDF makers store Arabic as one-off letter shapes that don't match normal Arabic text in searches. NFKC fixes that without translating anything. NUL would make the database insert fail.
+- **Where:** `backend/app/ingestion/cv_text.py` (`clean_text`).
+
+#### T-089 · Upload errors: 413, 415 or 422 with a code
+- **What:** `file_too_large` (413), `unsupported_file_type` (415), `file_unreadable`, `too_many_pages`, `no_text_found` (422). Broken files are caught whatever error pypdf or python-docx raises; only the error's type is logged, never the content.
+- **Why:** each code tells the user what to do next (smaller file, PDF instead of `.doc`, a text PDF instead of a scan). The frontend upload slice translates them as `errors.<code>` (T-079).
+- **Where:** `backend/app/api/sources.py`, `backend/app/ingestion/cv_text.py`.
+
+#### T-090 · Test CVs are committed files, made by a script with fpdf2
+- **What:** `backend/tests/fixtures/cv/` holds made-up CVs (en, fr, ar as PDF and `.docx`, plus a scanned-style picture-only PDF) and `make_cv_fixtures.py`, which makes them. `fpdf2` and `uharfbuzz` (for Arabic shaping) are dev-only dependencies, used only by that script.
+- **Why:** an Arabic PDF needs a font with Arabic letters, which CI machines don't reliably have. Committing the files (about 190 KB) means tests never need fonts. The tests check the text against the exact lines in the script.
+- **Where:** `backend/tests/fixtures/cv/`, `backend/pyproject.toml`.
+
 ### Repo setup script (no slice)
 
 #### T-078 · `github_setup.py` creates only missing labels

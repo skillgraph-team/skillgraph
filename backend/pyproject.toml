@@ -11,16 +11,21 @@ dependencies = [
     "pydantic>=2.14.4",
     "pydantic-settings>=2.16.3",
     "pyjwt>=2.15.1",
+    "pypdf>=7.1.1",
+    "python-docx>=1.2.0",
+    "python-multipart>=0.0.34",
     "sqlalchemy>=2.1.9",
     "uvicorn[standard]>=0.54.0",
 ]
 
 [dependency-groups]
 dev = [
+    "fpdf2>=2.9.0",
     "httpx>=0.28.1",
     "mypy>=2.4.1",
     "pytest>=9.2.0",
     "ruff>=0.17.6",
+    "uharfbuzz>=0.57.0",
 ]
 
 [tool.uv]

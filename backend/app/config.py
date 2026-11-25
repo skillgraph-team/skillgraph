@@ -11,6 +11,8 @@ from typing import Literal
 from pydantic import Field, model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
+BACKEND_DIR = Path(__file__).resolve().parents[1]
+
 # The repo-root .env (README: `cp .env.example .env`), wherever the server is started from.
 ENV_FILE = Path(__file__).resolve().parents[2] / ".env"
 
@@ -38,6 +40,12 @@ class Settings(BaseSettings):
     # True when the site is served over HTTPS (production): the browser then only sends
     # the login cookie over HTTPS. False for http://localhost.
     cookie_secure: bool = False
+
+    # Uploaded files (M3.5). Kept outside any folder the web server publishes; the
+    # default `backend/storage/` is git-ignored.
+    upload_dir: Path = BACKEND_DIR / "storage" / "uploads"
+    # Largest CV file accepted, in bytes (default 5 MB).
+    cv_max_bytes: int = Field(default=5 * 1024 * 1024, ge=1)
 
     @model_validator(mode="after")
     def _test_database_is_separate(self) -> "Settings":

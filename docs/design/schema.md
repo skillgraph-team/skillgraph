@@ -42,7 +42,7 @@ erDiagram
 | | **profiles** | the user's profile (one per user) | `github_username`, `github_consent_at` (empty = no consent, import refuses, M3.9) |
 | | **education**, **experience** | one entry the user typed (M3.3) | `position` orders the list |
 | | **manual_projects** | a project the user described | read as a `sources` row of kind `manual_project` |
-| Evidence | **sources** | one thing we read: CV, repo, certificate, manual project | `language` = detected language; `details` (JSON) = e.g. repo owner, fork flag, language shares; `storage_path` = uploaded file to delete with the account |
+| Evidence | **sources** | one thing we read: CV, repo, certificate, manual project | `language` = detected language; `details` (JSON) = e.g. repo owner, fork flag, language shares; `storage_path` = uploaded file to delete with the account, relative to `UPLOAD_DIR`; `text` = plain text read from an uploaded CV (M3.5) |
 | | **evidence** | one exact quote that mentions or shows a skill | `type`, `quote` (≤ 300 chars, never translated), `location` (JSON), `language`. No source only for `user_added` |
 | | **user_skills** | one skill on one person's profile | `status`, `confidence`, `hidden`, `disputed`, `produced_by` (rules / single_agent / multi_agent) |
 | | **user_skill_evidence** | an evidence link | `judgement` (supports / weak), `reason_code`, `inferred_from` (skill ids) |

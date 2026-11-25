@@ -22,6 +22,9 @@ class Source(Base):
     - `title`: file name, repo full name (`owner/repo`) or project title.
     - `details`: kind-specific facts, e.g. for a repo `owner`, `is_fork`, `languages`.
     - `storage_path`: where an uploaded file is kept, so deleting the account can remove it.
+      Relative to the `UPLOAD_DIR` setting, e.g. `<user id>/<source id>.pdf`.
+    - `text`: the plain text read from the file (CVs, M3.5), in its original language.
+      Skill extraction (M4, M6) reads this, not the file.
     - `manual_project_id`: set exactly when `kind` is `manual_project`.
     """
 
@@ -42,6 +45,7 @@ class Source(Base):
     language: Mapped[str | None] = mapped_column(String(5))
     details: Mapped[dict[str, Any]] = mapped_column(JSONB, server_default="{}")
     storage_path: Mapped[str | None]
+    text: Mapped[str | None] = mapped_column(Text)
     manual_project_id: Mapped[uuid.UUID | None] = mapped_column(
         ForeignKey("manual_projects.id", ondelete="CASCADE"), unique=True
     )
