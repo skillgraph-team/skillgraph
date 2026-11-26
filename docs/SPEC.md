@@ -3,7 +3,7 @@
 Changes go through a PR approved by Rasen (D-018). Bump the version and add a line to the changelog at the bottom.
 
 ## Goal
-SkillGraph builds evidence-backed skills profiles for students and recent graduates. It extracts skills from a CV and GitHub, records the evidence behind each skill with a status (claimed / demonstrated / assessed / unverified) and a confidence, matches the profile against a curated set of internships, and explains each match and gap with concrete next steps. A small set of specialized agents, coordinated by an orchestrator, does the analysis, and the project measures whether that multi-agent design beats a rule-based baseline and a single-agent version. It works in English, French and Arabic: the interface, the AI's explanations, and the CVs and postings it reads.
+SkillGraph builds evidence-backed skills profiles for students and recent graduates. It extracts skills from a CV and GitHub, records the evidence behind each skill with a status (claimed / demonstrated / assessed / unverified) and a confidence, matches the profile against a curated set of internships, and explains each match and gap with concrete next steps. A small set of specialized agents, coordinated by an orchestrator, does the analysis, and the project measures whether that multi-agent design beats a rule-based baseline and a single-agent version. The interface and the AI's explanations are in English, French and Arabic; the CVs and postings it reads are in English or French (D-030).
 
 ## Non-goals of the MVP (M0–M10)
 These are limits of the MVP. Some are lifted by the milestones in "Beyond the MVP" below.
@@ -13,7 +13,7 @@ These are limits of the MVP. Some are lifted by the milestones in "Beyond the MV
 - No scraping of job sites; opportunities are curated by hand from legitimate sources.
 - Never calls a skill "verified" because an LLM inferred it. Only an assessment can make a skill `assessed`.
 - No assessments in the MVP (D-014): `assessed` exists in the evidence model, but nothing in the MVP produces it.
-- No languages beyond English, French and Arabic. Users' CVs and evidence are never machine-translated: quotes stay in their original language.
+- No languages beyond English, French and Arabic, and no Arabic CVs or postings (Arabic is for the interface only, D-030). Users' CVs and evidence are never machine-translated: quotes stay in their original language.
 
 ## Never, at any stage
 - No automated hiring decisions: SkillGraph explains matches; people decide.
@@ -37,7 +37,7 @@ Full milestones, scheduled alongside M7–M10. M9 and M10 never depend on them.
 - The backend owns validation, permissions and every database write. Agents read through tools and return results; they never write.
 - All LLM calls go through one provider interface, with recorded responses for repeatable tests and evaluation.
 - Every skill keeps references to its source evidence.
-- Three languages (D-012): English, French and Arabic (right-to-left) for the interface and AI-written text; CVs, repos and postings in any of the three are read correctly. The backend sends codes plus data, not sentences.
+- Three languages (D-012, narrowed by D-030): English, French and Arabic (right-to-left) for the interface and AI-written text; CVs, repos and postings in English or French are read correctly. The backend sends codes plus data, not sentences.
 - Personal data: consent before GitHub ingestion, account deletion removes everything, no real people's CVs in tests. Real participants' CVs and labels are never committed; they stay in a private team folder (D-013).
 
 ## Interfaces
@@ -62,7 +62,7 @@ For the full product, each of M11–M16 has its own demo in `docs/MILESTONES.md`
 4. Steps 1–3 run through the orchestrated multi-agent workflow with bounded retries, budgets and a viewable run log.
 5. The same labeled inputs run through System A (rules), System B (single agent) and System C (multi-agent), and the evaluation table (extraction accuracy, evidence assessment quality, matching precision, completion rate, latency, cost, failure rate, coordination overhead) is filled in with ≥3 runs per system.
 6. The app is deployed (free host) or runs as a reproducible local demo, and 5+ students have used it and given feedback.
-7. Steps 1–3 work with the interface in English, French and Arabic (right-to-left), and for a French CV and an Arabic CV. The evaluation table is also broken down by language.
+7. Steps 1–3 work with the interface in English, French and Arabic (right-to-left), and for an English CV and a French CV. The evaluation table is also broken down by language.
 
 ## Changelog
 - v0.6: the plan now covers the full product (D-029): M11–M16; "Never, at any stage" rules; MVP non-goals marked as MVP-only.
