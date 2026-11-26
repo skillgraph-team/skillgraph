@@ -10,5 +10,25 @@
     "ok": "Le backend et la base de données fonctionnent.",
     "database-unreachable": "Le backend fonctionne, mais n'arrive pas à joindre la base de données.",
     "backend-unreachable": "Impossible de joindre le backend. Est-il lancé ?"
+  },
+  "errors": {
+    "email_taken": "Un compte existe déjà avec cette adresse e-mail.",
+    "invalid_credentials": "Adresse e-mail ou mot de passe incorrect.",
+    "wrong_password": "Ce mot de passe n'est pas le bon.",
+    "not_authenticated": "Veuillez d'abord vous connecter.",
+    "token_expired": "Votre session a expiré. Veuillez vous reconnecter.",
+    "token_invalid": "Votre connexion n'est plus valide. Veuillez vous reconnecter.",
+    "not_found": "Cet élément n'existe plus.",
+    "file_too_large": "Ce fichier est trop volumineux.",
+    "unsupported_file_type": "Seuls les fichiers PDF et Word (.docx) sont acceptés.",
+    "file_unreadable": "Impossible d'ouvrir ce fichier. Il est peut-être endommagé ou protégé par un mot de passe.",
+    "too_many_pages": "Ce fichier a trop de pages. La limite est de 20.",
+    "no_text_found": "Aucun texte n'a été trouvé dans ce fichier. S'il s'agit d'un scan, envoyez une version dont le texte est sélectionnable.",
+    "cv_file_error": "Impossible de lire ce fichier.",
+    "github_consent_required": "Autorisez d'abord SkillGraph à lire vos données GitHub publiques.",
+    "github_user_not_found": "Aucun utilisateur GitHub ne porte ce nom.",
+    "github_rate_limited": "GitHub limite les requêtes pour le moment. Réessayez plus tard.",
+    "github_unavailable": "GitHub est injoignable pour le moment. Réessayez plus tard.",
+    "github_error": "Un problème est survenu pendant la lecture de GitHub."
   }
 }

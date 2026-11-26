@@ -614,7 +614,7 @@ A working app with no AI yet: accounts, profile, CV upload, GitHub connection, d
 **Read first:** `backend/app/api/auth.py`, `backend/app/services/accounts.py`; T-068, T-069.
 
 **Tasks**
-- [ ] `POST /auth/password` {current_password, new_password} → 204; a wrong current password answers 401 `invalid_credentials`; the new password follows the sign-up rules (T-069)
+- [ ] `POST /auth/password` {current_password, new_password} → 204; a wrong current password answers 403 `wrong_password` (T-105); the new password follows the sign-up rules (T-069)
 - [ ] The user stays logged in afterwards
 
 **Done when**

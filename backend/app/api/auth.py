@@ -8,8 +8,9 @@ POST /auth/password {current_password, new_password}     → 204 (needs a login,
                     the user stays logged in
 
 Errors: 409 `email_taken`, 401 `invalid_credentials` (same for unknown email and wrong
-password, and for a wrong current password when changing it), 422 for invalid input
-(FastAPI's standard validation answer).
+password), 403 `wrong_password` (wrong current password when changing it; a 403, not a
+401, so the frontend doesn't take it for "logged out"), 422 for invalid input (FastAPI's
+standard validation answer).
 """
 
 import re
@@ -30,6 +31,7 @@ from app.db.values import Language
 from app.services.accounts import (
     EmailTakenError,
     InvalidCredentialsError,
+    WrongPasswordError,
     change_password,
     log_in,
     sign_up,
@@ -132,8 +134,6 @@ def me(user: CurrentUser) -> UserOut:
 def change_my_password(body: ChangePasswordRequest, user: CurrentUser, session: DbSession) -> None:
     try:
         change_password(session, user, current=body.current_password, new=body.new_password)
-    except InvalidCredentialsError:
-        raise HTTPException(
-            status.HTTP_401_UNAUTHORIZED, detail={"code": "invalid_credentials"}
-        ) from None
+    except WrongPasswordError:
+        raise HTTPException(status.HTTP_403_FORBIDDEN, detail={"code": "wrong_password"}) from None
     session.commit()

@@ -36,7 +36,7 @@ class InvalidCredentialsError(Exception):
 
 
 class WrongPasswordError(Exception):
-    """The logged-in user typed a password that isn't theirs (checked before deleting)."""
+    """The logged-in user typed a password that isn't theirs (changing it, deleting)."""
 
 
 def sign_up(session: Session, *, email: str, password: str, language: Language) -> User:
@@ -67,7 +67,7 @@ def change_password(session: Session, user: User, *, current: str, new: str) -> 
     aren't stored on the server (D-015), so there is nothing to revoke.
     """
     if not verify_password(current, user.password_hash):
-        raise InvalidCredentialsError
+        raise WrongPasswordError
     user.password_hash = hash_password(new)
     session.flush()
 

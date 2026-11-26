@@ -859,15 +859,20 @@ These fill in details D-006 left open. They are part of the contract in `docs/de
 
 ### M3.10 · Change password
 
-#### T-105 · A wrong current password gets 401 `invalid_credentials`
-- **What:** `POST /auth/password` answers 401 `invalid_credentials` when the current password is wrong, as the slice asks. The login cookie is untouched, so the user stays logged in. The new password follows the sign-up rules (T-069, 8–128 characters); it may equal the old one.
-- **Why:** it reuses the login error code, so the frontend needs no new translation. Unlike `/account/delete` (403 `wrong_password`, T-101), this is a 401: the frontend must not treat a 401 *from this endpoint* as "logged out".
+#### T-105 · A wrong current password gets 403 `wrong_password`
+- **What:** `POST /auth/password` answers 403 `wrong_password` when the current password is wrong, the same as `/account/delete` (T-101). The login cookie is untouched, so the user stays logged in. The new password follows the sign-up rules (T-069, 8–128 characters); it may equal the old one.
+- **Why:** the slice first asked for 401 `invalid_credentials`, but a 401 elsewhere means "you're not logged in", and a frontend that sends users to the login page on any 401 would log them out for a typo. Changed to 403 on Rasen's request (2026-11-26).
 - **Where:** `backend/app/api/auth.py`, `backend/app/services/accounts.py` (`change_password`).
 
 #### T-106 · Other open logins stay valid after a password change
 - **What:** changing the password only replaces the hash. Logins already open on other devices keep working until they expire (24 h by default).
 - **Why:** tokens aren't stored on the server (D-015), so there is nothing to revoke. Ending other logins would need a per-user "password changed at" time checked against the token's `iat`: a schema change, left for later if needed.
 - **Where:** `backend/app/services/accounts.py` (docstring of `change_password`).
+
+#### T-107 · Every backend error code has text in all three languages, checked by a test
+- **What:** `errors.<code>` keys in `frontend/src/locales/{en,fr,ar}.json` for all 18 codes the backend sends today (auth, CV upload, GitHub). `backend/tests/test_error_translations.py` finds the codes in `app/` by their usual spellings (`code = "..."`, `{"code": "..."}`, `_unauthorized(...)`, `_error(...)`) and fails if en.json lacks one; `npm run check` already makes fr and ar match en.
+- **Why:** a new code without words would show a raw `snake_case` code on screen. The texts don't include limits that are settings (the 5 MB CV size), so they can't go out of date.
+- **Where:** the locale files and the test above. Added after M3.10, on Rasen's request.
 
 ### Repo setup script (no slice)
 

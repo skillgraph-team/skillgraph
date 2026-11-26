@@ -46,8 +46,8 @@ def test_a_wrong_current_password_changes_nothing(client: TestClient, db_session
 
     response = change(client, "not my password", NEW_PASSWORD)
 
-    assert response.status_code == 401
-    assert error_code(response) == "invalid_credentials"
+    assert response.status_code == 403
+    assert error_code(response) == "wrong_password"
     db_session.expire_all()
     assert db_session.scalar(select(User.password_hash).where(User.email == EMAIL)) == before
     assert client.get("/auth/me").status_code == 200  # still logged in

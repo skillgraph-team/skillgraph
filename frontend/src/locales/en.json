@@ -10,5 +10,25 @@
     "ok": "Backend and database are working.",
     "database-unreachable": "The backend is running, but it can't reach the database.",
     "backend-unreachable": "The backend can't be reached. Is it running?"
+  },
+  "errors": {
+    "email_taken": "An account with this email already exists.",
+    "invalid_credentials": "Wrong email or password.",
+    "wrong_password": "That password isn't right.",
+    "not_authenticated": "Please log in first.",
+    "token_expired": "Your session has ended. Please log in again.",
+    "token_invalid": "Your login is no longer valid. Please log in again.",
+    "not_found": "This item no longer exists.",
+    "file_too_large": "This file is too large.",
+    "unsupported_file_type": "Only PDF and Word (.docx) files can be uploaded.",
+    "file_unreadable": "This file can't be opened. It may be damaged or password-protected.",
+    "too_many_pages": "This file has too many pages. The limit is 20.",
+    "no_text_found": "No text was found in this file. If it's a scan, upload a version with selectable text.",
+    "cv_file_error": "This file couldn't be read.",
+    "github_consent_required": "Allow SkillGraph to read your public GitHub data first.",
+    "github_user_not_found": "No GitHub user has this name.",
+    "github_rate_limited": "GitHub is limiting requests for now. Try again later.",
+    "github_unavailable": "GitHub can't be reached right now. Try again later.",
+    "github_error": "Something went wrong while reading GitHub."
   }
 }
