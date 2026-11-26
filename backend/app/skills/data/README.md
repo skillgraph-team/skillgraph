@@ -7,22 +7,30 @@ checks are in `backend/tests/skills/test_skill_data.py`.
 
 ## The files
 
-**`skills.csv`**: `id,name_en,category`
+**`skills.csv`**: `id,name_en,name_fr,name_ar,category`
 - `id`: lowercase, readable and permanent: `postgresql`, `node.js`, `c++`, `c#`.
   Letters, digits and `. + # _ -` only, and it starts with a letter or digit (the
   database refuses anything else). Use `-` between words: `spring-boot`.
   **Never rename an id** once it's used. Profiles and postings point at it.
-- `name_en`: the English name shown to users (`PostgreSQL`). French and Arabic names
-  come in M4.9 (`name_fr`, `name_ar`).
+- `name_en`, `name_fr`, `name_ar`: the name shown to users in each interface language.
+  All three are required. Technical names stay in Latin letters and are the same in all
+  three (`Python`, `Docker`, `PostgreSQL`, `CI/CD`); general skills are translated
+  (`Databases` / `Bases de données` / `قواعد البيانات`). Use the words from the term list
+  in `docs/design/localization.md`. Arabic: Modern Standard Arabic, no diacritics. A
+  technical term inside an Arabic name stays Latin: `تطوير Android`.
 - `category`: one of the values below.
 
 **`aliases.csv`**: `alias,skill_id`
-- Other ways people write the skill: `postgres,postgresql`, `js,javascript`,
-  `bases de données,databases`.
+- Other ways people write the skill, in English or French: `postgres,postgresql`,
+  `js,javascript`, `base de données,databases`, `dev web,web-development`.
+- No Arabic aliases: CVs and postings are read in English and French only (D-030).
+  Arabic names are for display.
 - Lowercase, keeping accents (`développement web`). Matching later removes case,
   punctuation and accent differences, so you don't need `Postgres` *and* `postgres`.
-- Don't repeat the skill's own id or English name; those are matched anyway.
-- Each alias belongs to **one** skill. If a word could mean two skills, leave it out.
+- Don't repeat the skill's own id or any of its three names; those are matched anyway.
+  Don't add an unaccented copy either (`developpement web`): matching removes accents.
+- Each alias belongs to **one** skill, and can't be another skill's name. If a word
+  could mean two skills, leave it out.
 
 **`relations.csv`**: `child_id,parent_id`
 - "child belongs under parent": `postgresql,sql`, then `sql,databases`. A skill can have
@@ -54,7 +62,7 @@ A new category also needs to be added to `CATEGORIES` in the test file.
 
 1. Check it isn't already there under another name: search `skills.csv` *and*
    `aliases.csv`.
-2. Add a row to `skills.csv`: id, English name, category.
+2. Add a row to `skills.csv`: id, the three names, category.
 3. Add its other names to `aliases.csv` (English and French spellings, short forms).
 4. Add one row per parent to `relations.csv`.
 5. Run `cd backend && uv run pytest tests/skills`. It reports duplicates, bad ids, aliases

@@ -988,7 +988,7 @@ These fill in details D-006 left open. They are part of the contract in `docs/de
 ### M4.1 · Skill list data
 
 #### T-126 · The first skill list is built for tech internships, before the curated postings exist
-- **What:** 246 skills for the internships SkillGraph targets (software, web, mobile, data, AI, cloud, DevOps, security, networks, embedded), plus a few soft skills and spoken languages that postings often ask for. 356 aliases (English and French spellings, short forms) and 258 parent links.
+- **What:** 246 skills for the internships SkillGraph targets (software, web, mobile, data, AI, cloud, DevOps, security, networks, embedded), plus a few soft skills and spoken languages that postings often ask for. 356 aliases (English and French spellings, short forms) and 258 parent links. This matches D-032 (first version: software engineering only); other fields come in M17.
 - **Why:** M4.1 should cover every skill in the curated postings (M1.7) and test profiles (M1.5), but neither exists yet. Waiting would block all of M4. When M1.7 lands, check each posting's skills against the list and add what's missing. Until then the "Done when" coverage item is open, and so is issue #32.
 - **Where:** `backend/app/skills/data/{skills,aliases,relations}.csv`.
 
@@ -1011,6 +1011,28 @@ These fill in details D-006 left open. They are part of the contract in `docs/de
 - **What:** `tests/skills/test_skill_data.py` reads the files directly and checks columns, the 150–300 count, id format (same pattern as the database CHECK), duplicates, references and loops in the parent links. It doesn't touch the database.
 - **Why:** M4.1 is data only. The loader comes in M4.2. Fast checks with no dependencies catch mistakes as soon as someone edits a CSV by hand.
 - **Where:** `backend/tests/skills/test_skill_data.py`.
+
+### M4.9 · Skill names in French and Arabic
+
+#### T-131 · Every skill has all three names filled in, even when they're the same
+- **What:** `skills.csv` now has `id,name_en,name_fr,name_ar,category`, and no name is empty. Technical names are copied as they are (`Python` in all three). General skills are translated (`Databases` / `Bases de données` / `قواعد البيانات`). A technical term inside an Arabic name stays in Latin letters (`تطوير Android`). A test checks that each Arabic name either contains Arabic letters or is exactly the English name, which catches an English name left untranslated by mistake.
+- **Why:** the screens can show `name_<language>` without a fallback, and an empty cell can't be confused with "not translated yet". The Latin-letters rule comes from `docs/design/localization.md` section 3.
+- **Where:** `backend/app/skills/data/skills.csv`, `backend/tests/skills/test_skill_data.py`.
+
+#### T-132 · No Arabic aliases
+- **What:** M4.9 asks for Arabic aliases. None were added. Arabic names are for display only.
+- **Why:** D-030 (decided after M4.9 was written) says CVs and postings are read in English and French only, and no slice spends effort on Arabic skill extraction. Arabic aliases would be rows nothing uses. M4.9's text in `docs/MILESTONES.md` still mentions them; it could be updated to match D-030.
+- **Where:** `backend/app/skills/data/aliases.csv`, README.
+
+#### T-133 · French aliases are written once, with their accents; no unaccented copies
+- **What:** 51 new French aliases (`dev web`, `bdd`, `sgbd`, `infonuagique`, `pack office`, `méthodologie agile`…). There's no unaccented copy (`developpement web`). 59 earlier aliases were removed because they're now a skill's French name (for example `bases de données`), which is matched anyway.
+- **Why:** M4.2's normalizer has to remove accents anyway (its own task list says so), because CVs mix both spellings. Copies would double the file and could drift apart. This differs from M4.9's task text ("with and without accents"): the result is the same, but the work is done in one place. If M4.2's normalizer doesn't strip accents, add the copies then.
+- **Where:** `backend/app/skills/data/aliases.csv`, README.
+
+#### T-134 · The French and Arabic names are a first draft by Claude Code
+- **What:** the names follow the term list and the style rules (French without inclusive spelling; Modern Standard Arabic without diacritics). They haven't been read by a fluent speaker yet.
+- **Why:** the same review the term list in `docs/design/localization.md` section 5 already asks for. Fixing a name is a one-cell edit and doesn't change any id.
+- **Where:** `backend/app/skills/data/skills.csv`.
 
 ### Repo setup script (no slice)
 

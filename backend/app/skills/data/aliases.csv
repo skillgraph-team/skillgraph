@@ -1,42 +1,30 @@
 alias,skill_id
 coding,programming
 software programming,programming
-programmation,programming
 développement logiciel,programming
-génie logiciel,software-engineering
 ingénierie logicielle,software-engineering
 web dev,web-development
-développement web,web-development
 front-end development,frontend-development
 front end,frontend-development
 front-end,frontend-development
 frontend,frontend-development
-développement front-end,frontend-development
 back-end development,backend-development
 back end,backend-development
 back-end,backend-development
 backend,backend-development
-développement back-end,backend-development
 full stack,full-stack-development
 full-stack,full-stack-development
 fullstack,full-stack-development
 développement full stack,full-stack-development
 mobile apps,mobile-development
 mobile app development,mobile-development
-développement mobile,mobile-development
 database,databases
 db,databases
-bases de données,databases
 base de données,databases
 data analytics,data-analysis
-analyse de données,data-analysis
-science des données,data-science
-ingénierie des données,data-engineering
 ml,machine-learning
-apprentissage automatique,machine-learning
 ai,artificial-intelligence
 a.i.,artificial-intelligence
-intelligence artificielle,artificial-intelligence
 ia,artificial-intelligence
 cloud,cloud-computing
 informatique en nuage,cloud-computing
@@ -46,14 +34,10 @@ information security,cybersecurity
 infosec,cybersecurity
 it security,cybersecurity
 sécurité informatique,cybersecurity
-cybersécurité,cybersecurity
 network administration,networking
 réseaux,networking
-réseaux informatiques,networking
 os,operating-systems
-systèmes d'exploitation,operating-systems
 embedded,embedded-systems
-systèmes embarqués,embedded-systems
 gamedev,game-development
 développement de jeux,game-development
 ux design,ui-ux-design
@@ -65,16 +49,12 @@ user interface design,ui-ux-design
 ux/ui,ui-ux-design
 qa,testing
 quality assurance,testing
-tests logiciels,testing
 assurance qualité,testing
 source control,version-control
-gestion de versions,version-control
 bi,business-intelligence
-informatique décisionnelle,business-intelligence
 help desk,it-support
 helpdesk,it-support
 technical support,it-support
-support informatique,it-support
 python3,python
 python 3,python
 java se,java
@@ -98,7 +78,6 @@ css3,css
 langage sql,sql
 visual basic for applications,vba
 assembler,assembly
-assembleur,assembly
 react.js,react
 reactjs,react
 angularjs,angular
@@ -131,7 +110,6 @@ rest,rest-api
 restful,rest-api
 restful api,rest-api
 rest api,rest-api
-api rest,rest-api
 restful apis,rest-api
 apis,api-design
 api,api-design
@@ -142,19 +120,13 @@ socket.io,websockets
 microservice architecture,microservices
 micro-services,microservices
 system design,software-architecture
-architecture logicielle,software-architecture
-patrons de conception,design-patterns
 object oriented programming,oop
 poo,oop
-programmation orientée objet,oop
-programmation fonctionnelle,functional-programming
 algorithms,data-structures
 dsa,data-structures
 algorithmique,data-structures
 structures de données,data-structures
 android sdk,android
-développement android,android
-développement ios,ios
 unity3d,unity
 unreal,unreal-engine
 ue5,unreal-engine
@@ -180,7 +152,6 @@ non-relational databases,nosql
 data modeling,database-design
 data modelling,database-design
 modélisation de données,database-design
-conception de bases de données,database-design
 merise,database-design
 object-relational mapping,orm
 amazon aws,aws
@@ -193,7 +164,6 @@ docker compose,docker
 docker-compose,docker
 containers,containerization
 conteneurs,containerization
-conteneurisation,containerization
 k8s,kubernetes
 iac,infrastructure-as-code
 continuous integration,ci-cd
@@ -207,7 +177,6 @@ apache2,apache-http-server
 httpd,apache-http-server
 apache server,apache-http-server
 observability,monitoring
-supervision,monitoring
 gnu/linux,linux
 ubuntu,linux
 debian,linux
@@ -236,9 +205,7 @@ pyplot,matplotlib
 dash,plotly
 dataviz,data-visualization
 data visualisation,data-visualization
-visualisation de données,data-visualization
 statistical analysis,statistics
-statistiques,statistics
 probability,statistics
 probabilités,statistics
 jupyter notebook,jupyter
@@ -248,13 +215,11 @@ sklearn,scikit-learn
 scikit learn,scikit-learn
 tf,tensorflow
 torch,pytorch
-apprentissage profond,deep-learning
 neural networks,deep-learning
 réseaux de neurones,deep-learning
 text mining,nlp
 traitement automatique du langage,nlp
 tal,nlp
-vision par ordinateur,computer-vision
 image processing,computer-vision
 traitement d'images,computer-vision
 huggingface,hugging-face
@@ -265,11 +230,9 @@ genai,llms
 ia générative,llms
 retrieval augmented generation,rag
 ml ops,mlops
-apprentissage par renforcement,reinforcement-learning
 time series,time-series
 forecasting,time-series
 séries temporelles,time-series
-fouille de données,data-mining
 exploration de données,data-mining
 données massives,big-data
 spark,apache-spark
@@ -288,17 +251,13 @@ beautifulsoup,web-scraping
 beautiful soup,web-scraping
 scrapy,web-scraping
 unit tests,unit-testing
-tests unitaires,unit-testing
 automated testing,test-automation
-automatisation des tests,test-automation
 sécurité réseau,network-security
 firewalls,network-security
 pare-feu,network-security
 pentest,penetration-testing
 pentesting,penetration-testing
 ethical hacking,penetration-testing
-tests d'intrusion,penetration-testing
-cryptographie,cryptography
 encryption,cryptography
 chiffrement,cryptography
 owasp top 10,owasp
@@ -314,23 +273,17 @@ openid connect,identity-access-management
 authentication,identity-access-management
 authentification,identity-access-management
 raspberry,raspberry-pi
-internet des objets,iot
 objets connectés,iot
 vhdl,fpga
 verilog,fpga
 web3,blockchain
 agility,agile
-méthodes agiles,agile
 agilité,agile
 scrum master,scrum
-gestion de projet,project-management
 gestion de projets,project-management
 unified modeling language,uml
-revue de code,code-review
 code reviews,code-review
-débogage,debugging
 documentation,technical-writing
-rédaction technique,technical-writing
 search engine optimization,seo
 référencement,seo
 a11y,accessibility
@@ -342,16 +295,55 @@ communication skills,communication
 compétences en communication,communication
 team work,teamwork
 collaboration,teamwork
-travail en équipe,teamwork
 esprit d'équipe,teamwork
-résolution de problèmes,problem-solving
-gestion du temps,time-management
 public speaking,presentation-skills
-prise de parole en public,presentation-skills
-esprit critique,critical-thinking
-anglais,english
-français,french
 francais,french
-arabe,arabic
-espagnol,spanish
-allemand,german
+dev web,web-development
+programmation web,web-development
+dev front,frontend-development
+dev back,backend-development
+dev mobile,mobile-development
+applications mobiles,mobile-development
+bdd,databases
+sgbd,databases
+sgbdr,sql
+analyse des données,data-analysis
+science de données,data-science
+apprentissage machine,machine-learning
+infonuagique,cloud-computing
+sécurité des systèmes d'information,cybersecurity
+administration réseau,networking
+informatique embarquée,embedded-systems
+conception ui/ux,ui-ux-design
+design ux,ui-ux-design
+maquettage,ui-ux-design
+gestion de version,version-control
+assistance informatique,it-support
+support technique,it-support
+programmation objet,oop
+programmation orientée objets,oop
+algorithmes,data-structures
+architecture microservices,microservices
+conception logicielle,software-architecture
+intégration et déploiement continus,ci-cd
+infrastructure en tant que code,infrastructure-as-code
+pack office,microsoft-office
+visualisation des données,data-visualization
+statistique,statistics
+vision artificielle,computer-vision
+traitement du langage naturel,nlp
+séries chronologiques,time-series
+tests automatisés,test-automation
+test d'intrusion,penetration-testing
+gestion des identités,identity-access-management
+méthode agile,agile
+méthodologie agile,agile
+gestion de projets agile,agile
+modélisation uml,uml
+rédaction de documentation,technical-writing
+référencement naturel,seo
+conception responsive,responsive-design
+accessibilité numérique,accessibility
+travail d'équipe,teamwork
+sens de la communication,communication
+esprit d'analyse,critical-thinking

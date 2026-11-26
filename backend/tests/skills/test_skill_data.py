@@ -1,6 +1,7 @@
-"""Checks on the skill list CSVs (M4.1): right columns, ids the database accepts,
-no duplicate ids or aliases, every reference points at a real skill, and no loops in
-the parent links. Reads the files with the standard csv module; no database needed.
+"""Checks on the skill list CSVs (M4.1, M4.9): right columns, ids the database accepts,
+a name in all three languages, no duplicate ids, names or aliases, every reference points
+at a real skill, and no loops in the parent links. Reads the files with the standard csv
+module; no database needed.
 """
 
 import csv
@@ -28,6 +29,10 @@ CATEGORIES = {
 }
 
 
+NAME_COLUMNS = ("name_en", "name_fr", "name_ar")
+ARABIC_LETTER = re.compile(r"[؀-ۿ]")
+
+
 def read(name: str) -> list[dict[str, str]]:
     with (DATA / name).open(encoding="utf-8", newline="") as f:
         return list(csv.DictReader(f))
@@ -43,7 +48,7 @@ def skill_ids() -> set[str]:
 
 
 def test_files_have_the_expected_columns() -> None:
-    assert header("skills.csv") == ["id", "name_en", "category"]
+    assert header("skills.csv") == ["id", "name_en", "name_fr", "name_ar", "category"]
     assert header("aliases.csv") == ["alias", "skill_id"]
     assert header("relations.csv") == ["child_id", "parent_id"]
 
@@ -59,12 +64,40 @@ def test_skill_ids_are_valid_and_unique() -> None:
     assert len(ids) == len(set(ids)), sorted({i for i in ids if ids.count(i) > 1})
 
 
-def test_skills_have_a_name_and_a_known_category() -> None:
+def own_names(row: dict[str, str]) -> set[str]:
+    """The id and the three names, lowercased: what the normalizer (M4.2) matches
+    without needing an alias."""
+    return {row["id"]} | {row[c].lower() for c in NAME_COLUMNS}
+
+
+def test_skills_have_three_names_and_a_known_category() -> None:
     rows = read("skills.csv")
-    assert [r["id"] for r in rows if not r["name_en"].strip()] == []
+    for column in NAME_COLUMNS:
+        assert [r["id"] for r in rows if not r[column].strip()] == [], column
+        assert [r["id"] for r in rows if r[column] != r[column].strip()] == [], column
     assert [r["id"] for r in rows if r["category"] not in CATEGORIES] == []
-    names = [r["name_en"].lower() for r in rows]
-    assert len(names) == len(set(names)), sorted({n for n in names if names.count(n) > 1})
+
+
+def test_names_are_unique_within_each_language() -> None:
+    rows = read("skills.csv")
+    for column in NAME_COLUMNS:
+        names = [r[column].lower() for r in rows]
+        assert len(names) == len(set(names)), (
+            column,
+            sorted({n for n in names if names.count(n) > 1}),
+        )
+
+
+def test_arabic_names_use_arabic_letters_or_stay_technical() -> None:
+    """An Arabic name is either written in Arabic, or is exactly the English name
+    (Python, Docker: technical names stay in Latin letters, localization.md section 3)."""
+    rows = read("skills.csv")
+    bad = [
+        r["id"]
+        for r in rows
+        if not ARABIC_LETTER.search(r["name_ar"]) and r["name_ar"] != r["name_en"]
+    ]
+    assert bad == []
 
 
 def test_aliases_are_lowercase_unique_and_point_at_a_skill() -> None:
@@ -78,10 +111,9 @@ def test_aliases_are_lowercase_unique_and_point_at_a_skill() -> None:
 
 
 def test_an_alias_never_names_a_different_skill() -> None:
-    """An alias can't be another skill's id or English name ("js" can't point at
-    javascript if some other skill is called "js")."""
-    own_name = {r["id"]: r["id"] for r in read("skills.csv")}
-    own_name |= {r["name_en"].lower(): r["id"] for r in read("skills.csv")}
+    """An alias can't be another skill's id or name in any language ("js" can't point
+    at javascript if some other skill is called "js")."""
+    own_name = {name: r["id"] for r in read("skills.csv") for name in own_names(r)}
     clashes = [
         r
         for r in read("aliases.csv")
@@ -91,9 +123,9 @@ def test_an_alias_never_names_a_different_skill() -> None:
 
 
 def test_aliases_do_not_repeat_the_id_or_name() -> None:
-    """The normalizer (M4.2) already matches the id and English name; repeating them
+    """The normalizer (M4.2) already matches the id and the three names; repeating them
     here would only hide mistakes."""
-    names = {r["id"]: {r["id"], r["name_en"].lower()} for r in read("skills.csv")}
+    names = {r["id"]: own_names(r) for r in read("skills.csv")}
     repeats = [r for r in read("aliases.csv") if r["alias"] in names.get(r["skill_id"], set())]
     assert repeats == []
 
