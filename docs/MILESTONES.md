@@ -13,6 +13,7 @@ The whole project as a list of small, self-contained pieces of work.
 - **They never block the graded work.** No slice in M9 (evaluation) or M10 (deploy and demo) depends on them. If time runs short, the evaluation and the presentation still happen, and the presentation shows whatever of M11–M16 is merged.
 - **Numbers are ids, not order.** M11 isn't "after M10"; the weeks and `depends` give the order.
 - **Each of them starts with a decision or contract slice.** Do that one first; the rest build on it.
+- **M17 (skills beyond software) is optional.** It starts only after the core project is done, and nothing depends on it.
 - **New personal data is deleted with the account.** Any slice that adds a table holding a user's data (attempts, history, notifications, visibility, contact requests, institution links) makes it cascade from `users` and adds it to `tests/db/test_delete_user.py`, so account deletion (M3.9) keeps removing everything.
 
 Every slice answers five questions:
@@ -2352,3 +2353,116 @@ The pieces that turn a working app into a product: free and premium plans, a vis
 
 **Done when**
 - [ ] Tests pass; the summary shows the pilot's numbers
+
+## M17 · Skills beyond software (optional)
+<!-- weeks: 15-18 -->
+**Optional, and only after the core project is done** (M0–M10 merged, plus whichever M11–M16 slices the team chose to finish). Nothing else depends on it. Today the skill list (M4.1) covers software engineering only, so a mathematics or biology student gets an empty or misleading profile. This milestone extends the skill list, test data and matching to other fields, one field at a time. **Where evidence for these fields comes from** (publications, lab reports, competition results, other websites) is a separate question, decided later. Until then these fields use the sources that already exist (CV, certificates, portfolio, manual projects).
+**Demo:** a biology student and a mathematics student each upload a CV in French, get a profile with skills from their field and the evidence behind them, and are matched against internships in their field.
+
+### M17.1 · Which fields, and how the skill list holds them
+`area:data` `size:M` `depends:M4.1, M4.9` `contract:yes`
+
+**Goal:** A decision on which fields come first and how one skill list holds several fields without making the software skills harder to find or match.
+
+**Why:** Every other slice in this milestone builds on it. Adding fields changes the skill list's structure (the 150–300 skill limit, the categories, which aliases are safe), and that is hard to undo once profiles and postings point at skill ids.
+
+**Read first:** `backend/app/skills/data/README.md`; `backend/tests/skills/test_skill_data.py`; `docs/research/findings.md`; D-031.
+
+**Tasks**
+- [ ] Decide D-031 (2–3 options + recommendation): which fields first (candidates: mathematics and statistics, biology and life sciences, physics, chemistry, electrical engineering, economics and finance), based on who the users are and which internships exist for them
+- [ ] How a skill says which field it belongs to: a new `field` column, a top-level `area` per field linked through `relations.csv`, or both. Skills shared by several fields (statistics, Python, technical writing) stay one skill
+- [ ] New categories for non-software skills (for example `method`, `technique`, `instrument`, `theory`), with examples, added to the README table and the test's `CATEGORIES`
+- [ ] Replace the single 150–300 limit with one limit per field, so the list stays curated and doesn't become a dictionary. This changes an existing test on purpose; say so in the commit and issue comment
+- [ ] Rules for words that mean different things in different fields ("modelling", "regression", "R", "culture", "cell"): left out of aliases, or kept with the field needed to read them
+- [ ] README: how to add a whole new field (skills, aliases, relations, names in three languages, test profiles, postings)
+
+**Done when**
+- [ ] D-031 Decided; README and test updated; every existing software skill still loads and passes the structure checks unchanged
+
+### M17.2 · Mathematics and statistics skills
+`area:data` `size:M` `depends:M17.1`
+
+**Goal:** The skills that mathematics and statistics students' CVs and internships mention, with their other names, parent links and display names in English, French and Arabic.
+
+**Why:** Mathematics overlaps most with what already exists (statistics, data analysis, Python, R), so it's the cheapest first field and a good test of the structure from M17.1.
+
+**Read first:** `backend/app/skills/data/README.md` (the "add a field" part from M17.1); a few real French and English mathematics internship postings.
+
+**Tasks**
+- [ ] Skills (for example linear algebra, probability, optimisation, numerical analysis, stochastic processes, LaTeX, MATLAB), reusing existing ids where they already exist
+- [ ] English and French aliases ("algèbre linéaire", "probas"); display names in en, fr and ar (D-030: no Arabic aliases needed)
+- [ ] Parent links into the field's area, and into existing skills where they belong (`statistics` already sits under data)
+
+**Done when**
+- [ ] `uv run pytest tests/skills` passes; every skill in the field's test profiles and postings (M17.4) is present
+
+### M17.3 · Biology and life sciences skills
+`area:data` `size:M` `depends:M17.1`
+
+**Goal:** The same as M17.2 for biology and life sciences: lab techniques, instruments, analysis methods and software.
+
+**Why:** Biology is far from software, so it shows whether the structure from M17.1 really works for a different kind of skill. A lab technique is shown by very different evidence than a library is.
+
+**Read first:** as M17.2.
+
+**Tasks**
+- [ ] Skills (for example PCR, cell culture, microscopy, Western blot, bioinformatics, sequence analysis, lab safety, good laboratory practice), reusing existing ids (Python, R, statistics)
+- [ ] English and French aliases ("culture cellulaire", "biologie moléculaire"); display names in en, fr and ar
+- [ ] Parent links
+
+**Done when**
+- [ ] `uv run pytest tests/skills` passes; every skill in the field's test profiles and postings (M17.4) is present
+
+### M17.4 · Test profiles, labels and postings for the new fields
+`area:eval` `size:L` `depends:M17.1, M1.6, M1.7`
+
+**Goal:** For each new field, a few anonymised test profiles with hand-written correct answers, and curated internship postings with match labels, in the same formats as M1.5–M1.7.
+
+**Why:** Without them nobody can tell whether the new skills are found and matched well, and the evaluation numbers would only describe software students.
+
+**Read first:** the labeling guide from M1.6; the M1.5 and M1.7 file formats.
+
+**Tasks**
+- [ ] 4–6 profiles per field (CV text in French or English, no GitHub needed), made up or anonymised with consent
+- [ ] The correct skills and statuses for each, written by people following the labeling guide (labels are ground truth: Claude doesn't write them)
+- [ ] 8–12 postings per field and at least 15 profile × posting pairs labeled relevant / not relevant
+- [ ] Kept apart from the original dataset, so the existing evaluation numbers stay comparable
+
+**Done when**
+- [ ] Files committed and checked by a second person; the evaluation script can run on the new fields alone or together with the rest
+
+### M17.5 · Finding skills in non-software CVs
+`area:ai` `size:M` `depends:M17.2, M17.3, M17.4, M4.2, M6.2`
+
+**Goal:** The CV skill finder and the agents find the new fields' skills, and handle words whose meaning depends on the field.
+
+**Why:** "Culture" in a biology CV is a lab technique; in a software CV it isn't a skill at all. Rules and prompts written with software in mind need checking on other fields.
+
+**Read first:** `backend/app/skills/` (the finder from M4.2); the Profile Agent's prompt (M6.1); M17.1's rules for field-dependent words.
+
+**Tasks**
+- [ ] Apply the field rules from M17.1 in the finder (for example, only accept a field-dependent alias when the CV is clearly from that field)
+- [ ] Check the Profile and Evidence agents' prompts and example answers on the new profiles; add examples from other fields if they help
+- [ ] Run the evaluation on the new fields for System A and the agents, and record the numbers next to the software numbers
+
+**Done when**
+- [ ] Tests pass; the evaluation shows results for each new field, and the software results haven't got worse
+
+### M17.6 · Field on the profile and in matching
+`area:frontend` `size:M` `depends:M17.5, M7.7`
+
+**Goal:** A student can say which field they study, the skills screen groups skills by field, and the opportunities list can be filtered by field.
+
+**Why:** A biology student shouldn't scroll past software internships, and a skill list that mixes fields needs grouping to stay readable.
+
+**Read first:** profile screens (M3.4); skills screen (M4.6); opportunities screen (M7.7); `docs/design/localization.md`.
+
+**Tasks**
+- [ ] Field of study on the profile (optional, more than one allowed), through the profile API
+- [ ] Skills grouped by field on the skills screen; opportunities filtered by field
+- [ ] All new text in en, fr and ar, checked right-to-left; update `docs/USER_GUIDE.md`
+
+**Done when**
+- [ ] A biology test profile sees its skills grouped and biology internships first, in all three languages
+
+**Not in this milestone (decided later):** which websites and sources provide evidence for these fields (publications, ORCID, lab reports, competitions, datasets), and assessments for non-software skills (M11 is built around code).
