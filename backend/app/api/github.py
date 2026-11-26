@@ -8,6 +8,7 @@ app/services/github_imports.py.
 
 Errors (body `{"detail": {"code": ...}}`):
 - 422 FastAPI validation error: not a valid GitHub username
+- 403 `github_consent_required`: the user hasn't agreed yet (app/api/github_consent.py)
 - 404 `github_user_not_found`: no GitHub account with that name
 - 429 `github_rate_limited`: GitHub's request limit is used up; `reset_at` (ISO time, or
   null) says when to try again. Setting GITHUB_TOKEN raises the limit.
@@ -69,6 +70,8 @@ def import_github(
         sources = github_imports.import_github(
             session, user, body.username, client=client, max_repos=settings.github_max_repos
         )
+    except github_imports.GitHubConsentRequiredError as error:
+        raise HTTPException(status.HTTP_403_FORBIDDEN, detail={"code": error.code}) from None
     except GitHubUserNotFoundError as error:
         raise HTTPException(status.HTTP_404_NOT_FOUND, detail={"code": error.code}) from None
     except GitHubRateLimitError as error:

@@ -4,7 +4,7 @@ GET    /profile  → 200 the profile with its education, experience and projects
 PATCH  /profile  {display_name?, headline?, preferred_language?} → 200 the profile;
                  only the fields sent change (send null to empty a text field)
 DELETE /profile  → 204; empties the profile and deletes its entries. The account and
-                 its preferred language stay (deleting the account is M3.9).
+                 its preferred language stay (deleting the account: app/api/account.py).
 
 A new user's profile is created empty on first use, so there is no "create" call.
 `preferred_language` is stored on the user (D-012) but edited here with the rest.

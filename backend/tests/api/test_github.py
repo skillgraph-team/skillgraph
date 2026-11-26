@@ -40,7 +40,13 @@ def fake_github(tmp_path: Path) -> Iterator[FakeGitHub]:
 @pytest.fixture
 def student(client: TestClient, fake_github: FakeGitHub) -> TestClient:
     sign_up(client, "gh-owner@example.com")
+    give_consent(client)
     return client
+
+
+def give_consent(client: TestClient) -> None:
+    """The import refuses without consent (M3.9; tested in test_github_consent.py)."""
+    assert client.put("/profile/github-consent").status_code == 200
 
 
 def import_github(client: TestClient, username: str = "test-student"):  # type: ignore[no-untyped-def]
@@ -201,9 +207,11 @@ def test_each_user_has_their_own_repo_sources(
     client: TestClient, db_session: Session, fake_github: FakeGitHub
 ) -> None:
     sign_up(client, "first-gh@example.com")
+    give_consent(client)
     import_github(client)
     sign_up(client, "second-gh@example.com")
     log_in(client, "second-gh@example.com")
+    give_consent(client)
     import_github(client)
 
     sources = repo_sources(db_session)

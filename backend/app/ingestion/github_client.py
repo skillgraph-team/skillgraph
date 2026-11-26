@@ -25,6 +25,7 @@ import time
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
+from urllib.parse import urlsplit
 
 import httpx
 
@@ -141,3 +142,21 @@ def _reset_time(response: httpx.Response) -> datetime | None:
         return datetime.fromtimestamp(int(response.headers["x-ratelimit-reset"]), UTC)
     except (KeyError, ValueError):
         return None
+
+
+def forget_cached_user(cache_dir: Path, username: str) -> int:
+    """Delete the saved answers about one GitHub user: their repo list and their repos
+    (M3.9: account deletion and withdrawn consent). Returns how many files went."""
+    if not cache_dir.exists():
+        return 0
+    prefixes = (f"/users/{username.lower()}/", f"/repos/{username.lower()}/")
+    removed = 0
+    for path in cache_dir.glob("*.json"):
+        try:
+            url = json.loads(path.read_text(encoding="utf-8")).get("url", "")
+        except (OSError, ValueError):
+            url = ""  # unreadable: can't tell whose it is, so delete it to be safe
+        if not url or urlsplit(url).path.lower().startswith(prefixes):
+            path.unlink(missing_ok=True)
+            removed += 1
+    return removed

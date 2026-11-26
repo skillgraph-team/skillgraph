@@ -11,6 +11,7 @@ from app.ingestion.github_client import (
     GitHubClient,
     GitHubRateLimitError,
     GitHubUnavailableError,
+    forget_cached_user,
 )
 from tests.fixtures.github.fake_github import BASE_URL, FakeGitHub
 
@@ -157,3 +158,21 @@ def test_no_token_sends_no_authorization(tmp_path: Path) -> None:
     fake.client(tmp_path, token="").get(LANGUAGES)
 
     assert "Authorization" not in fake.seen_headers[0]
+
+
+def test_forget_cached_user_deletes_only_that_users_answers(tmp_path: Path) -> None:
+    fake = FakeGitHub()
+    client = fake.client(tmp_path)
+    client.get(LANGUAGES)
+    client.get("/users/test-student/repos", {"type": "owner", "sort": "pushed", "per_page": 20})
+    fake.responses["/repos/someone-else/app/languages"] = fake.responses[LANGUAGES]
+    client.get("/repos/someone-else/app/languages")
+
+    removed = forget_cached_user(tmp_path, "Test-Student")
+
+    assert removed == 2
+    assert len(list(tmp_path.iterdir())) == 1  # someone-else's answer stays
+
+
+def test_forget_cached_user_without_a_cache_folder(tmp_path: Path) -> None:
+    assert forget_cached_user(tmp_path / "missing", "test-student") == 0

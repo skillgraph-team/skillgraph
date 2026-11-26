@@ -828,6 +828,35 @@ These fill in details D-006 left open. They are part of the contract in `docs/de
 - **Why:** the answers are hand-made, but in GitHub's real format (checked against `api.github.com` with the public `octocat` account on 2026-11-26), trimmed to the fields we use. One file is easier to read and edit than dozens.
 - **Where:** `backend/tests/fixtures/github/`.
 
+### M3.9 · Account and data deletion
+
+#### T-101 · Deleting an account asks for the password again
+- **What:** `POST /account/delete {password}` answers 204 and removes the login cookie. A wrong password gets 403 `wrong_password` and nothing is deleted. It's a POST, not a DELETE, because a body on DELETE is dropped by some tools and proxies.
+- **Why:** deletion can't be undone. Re-entering the password stops a login left open on a shared computer, or a stray click, from deleting an account. 403 and not 401, so the frontend doesn't treat it as "logged out".
+- **Where:** `backend/app/api/account.py`, `backend/app/services/accounts.py`.
+
+#### T-102 · Files are deleted before rows
+- **What:** the order is:
+  1. remove `UPLOAD_DIR/<user id>/` (all their CVs);
+  2. remove the cached GitHub answers for their saved GitHub username;
+  3. delete the `users` row. The database cascade removes every other personal row (schema.md).
+
+  An old login cookie stops working at once, because each request looks the user up (M3.1).
+- **Why:** if removing files fails, the error stops everything before any row is gone, so the user can try again. The other order could leave a CV on disk with no account left to delete it from.
+- **Watch out:** the GitHub cache is shared. If two users imported the same username, deleting one also empties the cache for the other, which only costs a few requests on their next import.
+- **Where:** `backend/app/services/accounts.py`, `backend/app/ingestion/github_client.py` (`forget_cached_user`).
+
+#### T-103 · GitHub consent has its own endpoints; the import refuses without it
+- **What:** `GET`/`PUT`/`DELETE /profile/github-consent`. `PUT` stores the time in `profiles.github_consent_at`; agreeing again keeps the first time. `POST /sources/github` answers 403 `github_consent_required` before sending any request to GitHub.
+- **Why:** consent is a separate, recorded act that can be taken back (SPEC: explicit, revocable consent). Separate endpoints make "taking it back" an obvious action of its own, rather than a flag sent with each import.
+- **Watch out:** only the time is stored, not which wording the user agreed to. If the consent text changes in a way that matters, add a version then.
+- **Where:** `backend/app/api/github_consent.py`, `backend/app/services/github_imports.py`.
+
+#### T-104 · Withdrawing consent deletes everything imported from GitHub
+- **What:** `DELETE /profile/github-consent` deletes the user's `github_repo` sources (and their evidence, by cascade), clears the saved username and the consent time, and removes the cached answers for that username. CVs and everything else stay.
+- **Why:** consent that's taken back should leave nothing behind that it allowed in.
+- **Where:** `backend/app/services/github_imports.py` (`withdraw_consent`).
+
 ### Repo setup script (no slice)
 
 #### T-078 · `github_setup.py` creates only missing labels
