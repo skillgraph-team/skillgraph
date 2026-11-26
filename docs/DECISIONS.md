@@ -220,7 +220,7 @@ Two kinds of entry:
 - **Choice:** Arabic is a small addition for the interface only: the interface text, the AI's explanations and the recommendations stay available in en, fr and ar, right-to-left included. CVs, repos and postings only need to work in English and French. No slice spends effort on Arabic CVs (skill extraction, Arabic eval profiles, Arabic postings).
 - **Why:** Arabic isn't a professional language for this audience; their CVs and job postings are in French or English.
 - **What already exists:** M3.5 was built before this decision and handles Arabic CVs (language `ar`, Arabic test files). That code stays: it's small, tested and costs nothing to keep. An Arabic CV still uploads and is tagged `ar`; nothing later has to support it.
-- **To update:** `docs/SPEC.md` still says content in all three languages. The change is proposed in the M3.5 report (SPEC changes need Rasen's approval).
+- **Spec:** `docs/SPEC.md` updated to match (approved by Rasen, 2026-11-26).
 
 ---
 
