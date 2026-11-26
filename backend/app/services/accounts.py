@@ -1,4 +1,5 @@
-"""Accounts: create a user, check an email + password at login, delete an account.
+"""Accounts: create a user, check an email + password at login, change the password
+(M3.10), delete an account.
 
 Emails arrive already normalised (trimmed, lowercase) from the API schemas; the
 database also refuses uppercase emails (T-057).
@@ -57,6 +58,18 @@ def log_in(session: Session, *, email: str, password: str) -> User:
     if not verify_password(password, user.password_hash):
         raise InvalidCredentialsError
     return user
+
+
+def change_password(session: Session, user: User, *, current: str, new: str) -> None:
+    """Replace the password hash. A wrong current password changes nothing.
+
+    Logins already open (on this or another device) stay valid until they expire: tokens
+    aren't stored on the server (D-015), so there is nothing to revoke.
+    """
+    if not verify_password(current, user.password_hash):
+        raise InvalidCredentialsError
+    user.password_hash = hash_password(new)
+    session.flush()
 
 
 def delete_account(

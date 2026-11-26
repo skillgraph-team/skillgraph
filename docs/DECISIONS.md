@@ -857,6 +857,18 @@ These fill in details D-006 left open. They are part of the contract in `docs/de
 - **Why:** consent that's taken back should leave nothing behind that it allowed in.
 - **Where:** `backend/app/services/github_imports.py` (`withdraw_consent`).
 
+### M3.10 · Change password
+
+#### T-105 · A wrong current password gets 401 `invalid_credentials`
+- **What:** `POST /auth/password` answers 401 `invalid_credentials` when the current password is wrong, as the slice asks. The login cookie is untouched, so the user stays logged in. The new password follows the sign-up rules (T-069, 8–128 characters); it may equal the old one.
+- **Why:** it reuses the login error code, so the frontend needs no new translation. Unlike `/account/delete` (403 `wrong_password`, T-101), this is a 401: the frontend must not treat a 401 *from this endpoint* as "logged out".
+- **Where:** `backend/app/api/auth.py`, `backend/app/services/accounts.py` (`change_password`).
+
+#### T-106 · Other open logins stay valid after a password change
+- **What:** changing the password only replaces the hash. Logins already open on other devices keep working until they expire (24 h by default).
+- **Why:** tokens aren't stored on the server (D-015), so there is nothing to revoke. Ending other logins would need a per-user "password changed at" time checked against the token's `iat`: a schema change, left for later if needed.
+- **Where:** `backend/app/services/accounts.py` (docstring of `change_password`).
+
 ### Repo setup script (no slice)
 
 #### T-078 · `github_setup.py` creates only missing labels

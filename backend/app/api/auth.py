@@ -4,9 +4,12 @@ POST /auth/signup  {email, password, preferred_language?} → 201 user, sets the
 POST /auth/login   {email, password}                     → 200 user, sets the login cookie
 POST /auth/logout                                        → 204, removes the login cookie
 GET  /auth/me                                            → 200 user (needs a login)
+POST /auth/password {current_password, new_password}     → 204 (needs a login, M3.10);
+                    the user stays logged in
 
 Errors: 409 `email_taken`, 401 `invalid_credentials` (same for unknown email and wrong
-password), 422 for invalid input (FastAPI's standard validation answer).
+password, and for a wrong current password when changing it), 422 for invalid input
+(FastAPI's standard validation answer).
 """
 
 import re
@@ -24,7 +27,13 @@ from app.config import get_settings
 from app.db.models import User
 from app.db.session import DbSession
 from app.db.values import Language
-from app.services.accounts import EmailTakenError, InvalidCredentialsError, log_in, sign_up
+from app.services.accounts import (
+    EmailTakenError,
+    InvalidCredentialsError,
+    change_password,
+    log_in,
+    sign_up,
+)
 
 router = APIRouter(prefix="/auth", tags=["auth"])
 
@@ -58,6 +67,13 @@ class LogInRequest(BaseModel):
 
     email: Email
     password: Annotated[str, Field(max_length=128)]
+
+
+class ChangePasswordRequest(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    current_password: Annotated[str, Field(max_length=128)]
+    new_password: Password  # the sign-up rules (T-069)
 
 
 class UserOut(BaseModel):
@@ -110,3 +126,14 @@ def logout(response: Response) -> None:
 @router.get("/me")
 def me(user: CurrentUser) -> UserOut:
     return UserOut.model_validate(user)
+
+
+@router.post("/password", status_code=status.HTTP_204_NO_CONTENT)
+def change_my_password(body: ChangePasswordRequest, user: CurrentUser, session: DbSession) -> None:
+    try:
+        change_password(session, user, current=body.current_password, new=body.new_password)
+    except InvalidCredentialsError:
+        raise HTTPException(
+            status.HTTP_401_UNAUTHORIZED, detail={"code": "invalid_credentials"}
+        ) from None
+    session.commit()
