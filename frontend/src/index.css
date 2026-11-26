@@ -74,3 +74,59 @@ main {
   margin-block: 0.25rem;
   padding-inline-start: 1.25rem;
 }
+
+.account-menu {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.account-menu a.active {
+  font-weight: 700;
+}
+
+.profile-page {
+  max-inline-size: 40rem;
+}
+
+.entry-section {
+  margin-block: 2rem;
+}
+
+.entries {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.entry {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-block: 0.5rem;
+  border-block-end: 1px solid #ddd;
+}
+
+.dates {
+  font-size: 0.875rem;
+}
+
+.entry-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-block: 0.5rem 1rem;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.buttons {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+}

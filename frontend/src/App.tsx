@@ -2,6 +2,7 @@
  * The app's frame and its pages.
  *
  * /        home, logged-in users only (anonymous visitors go to /login)
+ * /profile the user's profile, lists and password (logged-in users only)
  * /login   log in       /signup  sign up      (logged-in users are sent on)
  * /health  whether the backend and database work (anyone)
  *
@@ -16,6 +17,7 @@ import { LanguageSwitcher } from "./components/LanguageSwitcher";
 import { HealthPage } from "./pages/HealthPage";
 import { HomePage } from "./pages/HomePage";
 import { LoginPage } from "./pages/LoginPage";
+import { ProfilePage } from "./pages/ProfilePage";
 import { SignUpPage } from "./pages/SignUpPage";
 
 export function App() {
@@ -31,6 +33,14 @@ export function App() {
           element={
             <RequireLogin>
               <HomePage />
+            </RequireLogin>
+          }
+        />
+        <Route
+          path="/profile"
+          element={
+            <RequireLogin>
+              <ProfilePage />
             </RequireLogin>
           }
         />

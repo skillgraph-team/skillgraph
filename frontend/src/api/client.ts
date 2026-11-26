@@ -26,10 +26,28 @@ export class ApiError extends Error {
   constructor(
     readonly status: number,
     readonly code: string,
+    /** For `invalid_input`: which body fields FastAPI refused, and its error type for each
+     * (`{"title": "string_too_short"}`). Errors about the whole body are under `""`. */
+    readonly fields: Record<string, string> = {},
   ) {
     super(`Backend error ${status} ${code}`);
     this.name = "ApiError";
   }
+}
+
+/** FastAPI's 422 answer: `{"detail": [{"loc": ["body", "title"], "type": "..."}, ...]}`. */
+function invalidFields(body: unknown): Record<string, string> {
+  const detail = (body as { detail?: unknown } | null)?.detail;
+  if (!Array.isArray(detail)) return {};
+  const fields: Record<string, string> = {};
+  for (const item of detail as { loc?: unknown; type?: unknown }[]) {
+    if (!Array.isArray(item.loc) || typeof item.type !== "string") continue;
+    const [where, field] = item.loc as unknown[];
+    if (where !== "body") continue;
+    const name = typeof field === "string" ? field : "";
+    fields[name] ??= item.type;
+  }
+  return fields;
 }
 
 function errorCode(status: number, body: unknown): string {
@@ -65,7 +83,8 @@ export async function request<T>(
   if (!response.ok) {
     // The Vite proxy answers 502/504 without JSON when the backend isn't running.
     if (json === null && response.status >= 500) throw new BackendUnreachableError(response);
-    throw new ApiError(response.status, errorCode(response.status, json));
+    const code = errorCode(response.status, json);
+    throw new ApiError(response.status, code, code === "invalid_input" ? invalidFields(json) : {});
   }
   return json as T;
 }

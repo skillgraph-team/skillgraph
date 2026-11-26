@@ -60,5 +60,68 @@
   "home": {
     "logged_in_as": "Connecté avec",
     "coming": "Votre profil, vos compétences et vos stages correspondants apparaîtront ici."
+  },
+  "nav": {
+    "label": "Menu principal",
+    "home": "Accueil",
+    "profile": "Profil"
+  },
+  "profile": {
+    "title": "Votre profil",
+    "loading": "Chargement du profil…",
+    "save": "Enregistrer",
+    "saved": "Modifications enregistrées.",
+    "cancel": "Annuler",
+    "edit": "Modifier",
+    "edit_named": "Modifier {{name}}",
+    "delete": "Supprimer",
+    "delete_named": "Supprimer {{name}}",
+    "confirm_delete": "Supprimer cet élément ?",
+    "delete_yes": "Oui, supprimer",
+    "present": "aujourd'hui",
+    "education": {
+      "title": "Formation",
+      "empty": "Aucune formation ajoutée pour l'instant.",
+      "add": "Ajouter une formation"
+    },
+    "experience": {
+      "title": "Expérience",
+      "empty": "Aucune expérience ajoutée pour l'instant.",
+      "add": "Ajouter une expérience"
+    },
+    "projects": {
+      "title": "Projets",
+      "empty": "Aucun projet ajouté pour l'instant.",
+      "add": "Ajouter un projet"
+    },
+    "fields": {
+      "display_name": "Nom",
+      "headline": "Titre du profil",
+      "institution": "Établissement",
+      "degree": "Diplôme",
+      "field_of_study": "Domaine d'études",
+      "organization": "Organisation",
+      "role": "Poste",
+      "title": "Titre",
+      "url": "Lien",
+      "start_date": "Date de début",
+      "end_date": "Date de fin",
+      "description": "Description"
+    },
+    "problems": {
+      "required": "Ce champ est obligatoire.",
+      "too_long": "Ce texte est trop long.",
+      "url": "Saisissez un lien qui commence par http:// ou https://.",
+      "date": "Cette date n'est pas valide.",
+      "end_before_start": "La date de fin est antérieure à la date de début.",
+      "invalid": "Cette valeur n'est pas valide."
+    }
+  },
+  "password": {
+    "title": "Mot de passe",
+    "current": "Mot de passe actuel",
+    "new": "Nouveau mot de passe",
+    "change": "Changer le mot de passe",
+    "changed": "Mot de passe modifié."
   }
 }

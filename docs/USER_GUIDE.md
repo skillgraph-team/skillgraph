@@ -2,7 +2,7 @@
 
 How to use SkillGraph, written for the people using it: students, recent graduates, and anyone trying the demo. It describes only what works today. Features still being built are listed at the end.
 
-_Last updated: 2026-11-26, after M3.2 (sign-up and login screens)._
+_Last updated: 2026-11-26, after M3.4 (profile screens)._
 
 > **For contributors:** update this guide in the same commit as any slice that changes what a user sees or does (CLAUDE.md, "Finishing"). See "Keeping this guide up to date" at the end.
 
@@ -30,7 +30,7 @@ SkillGraph works in **English**, **French** and **Arabic**.
 
 ## 3. Creating an account and logging in
 
-Everything except the status page (section 4) needs an account. If you aren't logged in, SkillGraph shows the **Log in** page.
+Everything except the status page (section 5) needs an account. If you aren't logged in, SkillGraph shows the **Log in** page.
 
 **Creating an account**
 1. On the Log in page, next to "No account yet?", click **Sign up**.
@@ -51,9 +51,23 @@ There's no "forgot my password" email yet. If you lose your password, ask whoeve
 | The password needs at least 8 characters. | Choose a longer password. |
 | An account with this email already exists. | Log in instead, or use another email. |
 | Wrong email or password. | One of the two is wrong. For your safety, SkillGraph doesn't say which. |
-| SkillGraph can't be reached right now. Try again in a moment. | The backend isn't running (see section 4). |
+| SkillGraph can't be reached right now. Try again in a moment. | The backend isn't running (see section 5). |
 
-## 4. Checking that SkillGraph is working
+## 4. Your profile
+
+Click **Profile** at the top of the page.
+
+- **Name and headline:** fill them in and click **Save**. A headline is one line about you, such as "Computer science student looking for a data internship".
+- **Education, Experience, Projects:** click **Add education** (or **Add experience**, **Add a project**), fill in the form and click **Save**. Fields marked * are required. A project needs a title and a description; its link must start with `http://` or `https://`.
+- **Editing:** click **Edit** next to an entry, change it, and click **Save** (or **Cancel**).
+- **Deleting:** click **Delete** next to an entry, then **Yes, delete**. This can't be undone.
+- If something isn't right, a message shows under the field, for example "The end date is before the start date."
+- Dates are shown as month and year. An entry with no end date shows "present".
+- You can write entries in any language; each text is shown in its own direction, also in the Arabic interface.
+
+**Changing your password:** at the bottom of the Profile page, enter your current password and a new one (at least 8 characters), then click **Change password**. You stay logged in. If the current password is wrong, the message says "That password isn't right." and nothing changes.
+
+## 5. Checking that SkillGraph is working
 
 Open **http://localhost:5173/health** to see whether SkillGraph's parts are running:
 
@@ -64,11 +78,11 @@ Open **http://localhost:5173/health** to see whether SkillGraph's parts are runn
 | The backend is running, but it can't reach the database. | The database isn't running. | Run `docker compose up -d db` (step 1 above), then reload. |
 | The backend can't be reached. Is it running? | The backend isn't running. | Start it (step 2 above), then reload. |
 
-## 5. Coming later
+## 6. Coming later
 
 These are planned (see `docs/MILESTONES.md`) but **not available yet**:
 
-- Changing your password and deleting your account from the screen (they work in the backend already)
+- Deleting your account from the screen (it works in the backend already)
 - Uploading your CV and linking your GitHub profile
 - Seeing your skills, each linked to its evidence, with a status: claimed, demonstrated, assessed or unverified
 - Matching your profile against curated internships, with an explanation of each match and each gap

@@ -60,5 +60,68 @@
   "home": {
     "logged_in_as": "Logged in as",
     "coming": "Your profile, skills and matches will appear here."
+  },
+  "nav": {
+    "label": "Main menu",
+    "home": "Home",
+    "profile": "Profile"
+  },
+  "profile": {
+    "title": "Your profile",
+    "loading": "Loading the profile…",
+    "save": "Save",
+    "saved": "Changes saved.",
+    "cancel": "Cancel",
+    "edit": "Edit",
+    "edit_named": "Edit {{name}}",
+    "delete": "Delete",
+    "delete_named": "Delete {{name}}",
+    "confirm_delete": "Delete this entry?",
+    "delete_yes": "Yes, delete",
+    "present": "present",
+    "education": {
+      "title": "Education",
+      "empty": "No education added yet.",
+      "add": "Add education"
+    },
+    "experience": {
+      "title": "Experience",
+      "empty": "No experience added yet.",
+      "add": "Add experience"
+    },
+    "projects": {
+      "title": "Projects",
+      "empty": "No projects added yet.",
+      "add": "Add a project"
+    },
+    "fields": {
+      "display_name": "Name",
+      "headline": "Headline",
+      "institution": "School or university",
+      "degree": "Degree",
+      "field_of_study": "Field of study",
+      "organization": "Organization",
+      "role": "Role",
+      "title": "Title",
+      "url": "Link",
+      "start_date": "Start date",
+      "end_date": "End date",
+      "description": "Description"
+    },
+    "problems": {
+      "required": "This field is required.",
+      "too_long": "This is too long.",
+      "url": "Enter a link starting with http:// or https://.",
+      "date": "This isn't a valid date.",
+      "end_before_start": "The end date is before the start date.",
+      "invalid": "This value isn't valid."
+    }
+  },
+  "password": {
+    "title": "Password",
+    "current": "Current password",
+    "new": "New password",
+    "change": "Change password",
+    "changed": "Password changed."
   }
 }

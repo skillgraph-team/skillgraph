@@ -919,6 +919,33 @@ These fill in details D-006 left open. They are part of the contract in `docs/de
 - **Why:** the status page is still useful when setting up, and must work without logging in.
 - **Where:** `frontend/src/App.tsx`, `docs/USER_GUIDE.md` §4.
 
+### M3.4 · Profile screens
+
+#### T-116 · One list component for the three kinds, driven by a field list
+- **What:** `src/profile/entryKinds.ts` lists each kind's fields (name, type short/long/date/url, required) as the backend defines them. `EntrySection` (list, add, edit, delete) and `EntryForm` (the form) are built from that list, so education, experience and projects share one pattern. Field names are typed against `profile.fields.*` in en.json, so a field without a label fails `npm run check`.
+- **Why:** three copies of the same list and form would drift apart. The alternative, one component per kind, is easier to paste alone but triples every fix.
+- **Where:** `frontend/src/profile/entryKinds.ts`, `frontend/src/components/EntrySection.tsx`, `frontend/src/components/EntryForm.tsx`.
+
+#### T-117 · Mistakes show under their field, from our check first, then from the 422
+- **What:** `checkEntry` runs the backend's rules before sending: required, max length, `http(s)://` link, end date not before start. If the backend still refuses, `ApiError.fields` holds FastAPI's refused fields (`loc: ["body", <field>]` → error type). `problemsFromApi` maps those to the same `profile.problems.*` keys. The date check runs on the whole body (`loc: ["body"]`, `value_error`), so it shows above the buttons.
+- **Why:** the slice asks for the API's validation errors shown in the form. Checking first saves a round trip, and the 422 mapping covers anything that drifts.
+- **Where:** `frontend/src/profile/fieldProblems.ts`, `frontend/src/api/client.ts` (`invalidFields`).
+
+#### T-118 · Deleting an entry asks to confirm on the spot, not in a browser dialog
+- **What:** **Delete** turns into "Delete this entry?" with **Yes, delete** and **Cancel** in the same row.
+- **Why:** `window.confirm` can't be styled, and its buttons are in the browser's language, not the interface's.
+- **Where:** `frontend/src/components/EntrySection.tsx`.
+
+#### T-119 · The page loads the whole profile once and holds it
+- **What:** `GET /profile` (details and all three lists) when the page opens. Each section saves its own change (POST/PUT/DELETE) and hands the new list back to the page. No reload after each change.
+- **Why:** one request to open the page, and the screen shows exactly what the backend answered for each save.
+- **Where:** `frontend/src/pages/ProfilePage.tsx`.
+
+#### T-120 · Dates use the browser's date input; the list shows month and year
+- **What:** `<input type="date">` (sends `yyyy-mm-dd`, the backend's format). The list shows "September 2024" via `formatDate`, read as UTC so no time zone shifts the day. No end date shows "present".
+- **Why:** no date-picker library needed. The picker itself follows the browser's language, not the interface's: a known limit, fine for the MVP.
+- **Where:** `frontend/src/components/EntryForm.tsx`, `frontend/src/components/EntrySection.tsx`.
+
 ### Repo setup script (no slice)
 
 #### T-078 · `github_setup.py` creates only missing labels

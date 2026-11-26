@@ -88,10 +88,22 @@ describe("request", () => {
     await expect(request("POST", "/auth/signup")).rejects.toEqual(new ApiError(409, "email_taken"));
   });
 
-  it("calls FastAPI's validation answer invalid_input", async () => {
-    mockFetch(jsonResponse({ detail: [{ type: "string_too_short" }] }, 422));
-    await expect(request("POST", "/auth/signup")).rejects.toMatchObject({
+  it("calls FastAPI's validation answer invalid_input, with the refused fields", async () => {
+    mockFetch(
+      jsonResponse(
+        {
+          detail: [
+            { loc: ["body", "title"], type: "string_too_short" },
+            { loc: ["body"], type: "value_error" },
+            { loc: ["query", "page"], type: "int_parsing" },
+          ],
+        },
+        422,
+      ),
+    );
+    await expect(request("POST", "/profile/projects")).rejects.toMatchObject({
       code: "invalid_input",
+      fields: { title: "string_too_short", "": "value_error" },
     });
   });
 
