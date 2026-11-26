@@ -226,7 +226,7 @@ Two kinds of entry:
 
 ### D-031 · Which fields beyond software, and how the skill list holds them
 - **Status:** Open — decided in M17.1 (optional milestone, after the core project).
-- **Question:** which non-software fields to add first (mathematics, biology, physics, chemistry, engineering, economics…), and how one skill list holds several fields: a `field` column or a top-level area per field, new categories, a size limit per field, words whose meaning depends on the field. Where evidence for these fields comes from is a separate, later decision.
+- **Question:** which non-software fields to add first (mathematics, biology, physics, chemistry, engineering, economics…; the list stays open, more fields can join later), and how one skill list holds any number of fields: a `field` column or a top-level area per field, new categories, a size limit per field, words whose meaning depends on the field. Where evidence for these fields comes from is a separate, later decision.
 
 ---
 

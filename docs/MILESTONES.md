@@ -2356,13 +2356,13 @@ The pieces that turn a working app into a product: free and premium plans, a vis
 
 ## M17 · Skills beyond software (optional)
 <!-- weeks: 15-18 -->
-**Optional, and only after the core project is done** (M0–M10 merged, plus whichever M11–M16 slices the team chose to finish). Nothing else depends on it. Today the skill list (M4.1) covers software engineering only, so a mathematics or biology student gets an empty or misleading profile. This milestone extends the skill list, test data and matching to other fields, one field at a time. **Where evidence for these fields comes from** (publications, lab reports, competition results, other websites) is a separate question, decided later. Until then these fields use the sources that already exist (CV, certificates, portfolio, manual projects).
+**Optional, and only after the core project is done** (M0–M10 merged, plus whichever M11–M16 slices the team chose to finish). Nothing else depends on it. Today the skill list (M4.1) covers software engineering only, so a mathematics or biology student gets an empty or misleading profile. This milestone extends the skill list, test data and matching to other fields, one field at a time. **The list of fields is open:** mathematics and biology are the first two, and more (physics, chemistry, engineering, economics, and others) can join at any time later. See "Adding another field" at the end of this milestone. **Where evidence for these fields comes from** (publications, lab reports, competition results, other websites) is a separate question, decided later. Until then these fields use the sources that already exist (CV, certificates, portfolio, manual projects).
 **Demo:** a biology student and a mathematics student each upload a CV in French, get a profile with skills from their field and the evidence behind them, and are matched against internships in their field.
 
 ### M17.1 · Which fields, and how the skill list holds them
 `area:data` `size:M` `depends:M4.1, M4.9` `contract:yes`
 
-**Goal:** A decision on which fields come first and how one skill list holds several fields without making the software skills harder to find or match.
+**Goal:** A decision on which fields come first and how one skill list holds any number of fields without making the software skills harder to find or match. The structure must let a new field be added later without changing it again.
 
 **Why:** Every other slice in this milestone builds on it. Adding fields changes the skill list's structure (the 150–300 skill limit, the categories, which aliases are safe), and that is hard to undo once profiles and postings point at skill ids.
 
@@ -2464,5 +2464,7 @@ The pieces that turn a working app into a product: free and premium plans, a vis
 
 **Done when**
 - [ ] A biology test profile sees its skills grouped and biology internships first, in all three languages
+
+**Adding another field.** M17.1 leaves a "how to add a field" checklist in the skill list README. To add a field (say, chemistry), copy M17.3's section as a new slice, `M17.<next number> · Chemistry skills`, plus a test-data slice following M17.4, both depending on M17.1. Then run `python scripts/github_setup.py setup` to create their issues. Each field is checked by the same tests and evaluation, so fields can be added one by one and in any order, by anyone.
 
 **Not in this milestone (decided later):** which websites and sources provide evidence for these fields (publications, ORCID, lab reports, competitions, datasets), and assessments for non-software skills (M11 is built around code).
