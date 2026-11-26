@@ -963,6 +963,13 @@ These fill in details D-006 left open. They are part of the contract in `docs/de
 - **Why:** M3.9 made consent required, and the slice asks for "a clear consent message". The wording is Rasen's to approve, like the privacy notice.
 - **Where:** `frontend/src/components/GitHubConnect.tsx`, `sources.github.consent.*` in the locale files.
 
+### M3.8 · Dashboard layout
+
+#### T-124 · The dashboard is a grid of four cards; recent activity uses real data
+- **What:** `/` shows Skills, Opportunities and Gaps as placeholder cards, plus Recent activity: the five latest sources from `GET /sources`, or a link to `/sources` when there are none. The grid (`auto-fit`, at least 18rem per card) becomes one column on a narrow screen and mirrors in Arabic by itself. The header links (Home, Profile, Sources) are the navigation.
+- **Why:** the slice asks for placeholders. Recent activity could already be real at no cost, and it gives a new user a first step. Each later milestone (M4 skills, M5 matching, M7 gaps) replaces one card's text with a component.
+- **Where:** `frontend/src/pages/HomePage.tsx`, `frontend/src/index.css`.
+
 ### Repo setup script (no slice)
 
 #### T-078 · `github_setup.py` creates only missing labels

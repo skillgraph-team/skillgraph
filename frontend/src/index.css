@@ -130,3 +130,21 @@ main {
   align-items: center;
   gap: 0.5rem;
 }
+
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr));
+  gap: 1rem;
+}
+
+.card {
+  padding-block: 0.5rem 1rem;
+  padding-inline: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 0.5rem;
+}
+
+.card h2 {
+  margin-block: 0.5rem;
+  font-size: 1.125rem;
+}

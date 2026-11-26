@@ -58,8 +58,7 @@
     "deleted": "Deleting your account removes all of it."
   },
   "home": {
-    "logged_in_as": "Logged in as",
-    "coming": "Your profile, skills and matches will appear here."
+    "logged_in_as": "Logged in as"
   },
   "nav": {
     "label": "Main menu",
@@ -171,6 +170,27 @@
       "fr": "French",
       "ar": "Arabic",
       "other": "other language"
+    }
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "skills": {
+      "title": "Skills",
+      "placeholder": "Your skills, each with the evidence behind it, will appear here."
+    },
+    "opportunities": {
+      "title": "Opportunities",
+      "placeholder": "Internships that match your profile will appear here."
+    },
+    "gaps": {
+      "title": "Gaps",
+      "placeholder": "The skills missing for your target internships, and how to build them, will appear here."
+    },
+    "activity": {
+      "title": "Recent activity",
+      "empty": "Nothing added yet.",
+      "start": "Add a CV or GitHub",
+      "all": "All sources"
     }
   }
 }

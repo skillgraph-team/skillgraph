@@ -2,7 +2,7 @@
 
 How to use SkillGraph, written for the people using it: students, recent graduates, and anyone trying the demo. It describes only what works today. Features still being built are listed at the end.
 
-_Last updated: 2026-11-26, after M3.7 (upload and GitHub screens)._
+_Last updated: 2026-11-26, after M3.8 (dashboard)._
 
 > **For contributors:** update this guide in the same commit as any slice that changes what a user sees or does (CLAUDE.md, "Finishing"). See "Keeping this guide up to date" at the end.
 
@@ -30,7 +30,7 @@ SkillGraph works in **English**, **French** and **Arabic**.
 
 ## 3. Creating an account and logging in
 
-Everything except the status page (section 6) needs an account. If you aren't logged in, SkillGraph shows the **Log in** page.
+Everything except the status page (section 7) needs an account. If you aren't logged in, SkillGraph shows the **Log in** page.
 
 **Creating an account**
 1. On the Log in page, next to "No account yet?", click **Sign up**.
@@ -51,9 +51,16 @@ There's no "forgot my password" email yet. If you lose your password, ask whoeve
 | The password needs at least 8 characters. | Choose a longer password. |
 | An account with this email already exists. | Log in instead, or use another email. |
 | Wrong email or password. | One of the two is wrong. For your safety, SkillGraph doesn't say which. |
-| SkillGraph can't be reached right now. Try again in a moment. | The backend isn't running (see section 6). |
+| SkillGraph can't be reached right now. Try again in a moment. | The backend isn't running (see section 7). |
 
-## 4. Your profile
+## 4. The dashboard
+
+After logging in you land on the **Dashboard** (also **Home** at the top of the page). It has four parts:
+
+- **Skills**, **Opportunities** and **Gaps**: for now they only say what will appear there. Skills come next, then matching internships, then the skills you're missing.
+- **Recent activity**: the last five CVs and repositories you added, with a link to **All sources**. If you haven't added any yet, a link takes you to **Sources** (section 6).
+
+## 5. Your profile
 
 Click **Profile** at the top of the page.
 
@@ -67,7 +74,7 @@ Click **Profile** at the top of the page.
 
 **Changing your password:** at the bottom of the Profile page, enter your current password and a new one (at least 8 characters), then click **Change password**. You stay logged in. If the current password is wrong, the message says "That password isn't right." and nothing changes.
 
-## 5. Adding your CV and GitHub
+## 6. Adding your CV and GitHub
 
 Click **Sources** at the top of the page.
 
@@ -88,7 +95,7 @@ GitHub limits how often it can be asked. If it says "GitHub is limiting requests
 
 **Deleting a source:** click **Delete** next to it, then **Yes, delete**. A CV's file is deleted too. A deleted repository comes back if you import GitHub again.
 
-## 6. Checking that SkillGraph is working
+## 7. Checking that SkillGraph is working
 
 Open **http://localhost:5173/health** to see whether SkillGraph's parts are running:
 
@@ -99,7 +106,7 @@ Open **http://localhost:5173/health** to see whether SkillGraph's parts are runn
 | The backend is running, but it can't reach the database. | The database isn't running. | Run `docker compose up -d db` (step 1 above), then reload. |
 | The backend can't be reached. Is it running? | The backend isn't running. | Start it (step 2 above), then reload. |
 
-## 7. Coming later
+## 8. Coming later
 
 These are planned (see `docs/MILESTONES.md`) but **not available yet**:
 

@@ -58,8 +58,7 @@
     "deleted": "Supprimer votre compte efface toutes ces données."
   },
   "home": {
-    "logged_in_as": "Connecté avec",
-    "coming": "Votre profil, vos compétences et vos stages correspondants apparaîtront ici."
+    "logged_in_as": "Connecté avec"
   },
   "nav": {
     "label": "Menu principal",
@@ -171,6 +170,27 @@
       "fr": "français",
       "ar": "arabe",
       "other": "autre langue"
+    }
+  },
+  "dashboard": {
+    "title": "Tableau de bord",
+    "skills": {
+      "title": "Compétences",
+      "placeholder": "Vos compétences, chacune avec ses preuves, apparaîtront ici."
+    },
+    "opportunities": {
+      "title": "Opportunités",
+      "placeholder": "Les stages qui correspondent à votre profil apparaîtront ici."
+    },
+    "gaps": {
+      "title": "Écarts",
+      "placeholder": "Les compétences qui manquent pour les stages visés, et comment les acquérir, apparaîtront ici."
+    },
+    "activity": {
+      "title": "Activité récente",
+      "empty": "Rien n'a encore été ajouté.",
+      "start": "Ajouter un CV ou GitHub",
+      "all": "Toutes les sources"
     }
   }
 }
