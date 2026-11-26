@@ -1057,6 +1057,50 @@ These fill in details D-006 left open. They are part of the contract in `docs/de
 - **Why:** Rasen, 2026-11-26: Arabic is for the interface only, not a professional language SkillGraph assesses or recommends learning (extends D-030). Keeping the skill would have forced Arabic-learning resources into the recommendation list.
 - **Where:** `backend/app/skills/data/skills.csv`, `resources.csv`.
 
+### M4.2 · Skill list loader and CV skill finder
+
+#### T-139 · One lookup key for every spelling: no accents, lowercase, punctuation as spaces
+- **What:** `normalize` does Unicode NFKD, drops the combining marks, casefolds, and keeps only runs of letters, digits, `+` and `#` as words, joined by one space. `Node.js` → `node js`, `Développement-Web` → `developpement web`, `C++` stays `c++`, `.NET` → `net`.
+- **Why:** one rule for both the index and the CV text, so they always agree. Dropping marks also removes Arabic diacritics and the hamza on alef for free. No Arabic-specific rules were added (ة/ه, ى/ي), because Arabic text isn't read (D-030).
+- **Where:** `backend/app/skills/normalize.py`.
+- **Watch out:** Python's word class in regular expressions doesn't match combining marks, so the word pattern lists their ranges. They're built from numbers, because some editing tools turn written-out Unicode escapes into invisible characters.
+
+#### T-140 · The index holds the id, all three names and the aliases; two skills on one key are refused
+- **What:** `SkillIndex` maps each key to one skill id. A key that would point at two skills raises `SkillIndexCollisionError` when the index is built. The app builds it from the database (`load_index`). Tests and the check script build it straight from the CSVs (`SkillIndex.from_csv`).
+- **Why:** a collision means a guess, and guesses are what the evidence model forbids. Building from the CSV means most finder tests need no database.
+- **Where:** `backend/app/skills/index.py`.
+
+#### T-141 · Words that are also ordinary words only count in a skills list or with a capital letter
+- **What:** `AMBIGUOUS` lists about 70 keys like `go`, `c`, `r`, `rest`, `vue`, `tableau`, `excel`, `spring`, `react`, `networking` and `supervision`. Outside a skills list they're only taken when written with a capital letter ("REST", "Go", "C"). A test checks each one is a real key.
+- **Why:** "rest on weekends", « tableau de bord », « sous la supervision de » and "j'ai" (→ `ai`) would otherwise become skills.
+- **Where:** `backend/app/skills/index.py`, `backend/app/skills/cv_finder.py`.
+- **Watch out:** a sentence starting with « C'est » still gives `c`. The list will need tuning once real labeled CVs exist (M4.7).
+
+#### T-142 · CV sections come from a fixed list of English and French headings
+- **What:** a line is a heading when, without its bullet, it matches one of about 70 headings (alone, or followed by `:` and text). Headings map to skills / summary / experience / project / education / certificate, or are skipped (hobbies, references). Text before any heading counts as summary. Location is `{"section": <heading as written>, "line": <n>}`. There's no page, because the extracted text has no page breaks.
+- **Why:** the section decides the evidence type, which the status rules depend on. A fixed list is easy to test and to extend by hand.
+- **Where:** `HEADINGS` in `backend/app/skills/cv_finder.py`.
+
+#### T-143 · One evidence record per sentence, quoted exactly, cut around the first skill when too long
+- **What:** each line is split after `.` `!` `?` `;`. A sentence naming several skills is one record listing them all (no repeats). A sentence over 300 characters is cut at word boundaries around its first skill and marked `…`. The quote's language is detected. A bare list of tools ("Python, SQL") gets the CV's language instead of `other`.
+- **Why:** the evidence model says one record can support several skills and caps quotes at about 300 characters. Labeling "Python, SQL" as `other` would hide that it came from a French CV.
+- **Where:** `backend/app/skills/cv_finder.py`.
+
+#### T-144 · The finder saves evidence records only; judging and linking come later
+- **What:** `save_cv_evidence` deletes the CV's earlier evidence records and saves new ones, and returns each record with its skill ids. It doesn't mark `supports` / `weak` (M4.4) or create skill rows and links (M4.5).
+- **Why:** an evidence link needs a skill row, and a skill row needs a status, which M4.4 computes. Replacing a source's records on every run keeps the result equal to what the current rules find.
+- **Where:** `backend/app/services/cv_evidence.py`.
+
+#### T-145 · The skill list is loaded with a command, and refuses to delete skills still in use
+- **What:** `uv run python -m app.skills.taxonomy` makes the database match the CSVs: it updates skills in place, replaces aliases and parent links, and deletes skills that left the CSV. If a removed skill is still on a profile or a posting, it raises `SkillInUseError` before changing anything. This error and `NotACvError` have no API error code, because neither can reach a user.
+- **Why:** running it again must be safe, and a typo in the CSV must not wipe profiles (T-055).
+- **Where:** `backend/app/skills/taxonomy.py`. Command added to CLAUDE.md.
+
+#### T-146 · The check script uses the made-up CVs, with expected skills written in the test
+- **What:** `uv run python -m app.skills.check_cv_finder <cv file> <id,id,...>` prints `expected / found / missed / wrong`. Its tests use `cv_en.pdf` and `cv_fr.docx` with hand-written expected lists. Both are found with no misses and nothing wrong.
+- **Why:** the slice wants found / wrong counts on labeled skills, but the labeled profiles (M1.5, M1.6) don't exist yet. The full evaluation over them is M4.7.
+- **Where:** `backend/app/skills/check_cv_finder.py`, `backend/tests/skills/test_check_cv_finder.py`.
+
 ### Repo setup script (no slice)
 
 #### T-078 · `github_setup.py` creates only missing labels

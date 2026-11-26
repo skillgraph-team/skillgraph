@@ -161,6 +161,15 @@ Do this pass once in English, then repeat the starred (★) steps in **Français
 
 ---
 
+## 4b. Skills, rule-based (M4)
+
+**Skill list and CV finder (M4.2)**
+- [ ] `cd backend && uv run python -m app.skills.taxonomy` prints `skills: 245, aliases: 348, parent links: 258, removed: 0`. Running it again prints the same.
+- [ ] `uv run python -m app.skills.check_cv_finder tests/fixtures/cv/cv_en.pdf python,docker,kubernetes` prints `expected 3, found 2, missed 1, wrong 6` and `missed: kubernetes`.
+- [ ] Try it on a made-up CV of your own (never a real person's). List the skills you'd expect, and note what's missed or wrong. Misses usually mean a missing alias or heading, which is worth adding.
+
+---
+
 ## 5. GitHub settings and tooling
 
 - [ ] **CI (M0.5):** the Actions tab shows `backend` and `frontend` green on the latest `main` run.

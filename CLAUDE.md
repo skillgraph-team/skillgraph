@@ -58,6 +58,7 @@ The user talks normally ("let's do M2.3", "this is done", "review PR 12"). Follo
 - Backend tests: `cd backend && uv run pytest`
 - Backend lint/types: `cd backend && uv run ruff check . && uv run ruff format --check . && uv run mypy app`
 - Migrations: `cd backend && uv run alembic upgrade head` / new: `uv run alembic revision --autogenerate -m "<msg>"`
+- Load the skill list (after migrations, and after changing a CSV): `cd backend && uv run python -m app.skills.taxonomy`
 - Frontend: `cd frontend && npm install && npm run dev` / checks: `npm run lint && npm run check && npm test`
 - Eval: `cd backend && uv run python -m eval.run --system <baseline|single|multi>`
 
