@@ -1101,6 +1101,42 @@ These fill in details D-006 left open. They are part of the contract in `docs/de
 - **Why:** the slice wants found / wrong counts on labeled skills, but the labeled profiles (M1.5, M1.6) don't exist yet. The full evaluation over them is M4.7.
 - **Where:** `backend/app/skills/check_cv_finder.py`, `backend/tests/skills/test_check_cv_finder.py`.
 
+### M4.3 · Skills from GitHub repos
+
+#### T-147 · "More weight to larger, recent repos the user wrote" is a stored weight, not a rule change
+- **What:** each repo gets `weight = authorship × recency × size`, rounded to 2 decimals and stored in every repo evidence location:
+  - authorship: the user's share of the commits; 0 for a fork or a repo with no commits.
+  - recency: 1 if pushed in the last year, 0.5 in the last three, otherwise 0.25.
+  - size: the code's bytes divided by 50 000, at most 1.
+- **Why:** the slice asks for more weight on larger, recent, self-written repos, but status and confidence follow D-006's fixed rules, and those have no weight. Storing it lets the screens and agents order and explain repo evidence without changing the contract. **Needs Rasen** if weight should change confidence: that would be a new D-entry on the evidence model.
+- **Where:** `repo_weight` in `backend/app/skills/repo_finder.py`.
+
+#### T-148 · GitHub topics are stored as `repo_readme` evidence
+- **What:** a repo's topics that are skills become one `repo_readme` record: quote `topics: fastapi, postgresql`, location `{"repo": …, "field": "topics"}`.
+- **Why:** the evidence types are a decided contract (D-006) with no type for topics. Topics, like the README, are the repo describing itself, so they are context only and never raise a status. Adding a `repo_topic` type would need the owner's approval.
+- **Where:** `backend/app/skills/repo_finder.py`.
+
+#### T-149 · No `repo_code` evidence yet: the import doesn't download code
+- **What:** the finder produces `repo_language`, `repo_dependency` and `repo_readme`, never `repo_code`.
+- **Why:** M3.6 fetches only READMEs and dependency files, to stay within GitHub's 60 requests an hour without a token (T-095). Without code, a repo can still make a skill demonstrated through its language share (≥ 10 %, owned, not a fork).
+- **Where:** `backend/app/skills/repo_finder.py`.
+- **Watch out:** frameworks (FastAPI, React…) can't reach demonstrated from a repo alone, only through a CV project or experience. Reading a few code files is the natural later slice (or the Evidence Agent's job, M6).
+
+#### T-150 · Language findings keep every share; the 10 % rule is applied later
+- **What:** each GitHub language that is a skill gives a `repo_language` record, even at 1 %. The location keeps `share`, `bytes`, `owned` (owner = the profile's GitHub username) and `is_fork`. Forks still give language records, which are judged weak later.
+- **Why:** the finder finds and the rules judge (T-144). Keeping the facts in the location lets the validator check guardrail 4 of the evidence model.
+- **Where:** `backend/app/skills/repo_finder.py`.
+
+#### T-151 · Package and language names that differ from the skill go in two small CSV files
+- **What:** `packages.csv` (about 70 rows, for example `psycopg2,postgresql`, `react-dom,react`, `spring-boot-starter*,spring-boot`) and `github_languages.csv` (`Dockerfile,docker`, `HCL,terraform`…). They're checked first, then the skill index. A trailing `*` matches any ending, and the longest match wins. Scoped npm names (`@types/node`) only match through the file. A file gives one record per skill, so `react` and `react-dom` give one.
+- **Why:** these are data, not logic, so teammates can extend them by hand like the other CSVs. Without the scope rule, `@types/node` would read as Node.js.
+- **Where:** `backend/app/skills/data/`, `backend/app/skills/repo_finder.py`.
+
+#### T-152 · README matching skips headings, code blocks and link addresses
+- **What:** README lines starting with `#` and lines inside fenced code blocks are skipped. Link addresses are blanked out before matching, but the quote keeps them. Everything else is matched like CV prose (`app/skills/matching.py`, shared with the CV finder).
+- **Why:** `# shop-api` would read as "API design", `pip install django` in a code block isn't a statement, and badge URLs are full of tool names.
+- **Where:** `backend/app/skills/repo_finder.py`, `backend/app/skills/matching.py`.
+
 ### Repo setup script (no slice)
 
 #### T-078 · `github_setup.py` creates only missing labels

@@ -1,0 +1,7 @@
+language,skill_id
+Blade,laravel
+Dockerfile,docker
+HCL,terraform
+PLpgSQL,postgresql
+SystemVerilog,fpga
+Twig,symfony

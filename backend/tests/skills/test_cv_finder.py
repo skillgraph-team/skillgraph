@@ -5,7 +5,8 @@ database: the skill index is built from the CSV files. All CV text is made up.
 
 import pytest
 
-from app.skills.cv_finder import CvFinding, find_in_cv
+from app.skills.cv_finder import find_in_cv
+from app.skills.findings import Finding
 from app.skills.index import SkillIndex
 
 
@@ -14,7 +15,7 @@ def index() -> SkillIndex:
     return SkillIndex.from_csv()
 
 
-def by_type(findings: list[CvFinding]) -> dict[str, list[str]]:
+def by_type(findings: list[Finding]) -> dict[str, list[str]]:
     out: dict[str, list[str]] = {}
     for finding in findings:
         out.setdefault(finding.type, []).extend(finding.skill_ids)

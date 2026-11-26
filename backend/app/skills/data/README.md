@@ -1,10 +1,12 @@
 # Skill list (taxonomy)
 
 The skills SkillGraph knows about, their other names, and which skill belongs under which.
-Four CSV files (UTF-8, comma-separated, with a header row). The first three are loaded
-into the `skills`, `skill_aliases` and `skill_relations` tables (loader: M4.2). The
-structure checks are in `backend/tests/skills/test_skill_data.py` and
-`test_resource_data.py`.
+CSV files (UTF-8, comma-separated, with a header row). The first three are loaded into
+the `skills`, `skill_aliases` and `skill_relations` tables with
+`cd backend && uv run python -m app.skills.taxonomy` (M4.2); run it again after editing
+them. The other three are read straight from here. The checks are in
+`backend/tests/skills/test_skill_data.py`, `test_resource_data.py` and
+`test_repo_mapping_data.py`.
 
 ## The files
 
@@ -52,6 +54,19 @@ structure checks are in `backend/tests/skills/test_skill_data.py` and
 - `https://` links only. The same link may serve several skills (one row each).
 - **Open every new link in a browser before adding it.** Prefer a stable address
   (`/stable/`, `/latest/`, no `?view=` version) over one that redirects to a version.
+
+**`packages.csv`**: `package,skill_id` (M4.3)
+- Package names from dependency files (`requirements.txt`, `pyproject.toml`,
+  `package.json`, `pom.xml`) that are **not** already a skill's name or alias:
+  `psycopg2,postgresql`, `react-dom,react`, `@angular/*,angular`.
+- Lowercase. A trailing `*` matches any ending (`spring-boot-starter*`); the longest
+  match wins. Scoped npm names (`@types/node`) only match through this file.
+- Only list packages that clearly mean the skill. A helper library that works with many
+  tools (`requests`, `lodash`) isn't a skill.
+
+**`github_languages.csv`**: `language,skill_id` (M4.3)
+- GitHub language names that aren't a skill's name or alias: `Dockerfile,docker`,
+  `HCL,terraform`. Written exactly as GitHub writes them.
 
 ## Categories
 
