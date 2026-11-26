@@ -1,0 +1,247 @@
+id,name_en,category
+programming,Programming,area
+software-engineering,Software engineering,area
+web-development,Web development,area
+frontend-development,Frontend development,area
+backend-development,Backend development,area
+full-stack-development,Full-stack development,area
+mobile-development,Mobile development,area
+databases,Databases,area
+data-analysis,Data analysis,area
+data-science,Data science,area
+data-engineering,Data engineering,area
+machine-learning,Machine learning,ai
+artificial-intelligence,Artificial intelligence,area
+cloud-computing,Cloud computing,area
+devops,DevOps,area
+cybersecurity,Cybersecurity,area
+networking,Computer networks,area
+operating-systems,Operating systems,area
+embedded-systems,Embedded systems,area
+game-development,Game development,area
+ui-ux-design,UI/UX design,area
+testing,Software testing,area
+version-control,Version control,practice
+business-intelligence,Business intelligence,area
+it-support,IT support,area
+python,Python,language
+java,Java,language
+javascript,JavaScript,language
+typescript,TypeScript,language
+c,C,language
+c++,C++,language
+c#,C#,language
+go,Go,language
+rust,Rust,language
+kotlin,Kotlin,language
+swift,Swift,language
+php,PHP,language
+ruby,Ruby,language
+r,R,language
+matlab,MATLAB,language
+scala,Scala,language
+dart,Dart,language
+bash,Bash,language
+powershell,PowerShell,language
+html,HTML,language
+css,CSS,language
+sql,SQL,language
+vba,VBA,language
+assembly,Assembly,language
+perl,Perl,language
+lua,Lua,language
+solidity,Solidity,language
+react,React,framework
+angular,Angular,framework
+vue,Vue.js,framework
+svelte,Svelte,framework
+next.js,Next.js,framework
+nuxt,Nuxt,framework
+jquery,jQuery,library
+bootstrap,Bootstrap,framework
+tailwind-css,Tailwind CSS,framework
+sass,Sass,tool
+redux,Redux,library
+node.js,Node.js,framework
+express,Express,framework
+nestjs,NestJS,framework
+django,Django,framework
+flask,Flask,framework
+fastapi,FastAPI,framework
+spring,Spring,framework
+spring-boot,Spring Boot,framework
+hibernate,Hibernate,framework
+asp.net,ASP.NET,framework
+dotnet,.NET,framework
+laravel,Laravel,framework
+symfony,Symfony,framework
+ruby-on-rails,Ruby on Rails,framework
+graphql,GraphQL,practice
+rest-api,REST APIs,practice
+api-design,API design,practice
+websockets,WebSockets,practice
+microservices,Microservices,practice
+software-architecture,Software architecture,practice
+design-patterns,Design patterns,practice
+oop,Object-oriented programming,practice
+functional-programming,Functional programming,practice
+data-structures,Data structures and algorithms,practice
+react-native,React Native,framework
+flutter,Flutter,framework
+android,Android development,framework
+ios,iOS development,framework
+swiftui,SwiftUI,framework
+jetpack-compose,Jetpack Compose,framework
+xamarin,Xamarin,framework
+unity,Unity,tool
+unreal-engine,Unreal Engine,tool
+postgresql,PostgreSQL,database
+mysql,MySQL,database
+mariadb,MariaDB,database
+sqlite,SQLite,database
+oracle-database,Oracle Database,database
+sql-server,Microsoft SQL Server,database
+mongodb,MongoDB,database
+redis,Redis,database
+cassandra,Apache Cassandra,database
+elasticsearch,Elasticsearch,database
+firebase,Firebase,cloud
+nosql,NoSQL,database
+neo4j,Neo4j,database
+supabase,Supabase,cloud
+database-design,Database design,practice
+orm,ORM,practice
+sqlalchemy,SQLAlchemy,library
+prisma,Prisma,library
+aws,Amazon Web Services,cloud
+azure,Microsoft Azure,cloud
+gcp,Google Cloud,cloud
+heroku,Heroku,cloud
+vercel,Vercel,cloud
+aws-lambda,AWS Lambda,cloud
+s3,Amazon S3,cloud
+ec2,Amazon EC2,cloud
+serverless,Serverless,practice
+docker,Docker,devops
+containerization,Containerization,practice
+kubernetes,Kubernetes,devops
+helm,Helm,devops
+terraform,Terraform,devops
+ansible,Ansible,devops
+infrastructure-as-code,Infrastructure as code,practice
+ci-cd,CI/CD,practice
+github-actions,GitHub Actions,devops
+gitlab-ci,GitLab CI,devops
+jenkins,Jenkins,devops
+nginx,Nginx,devops
+apache-http-server,Apache HTTP Server,devops
+prometheus,Prometheus,devops
+grafana,Grafana,devops
+monitoring,Monitoring,practice
+linux,Linux,tool
+windows-administration,Windows administration,tool
+git,Git,tool
+github,GitHub,tool
+gitlab,GitLab,tool
+bitbucket,Bitbucket,tool
+jira,Jira,tool
+confluence,Confluence,tool
+postman,Postman,tool
+vs-code,Visual Studio Code,tool
+intellij-idea,IntelliJ IDEA,tool
+figma,Figma,tool
+adobe-xd,Adobe XD,tool
+photoshop,Adobe Photoshop,tool
+excel,Microsoft Excel,tool
+microsoft-office,Microsoft Office,tool
+power-bi,Power BI,tool
+tableau,Tableau,tool
+looker,Looker,tool
+sap,SAP,tool
+salesforce,Salesforce,tool
+wordpress,WordPress,tool
+pandas,pandas,library
+numpy,NumPy,library
+scipy,SciPy,library
+matplotlib,Matplotlib,library
+seaborn,Seaborn,library
+plotly,Plotly,library
+data-visualization,Data visualization,data
+statistics,Statistics,data
+jupyter,Jupyter,tool
+scikit-learn,scikit-learn,library
+tensorflow,TensorFlow,library
+keras,Keras,library
+pytorch,PyTorch,library
+deep-learning,Deep learning,ai
+nlp,Natural language processing,ai
+computer-vision,Computer vision,ai
+opencv,OpenCV,library
+hugging-face,Hugging Face,library
+llms,Large language models,ai
+prompt-engineering,Prompt engineering,ai
+langchain,LangChain,library
+rag,Retrieval-augmented generation,ai
+mlops,MLOps,practice
+xgboost,XGBoost,library
+reinforcement-learning,Reinforcement learning,ai
+time-series,Time series analysis,data
+data-mining,Data mining,data
+big-data,Big data,data
+apache-spark,Apache Spark,data
+hadoop,Hadoop,data
+kafka,Apache Kafka,data
+airflow,Apache Airflow,data
+etl,ETL,practice
+data-warehousing,Data warehousing,data
+snowflake,Snowflake,data
+bigquery,BigQuery,data
+dbt,dbt,data
+web-scraping,Web scraping,data
+unit-testing,Unit testing,practice
+test-automation,Test automation,practice
+pytest,pytest,tool
+junit,JUnit,tool
+jest,Jest,tool
+selenium,Selenium,tool
+cypress,Cypress,tool
+playwright,Playwright,tool
+tdd,Test-driven development,practice
+network-security,Network security,practice
+penetration-testing,Penetration testing,practice
+cryptography,Cryptography,practice
+owasp,OWASP,practice
+siem,SIEM,tool
+wireshark,Wireshark,tool
+tcp-ip,TCP/IP,practice
+cisco,Cisco networking,tool
+vpn,VPN,practice
+identity-access-management,Identity and access management,practice
+arduino,Arduino,tool
+raspberry-pi,Raspberry Pi,tool
+iot,Internet of Things,area
+fpga,FPGA,tool
+blockchain,Blockchain,area
+agile,Agile methods,practice
+scrum,Scrum,practice
+kanban,Kanban,practice
+project-management,Project management,practice
+uml,UML,practice
+code-review,Code review,practice
+debugging,Debugging,practice
+technical-writing,Technical writing,soft
+seo,SEO,practice
+accessibility,Web accessibility,practice
+responsive-design,Responsive design,practice
+communication,Communication,soft
+teamwork,Teamwork,soft
+problem-solving,Problem solving,soft
+leadership,Leadership,soft
+time-management,Time management,soft
+presentation-skills,Presentation skills,soft
+critical-thinking,Critical thinking,soft
+english,English,spoken_language
+french,French,spoken_language
+arabic,Arabic,spoken_language
+spanish,Spanish,spoken_language
+german,German,spoken_language

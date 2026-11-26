@@ -1,0 +1,357 @@
+alias,skill_id
+coding,programming
+software programming,programming
+programmation,programming
+développement logiciel,programming
+génie logiciel,software-engineering
+ingénierie logicielle,software-engineering
+web dev,web-development
+développement web,web-development
+front-end development,frontend-development
+front end,frontend-development
+front-end,frontend-development
+frontend,frontend-development
+développement front-end,frontend-development
+back-end development,backend-development
+back end,backend-development
+back-end,backend-development
+backend,backend-development
+développement back-end,backend-development
+full stack,full-stack-development
+full-stack,full-stack-development
+fullstack,full-stack-development
+développement full stack,full-stack-development
+mobile apps,mobile-development
+mobile app development,mobile-development
+développement mobile,mobile-development
+database,databases
+db,databases
+bases de données,databases
+base de données,databases
+data analytics,data-analysis
+analyse de données,data-analysis
+science des données,data-science
+ingénierie des données,data-engineering
+ml,machine-learning
+apprentissage automatique,machine-learning
+ai,artificial-intelligence
+a.i.,artificial-intelligence
+intelligence artificielle,artificial-intelligence
+ia,artificial-intelligence
+cloud,cloud-computing
+informatique en nuage,cloud-computing
+dev ops,devops
+cyber security,cybersecurity
+information security,cybersecurity
+infosec,cybersecurity
+it security,cybersecurity
+sécurité informatique,cybersecurity
+cybersécurité,cybersecurity
+network administration,networking
+réseaux,networking
+réseaux informatiques,networking
+os,operating-systems
+systèmes d'exploitation,operating-systems
+embedded,embedded-systems
+systèmes embarqués,embedded-systems
+gamedev,game-development
+développement de jeux,game-development
+ux design,ui-ux-design
+ui design,ui-ux-design
+ux,ui-ux-design
+ui,ui-ux-design
+user experience,ui-ux-design
+user interface design,ui-ux-design
+ux/ui,ui-ux-design
+qa,testing
+quality assurance,testing
+tests logiciels,testing
+assurance qualité,testing
+source control,version-control
+gestion de versions,version-control
+bi,business-intelligence
+informatique décisionnelle,business-intelligence
+help desk,it-support
+helpdesk,it-support
+technical support,it-support
+support informatique,it-support
+python3,python
+python 3,python
+java se,java
+js,javascript
+ecmascript,javascript
+es6,javascript
+ts,typescript
+langage c,c
+c language,c
+cpp,c++
+csharp,c#
+c sharp,c#
+golang,go
+r language,r
+langage r,r
+shell scripting,bash
+shell,bash
+bash scripting,bash
+html5,html
+css3,css
+langage sql,sql
+visual basic for applications,vba
+assembler,assembly
+assembleur,assembly
+react.js,react
+reactjs,react
+angularjs,angular
+angular.js,angular
+vuejs,vue
+sveltekit,svelte
+nextjs,next.js
+nuxt.js,nuxt
+nuxtjs,nuxt
+tailwind,tailwind-css
+tailwindcss,tailwind-css
+scss,sass
+nodejs,node.js
+node,node.js
+express.js,express
+expressjs,express
+nest.js,nestjs
+fast api,fastapi
+spring framework,spring
+springboot,spring-boot
+jpa,hibernate
+asp.net core,asp.net
+aspnet,asp.net
+.net core,dotnet
+.net framework,dotnet
+dot net,dotnet
+rails,ruby-on-rails
+ror,ruby-on-rails
+rest,rest-api
+restful,rest-api
+restful api,rest-api
+rest api,rest-api
+api rest,rest-api
+restful apis,rest-api
+apis,api-design
+api,api-design
+web services,api-design
+services web,api-design
+websocket,websockets
+socket.io,websockets
+microservice architecture,microservices
+micro-services,microservices
+system design,software-architecture
+architecture logicielle,software-architecture
+patrons de conception,design-patterns
+object oriented programming,oop
+poo,oop
+programmation orientée objet,oop
+programmation fonctionnelle,functional-programming
+algorithms,data-structures
+dsa,data-structures
+algorithmique,data-structures
+structures de données,data-structures
+android sdk,android
+développement android,android
+développement ios,ios
+unity3d,unity
+unreal,unreal-engine
+ue5,unreal-engine
+postgres,postgresql
+postgre,postgresql
+psql,postgresql
+pgsql,postgresql
+sqlite3,sqlite
+oracle,oracle-database
+oracle db,oracle-database
+pl/sql,oracle-database
+plsql,oracle-database
+sql server,sql-server
+mssql,sql-server
+ms sql,sql-server
+t-sql,sql-server
+tsql,sql-server
+mongo,mongodb
+elastic search,elasticsearch
+elk,elasticsearch
+firestore,firebase
+non-relational databases,nosql
+data modeling,database-design
+data modelling,database-design
+modélisation de données,database-design
+conception de bases de données,database-design
+merise,database-design
+object-relational mapping,orm
+amazon aws,aws
+google cloud platform,gcp
+lambda,aws-lambda
+aws s3,s3
+aws ec2,ec2
+serverless computing,serverless
+docker compose,docker
+docker-compose,docker
+containers,containerization
+conteneurs,containerization
+conteneurisation,containerization
+k8s,kubernetes
+iac,infrastructure-as-code
+continuous integration,ci-cd
+continuous delivery,ci-cd
+continuous deployment,ci-cd
+cicd,ci-cd
+intégration continue,ci-cd
+déploiement continu,ci-cd
+gitlab ci/cd,gitlab-ci
+apache2,apache-http-server
+httpd,apache-http-server
+apache server,apache-http-server
+observability,monitoring
+supervision,monitoring
+gnu/linux,linux
+ubuntu,linux
+debian,linux
+centos,linux
+red hat,linux
+redhat,linux
+fedora,linux
+windows server,windows-administration
+active directory,windows-administration
+vs code,vs-code
+vscode,vs-code
+intellij,intellij-idea
+ms excel,excel
+spreadsheets,excel
+ms office,microsoft-office
+office 365,microsoft-office
+microsoft 365,microsoft-office
+word,microsoft-office
+powerpoint,microsoft-office
+powerbi,power-bi
+microsoft power bi,power-bi
+looker studio,looker
+google data studio,looker
+sap erp,sap
+pyplot,matplotlib
+dash,plotly
+dataviz,data-visualization
+data visualisation,data-visualization
+visualisation de données,data-visualization
+statistical analysis,statistics
+statistiques,statistics
+probability,statistics
+probabilités,statistics
+jupyter notebook,jupyter
+jupyterlab,jupyter
+notebooks,jupyter
+sklearn,scikit-learn
+scikit learn,scikit-learn
+tf,tensorflow
+torch,pytorch
+apprentissage profond,deep-learning
+neural networks,deep-learning
+réseaux de neurones,deep-learning
+text mining,nlp
+traitement automatique du langage,nlp
+tal,nlp
+vision par ordinateur,computer-vision
+image processing,computer-vision
+traitement d'images,computer-vision
+huggingface,hugging-face
+transformers,hugging-face
+llm,llms
+generative ai,llms
+genai,llms
+ia générative,llms
+retrieval augmented generation,rag
+ml ops,mlops
+apprentissage par renforcement,reinforcement-learning
+time series,time-series
+forecasting,time-series
+séries temporelles,time-series
+fouille de données,data-mining
+exploration de données,data-mining
+données massives,big-data
+spark,apache-spark
+pyspark,apache-spark
+hdfs,hadoop
+mapreduce,hadoop
+elt,etl
+data pipelines,etl
+etl pipelines,etl
+data warehouse,data-warehousing
+entrepôt de données,data-warehousing
+google bigquery,bigquery
+data build tool,dbt
+scraping,web-scraping
+beautifulsoup,web-scraping
+beautiful soup,web-scraping
+scrapy,web-scraping
+unit tests,unit-testing
+tests unitaires,unit-testing
+automated testing,test-automation
+automatisation des tests,test-automation
+sécurité réseau,network-security
+firewalls,network-security
+pare-feu,network-security
+pentest,penetration-testing
+pentesting,penetration-testing
+ethical hacking,penetration-testing
+tests d'intrusion,penetration-testing
+cryptographie,cryptography
+encryption,cryptography
+chiffrement,cryptography
+owasp top 10,owasp
+web application security,owasp
+splunk,siem
+security monitoring,siem
+tcp,tcp-ip
+ccna,cisco
+iam,identity-access-management
+oauth,identity-access-management
+oauth2,identity-access-management
+openid connect,identity-access-management
+authentication,identity-access-management
+authentification,identity-access-management
+raspberry,raspberry-pi
+internet des objets,iot
+objets connectés,iot
+vhdl,fpga
+verilog,fpga
+web3,blockchain
+agility,agile
+méthodes agiles,agile
+agilité,agile
+scrum master,scrum
+gestion de projet,project-management
+gestion de projets,project-management
+unified modeling language,uml
+revue de code,code-review
+code reviews,code-review
+débogage,debugging
+documentation,technical-writing
+rédaction technique,technical-writing
+search engine optimization,seo
+référencement,seo
+a11y,accessibility
+wcag,accessibility
+accessibilité,accessibility
+responsive web design,responsive-design
+mobile-first,responsive-design
+communication skills,communication
+compétences en communication,communication
+team work,teamwork
+collaboration,teamwork
+travail en équipe,teamwork
+esprit d'équipe,teamwork
+résolution de problèmes,problem-solving
+gestion du temps,time-management
+public speaking,presentation-skills
+prise de parole en public,presentation-skills
+esprit critique,critical-thinking
+anglais,english
+français,french
+francais,french
+arabe,arabic
+espagnol,spanish
+allemand,german

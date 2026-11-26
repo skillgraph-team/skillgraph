@@ -976,6 +976,33 @@ These fill in details D-006 left open. They are part of the contract in `docs/de
 - **Why:** the slice asks for placeholders. Recent activity could already be real at no cost, and it gives a new user a first step. Each later milestone (M4 skills, M5 matching, M7 gaps) replaces one card's text with a component.
 - **Where:** `frontend/src/pages/HomePage.tsx`, `frontend/src/index.css`.
 
+### M4.1 · Skill list data
+
+#### T-126 · The first skill list is built for tech internships, before the curated postings exist
+- **What:** 246 skills for the internships SkillGraph targets (software, web, mobile, data, AI, cloud, DevOps, security, networks, embedded), plus a few soft skills and spoken languages that postings often ask for. 356 aliases (English and French spellings, short forms) and 258 parent links.
+- **Why:** M4.1 should cover every skill in the curated postings (M1.7) and test profiles (M1.5), but neither exists yet. Waiting would block all of M4. When M1.7 lands, check each posting's skills against the list and add what's missing. Until then the "Done when" coverage item is open, and so is issue #32.
+- **Where:** `backend/app/skills/data/{skills,aliases,relations}.csv`.
+
+#### T-127 · A fixed list of 13 categories, checked by a test rather than the database
+- **What:** `area, language, framework, library, database, cloud, devops, tool, data, ai, practice, soft, spoken_language`. The README says what each is for. The test refuses any other value.
+- **Why:** the screen (M4.6) can group skills by category, and a short fixed list keeps the data consistent. `skills.category` stays free text in the schema (D-019), so no migration was needed. If the UI shows categories, they'll need locale keys then.
+- **Where:** `backend/app/skills/data/README.md`, `CATEGORIES` in `backend/tests/skills/test_skill_data.py`.
+
+#### T-128 · Alias rules: lowercase with accents, never repeat the skill's own id or name, never ambiguous
+- **What:** aliases are stored lowercase (the `skill_aliases` CHECK) with French accents kept (`développement web`). An alias that equals the skill's id or English name is refused, and so is one that equals a *different* skill's id or name. Words that could mean two skills are left out.
+- **Why:** M4.2's normalizer matches ids and English names directly and strips accents and punctuation itself, so repeating them only adds rows that can hide typos. One alias → one skill is required by the table's primary key.
+- **Where:** `backend/app/skills/data/aliases.csv`, `backend/tests/skills/test_skill_data.py`.
+
+#### T-129 · `.NET`'s id is `dotnet`
+- **What:** the skill is `dotnet` with the name `.NET`. Spellings like `.net core` and `dot net` are aliases.
+- **Why:** the `skills.id` CHECK requires the first character to be a letter or digit, so `.net` can't be an id. `.net` is still found through the English name.
+- **Where:** `backend/app/skills/data/skills.csv`.
+
+#### T-130 · The CSV checks are a plain test with the standard `csv` module
+- **What:** `tests/skills/test_skill_data.py` reads the files directly and checks columns, the 150–300 count, id format (same pattern as the database CHECK), duplicates, references and loops in the parent links. It doesn't touch the database.
+- **Why:** M4.1 is data only. The loader comes in M4.2. Fast checks with no dependencies catch mistakes as soon as someone edits a CSV by hand.
+- **Where:** `backend/tests/skills/test_skill_data.py`.
+
 ### Repo setup script (no slice)
 
 #### T-078 · `github_setup.py` creates only missing labels
