@@ -16,7 +16,7 @@ Two kinds of entry:
 | D-006 | Evidence model: types, statuses, confidence | Decided (contract) | M2.3 |
 | D-007 | Agent message envelope | Decided (contract) | M2.5 |
 | D-008 | Hosting for the demo | Open | M10.1 |
-| D-009 | GitHub: public username only vs OAuth | Open | M3.6 |
+| D-009 | GitHub: public username only vs OAuth | Decided | M3.6 |
 | D-010 | How work is split and claimed | Decided | — |
 | D-011 | Which tools people use | Decided | — |
 | D-012 | Languages: English, French, Arabic | Decided | M0.7, M2.8 |
@@ -99,9 +99,11 @@ Two kinds of entry:
 - **Status:** Open — decided in M10.1. Options: a free hosting tier (verify current limits then) vs a reproducible local demo (Docker Compose).
 
 ### D-009 · GitHub integration
-- **Status:** Open — decided in M3.6.
+- **Status:** Decided in M3.6 (2026-11-26), recommendation taken under Rasen's standing instruction (autonomous mode); Rasen can overturn it.
 - **Options:** public data by username (no secrets, simplest, can't see private repos) vs GitHub OAuth (proves account ownership, sees private repos, more work and a client secret to manage).
-- **Recommendation:** username for the MVP; note that it doesn't prove the account belongs to the user.
+- **Choice:** public data by username. The import reads only public repos owned by that username, without logging in to GitHub. An optional `GITHUB_TOKEN` (the server's own token, not the user's) only raises the rate limit.
+- **Why:** no client secret, no OAuth app to register, nothing to store per user, $0. Private repos aren't needed for an internship profile.
+- **Consequence:** it doesn't prove the account belongs to the user. Anyone could type a stranger's username. The evidence model already says so (§3.2); OAuth can be added later without changing how repos are stored.
 
 ### D-010 · How work is split and claimed
 - **Status:** Decided (Rasen)
@@ -746,6 +748,85 @@ These fill in details D-006 left open. They are part of the contract in `docs/de
 - **What:** `backend/tests/fixtures/cv/` holds made-up CVs (en, fr, ar as PDF and `.docx`, plus a scanned-style picture-only PDF) and `make_cv_fixtures.py`, which makes them. `fpdf2` and `uharfbuzz` (for Arabic shaping) are dev-only dependencies, used only by that script.
 - **Why:** an Arabic PDF needs a font with Arabic letters, which CI machines don't reliably have. Committing the files (about 190 KB) means tests never need fonts. The tests check the text against the exact lines in the script.
 - **Where:** `backend/tests/fixtures/cv/`, `backend/pyproject.toml`.
+
+### M3.6 · GitHub import
+
+#### T-091 · One `sources` row per repo: README in `text`, the rest in `details`
+- **What:** each imported repo is a `github_repo` source. `title` is `owner/repo`. `text` is the README, exactly as written. `language` is the README's language, or `other` without a README (code counts as `other`). `details` holds the rest as JSON:
+  - owner, URL, description, fork and archived flags, default branch, last push, topics;
+  - `languages` (bytes) and `language_shares` (%, one decimal);
+  - `commits` (`by_user`, `total`);
+  - `dependency_files` (path, content, truncated);
+  - `file_list_truncated`.
+- **Why:** it reuses the schema as it is (`details` was meant for "repo owner, fork flag, language shares"). The README goes in `text` because, like a CV's text, it's what skill extraction reads.
+- **Where:** `backend/app/services/github_imports.py`, `backend/app/ingestion/github_repos.py` (`RepoInfo`).
+
+#### T-092 · `httpx` for GitHub requests, injected so tests use a fake transport
+- **What:** `httpx` moves from a dev to a runtime dependency (it was already in the lock file for tests). `GitHubClient` takes an `httpx.Client`. The endpoint gets the client from `get_github_client`, which tests replace with one on `httpx.MockTransport`, so no extra mocking library is needed.
+- **Why:** the GitHub calls happen in the backend's ingestion layer, not in agents. Injecting the client makes "tests never use the live API" structural: the fake fails any request it has no saved answer for.
+- **Where:** `backend/app/ingestion/github_client.py`, `backend/app/api/github.py`, `backend/tests/fixtures/github/fake_github.py`.
+
+#### T-093 · GitHub answers are cached as files, for 1 hour, then re-checked with ETags
+- **What:** each answer is saved as JSON in `GITHUB_CACHE_DIR` (default `backend/storage/github_cache`, git-ignored), named after a hash of the URL.
+  - Within `GITHUB_CACHE_SECONDS` (default 3600) GitHub isn't asked at all.
+  - After that, the request sends the saved ETag, and a 304 reuses the saved body.
+  - "Nothing there" answers (404, 409, 204, 451) are cached too. Errors and rate-limit answers are not.
+  - The token is never written to the cache.
+- **Why:** repeated imports (a user retrying, the demo) then cost almost nothing against the rate limit. Files rather than a table: the cache holds only public data and can be deleted at any time, so it needs no migration.
+- **Watch out:** the cache is per machine and is never cleaned up; old files just stay (they're small). Deleting the folder is always safe.
+- **Where:** `backend/app/ingestion/github_client.py`, `backend/app/config.py`.
+
+#### T-094 · Rate limit: fail fast with 429 and the reset time, never wait
+- **What:** a 403 or 429 with `x-ratelimit-remaining: 0`, or with `Retry-After` (GitHub's "secondary" limit), raises `GitHubRateLimitError`. The API answers 429 `github_rate_limited` with `reset_at`. Nothing is retried automatically. An optional `GITHUB_TOKEN` (the server's own token, no scopes needed) raises the limit from 60 to 5000 requests an hour.
+- **Why:** the limit can take up to an hour to refill; holding a request open that long helps nobody. Thanks to the cache (T-093), a retry after the reset resumes cheaply.
+- **Where:** `backend/app/ingestion/github_client.py`, `backend/app/api/github.py`.
+
+#### T-095 · At most 10 repos, owned ones only; forks only get their languages
+- **What:** `GET /users/{name}/repos?type=owner&sort=pushed` keeps the `GITHUB_MAX_REPOS` most recently pushed repos (default 10).
+  - Forks: only `/languages` is fetched (1 request).
+  - Other repos: `/languages`, `/contributors`, `/readme`, `/git/trees` and up to 5 dependency files (4–9 requests).
+- **Why:** without a token GitHub allows 60 requests an hour, and 10 repos fit in that. A fork never supports a skill (evidence model §3.2), so its README and files would cost requests for nothing. With a token, raise the limit to 20–30.
+- **Watch out:** the import runs inside the request: 10 repos take a few seconds. Large accounts or a background job are a later concern.
+- **Where:** `backend/app/ingestion/github_repos.py`, `backend/app/config.py`.
+
+#### T-096 · "How much of the code they wrote" = commit counts from `/contributors`
+- **What:** `commits.by_user` is the username's contributions (matched ignoring case) and `commits.total` is everyone's, from the first 100 contributors.
+- **Why:** one request per repo gives both numbers. The alternatives (listing commits, or lines changed from `/stats/contributors`) cost many more requests, and `/stats` often answers 202 "computing, try later".
+- **Watch out:** GitHub counts commits on the default branch only, and commits made under an email not linked to the account count as someone else's. It's a signal, not proof.
+- **Where:** `backend/app/ingestion/github_repos.py`.
+
+#### T-097 · Dependency files are found anywhere in the repo and kept exactly as written
+- **What:** the full file list (`/git/trees/<branch>?recursive=1`) is searched for `requirements.txt`, `pyproject.toml`, `package.json` and `pom.xml`.
+  - Folders of installed or generated code are skipped (node_modules, vendor, venv, .venv, env, site-packages, dist, build).
+  - The shallowest files come first, at most 5 per repo, each cut at 100,000 characters (marked `truncated`).
+  - File texts and the README are stored as they are; only NUL characters are removed.
+- **Why:** many student repos keep `package.json` in a `frontend/` folder, so looking only at the root misses it. Keeping the text exact keeps line numbers right for evidence locations (`repo_dependency`: file + line).
+- **Where:** `backend/app/ingestion/github_repos.py`.
+
+#### T-098 · Importing again updates rows in place; the username is saved on the profile
+- **What:** rows are matched by repo full name, ignoring case, so their ids (and later, evidence pointing at them) stay. Repos no longer listed, including all repos of a previously used username, are deleted, with their evidence (cascade). `profiles.github_username` is set on every import. GitHub is read completely before any row changes, so a failure part-way saves nothing.
+- **Why:** a re-import shouldn't break links to evidence for repos that still exist.
+- **Where:** `backend/app/services/github_imports.py`.
+
+#### T-099 · Import errors and username rules
+- **What:**
+  - 422 for a name that breaks GitHub's rules (letters, digits and single hyphens between them, at most 39 characters); checked before any request.
+  - 404 `github_user_not_found`.
+  - 429 `github_rate_limited` (+ `reset_at`).
+  - 502 `github_unavailable`: network failure, or any other GitHub error status, including 401 for a bad token.
+- **Why:** each code tells the user what to do next (check the name, try later). The frontend translates them as `errors.<code>` (T-079).
+- **Where:** `backend/app/api/github.py`.
+
+#### T-100 · Saved GitHub answers: one JSON file for a made-up account
+- **What:** `backend/tests/fixtures/github/test_student.json` holds every answer for `test-student`, keyed by path plus sorted query. Its 4 repos are:
+  - `shop-api`: Python, with a README, `requirements.txt` and an `admin/package.json`;
+  - `projet-bibliotheque`: Java, with a French README and a `pom.xml`;
+  - `awesome-dashboard`: a fork;
+  - `empty-repo`: an empty repo, answered with 204 / 404 / 409.
+
+  `FakeGitHub` serves them, answers 304 to a matching ETag, and fails on anything unknown.
+- **Why:** the answers are hand-made, but in GitHub's real format (checked against `api.github.com` with the public `octocat` account on 2026-11-26), trimmed to the fields we use. One file is easier to read and edit than dozens.
+- **Where:** `backend/tests/fixtures/github/`.
 
 ### Repo setup script (no slice)
 

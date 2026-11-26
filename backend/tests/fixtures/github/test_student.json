@@ -1,0 +1,353 @@
+{
+  "_about": "Saved GitHub API answers for the made-up account test-student (M3.6). Shapes follow GitHub's REST API (checked against api.github.com on 2026-11-26), trimmed to the fields we use. Keys are the path plus the query, sorted.",
+  "responses": {
+    "/users/test-student/repos?per_page=20&sort=pushed&type=owner": {
+      "status": 200,
+      "headers": {
+        "ETag": "W/\"269383129841\""
+      },
+      "body": [
+        {
+          "id": 69182754,
+          "name": "shop-api",
+          "full_name": "test-student/shop-api",
+          "private": false,
+          "owner": {
+            "login": "test-student",
+            "type": "User"
+          },
+          "html_url": "https://github.com/test-student/shop-api",
+          "description": "REST API for a shop",
+          "fork": false,
+          "language": "Python",
+          "topics": [
+            "fastapi",
+            "postgresql"
+          ],
+          "archived": false,
+          "default_branch": "main",
+          "pushed_at": "2026-11-01T09:00:00Z",
+          "size": 120,
+          "stargazers_count": 0,
+          "visibility": "public"
+        },
+        {
+          "id": 99200072,
+          "name": "projet-bibliotheque",
+          "full_name": "test-student/projet-bibliotheque",
+          "private": false,
+          "owner": {
+            "login": "test-student",
+            "type": "User"
+          },
+          "html_url": "https://github.com/test-student/projet-bibliotheque",
+          "description": "Gestion de bibliothèque",
+          "fork": false,
+          "language": "Java",
+          "topics": [],
+          "archived": false,
+          "default_branch": "main",
+          "pushed_at": "2026-10-15T09:00:00Z",
+          "size": 120,
+          "stargazers_count": 0,
+          "visibility": "public"
+        },
+        {
+          "id": 79911374,
+          "name": "awesome-dashboard",
+          "full_name": "test-student/awesome-dashboard",
+          "private": false,
+          "owner": {
+            "login": "test-student",
+            "type": "User"
+          },
+          "html_url": "https://github.com/test-student/awesome-dashboard",
+          "description": null,
+          "fork": true,
+          "language": "JavaScript",
+          "topics": [],
+          "archived": false,
+          "default_branch": "main",
+          "pushed_at": "2026-09-01T09:00:00Z",
+          "size": 120,
+          "stargazers_count": 0,
+          "visibility": "public"
+        },
+        {
+          "id": 13623158,
+          "name": "empty-repo",
+          "full_name": "test-student/empty-repo",
+          "private": false,
+          "owner": {
+            "login": "test-student",
+            "type": "User"
+          },
+          "html_url": "https://github.com/test-student/empty-repo",
+          "description": null,
+          "fork": false,
+          "language": null,
+          "topics": [],
+          "archived": false,
+          "default_branch": "main",
+          "pushed_at": "2026-08-01T09:00:00Z",
+          "size": 120,
+          "stargazers_count": 0,
+          "visibility": "public"
+        }
+      ]
+    },
+    "/repos/test-student/shop-api/languages": {
+      "status": 200,
+      "headers": {
+        "ETag": "W/\"978037174916\""
+      },
+      "body": {
+        "Python": 9000,
+        "Shell": 600,
+        "Dockerfile": 400
+      }
+    },
+    "/repos/test-student/shop-api/contributors?per_page=100": {
+      "status": 200,
+      "headers": {
+        "ETag": "W/\"709857934556\""
+      },
+      "body": [
+        {
+          "login": "test-student",
+          "type": "User",
+          "contributions": 42
+        },
+        {
+          "login": "a-classmate",
+          "type": "User",
+          "contributions": 8
+        }
+      ]
+    },
+    "/repos/test-student/shop-api/readme": {
+      "status": 200,
+      "headers": {
+        "ETag": "W/\"607468358383\""
+      },
+      "body": {
+        "type": "file",
+        "name": "README.md",
+        "path": "README.md",
+        "encoding": "base64",
+        "size": 129,
+        "content": "IyBzaG9wLWFwaQoKQSBzbWFsbCBSRVNUIEFQSSBmb3IgYW4gb25saW5lIHNob3AsIGJ1aWx0IHdp\ndGggRmFzdEFQSSBhbmQgUG9zdGdyZVNRTC4KSXQgaGFzIHRlc3RzIHdpdGggcHl0ZXN0IGFuZCBy\ndW5zIGluIERvY2tlci4K\n"
+      }
+    },
+    "/repos/test-student/shop-api/git/trees/main?recursive=1": {
+      "status": 200,
+      "headers": {
+        "ETag": "W/\"523804687752\""
+      },
+      "body": {
+        "sha": "abc123",
+        "truncated": false,
+        "tree": [
+          {
+            "path": "README.md",
+            "mode": "100644",
+            "type": "blob",
+            "size": 100
+          },
+          {
+            "path": "requirements.txt",
+            "mode": "100644",
+            "type": "blob",
+            "size": 100
+          },
+          {
+            "path": "app",
+            "mode": "040000",
+            "type": "tree"
+          },
+          {
+            "path": "app/routes.py",
+            "mode": "100644",
+            "type": "blob",
+            "size": 100
+          },
+          {
+            "path": "app/db.py",
+            "mode": "100644",
+            "type": "blob",
+            "size": 100
+          },
+          {
+            "path": "admin",
+            "mode": "040000",
+            "type": "tree"
+          },
+          {
+            "path": "admin/package.json",
+            "mode": "100644",
+            "type": "blob",
+            "size": 100
+          },
+          {
+            "path": "admin/node_modules/react/package.json",
+            "mode": "100644",
+            "type": "blob",
+            "size": 100
+          },
+          {
+            "path": "Dockerfile",
+            "mode": "100644",
+            "type": "blob",
+            "size": 100
+          }
+        ]
+      }
+    },
+    "/repos/test-student/shop-api/contents/requirements.txt?ref=main": {
+      "status": 200,
+      "headers": {
+        "ETag": "W/\"711910880654\""
+      },
+      "body": {
+        "type": "file",
+        "name": "requirements.txt",
+        "path": "requirements.txt",
+        "encoding": "base64",
+        "size": 54,
+        "content": "ZmFzdGFwaT09MC4xMTUuMApwc3ljb3BnW2JpbmFyeV09PTMuMi4xCnB5dGVzdD09OC4zLjIK\n"
+      }
+    },
+    "/repos/test-student/shop-api/contents/admin/package.json?ref=main": {
+      "status": 200,
+      "headers": {
+        "ETag": "W/\"796986955904\""
+      },
+      "body": {
+        "type": "file",
+        "name": "package.json",
+        "path": "admin/package.json",
+        "encoding": "base64",
+        "size": 124,
+        "content": "ewogICJuYW1lIjogInNob3AtYWRtaW4iLAogICJkZXBlbmRlbmNpZXMiOiB7CiAgICAicmVhY3Qi\nOiAiXjE4LjMuMCIKICB9LAogICJkZXZEZXBlbmRlbmNpZXMiOiB7CiAgICAidml0ZSI6ICJeNS40\nLjAiCiAgfQp9Cg==\n"
+      }
+    },
+    "/repos/test-student/projet-bibliotheque/languages": {
+      "status": 200,
+      "headers": {
+        "ETag": "W/\"273250001142\""
+      },
+      "body": {
+        "Java": 15000,
+        "HTML": 1000
+      }
+    },
+    "/repos/test-student/projet-bibliotheque/contributors?per_page=100": {
+      "status": 200,
+      "headers": {
+        "ETag": "W/\"380922758697\""
+      },
+      "body": [
+        {
+          "login": "Test-Student",
+          "type": "User",
+          "contributions": 17
+        }
+      ]
+    },
+    "/repos/test-student/projet-bibliotheque/readme": {
+      "status": 200,
+      "headers": {
+        "ETag": "W/\"146087406175\""
+      },
+      "body": {
+        "type": "file",
+        "name": "README.md",
+        "path": "README.md",
+        "encoding": "base64",
+        "size": 160,
+        "content": "IyBQcm9qZXQgYmlibGlvdGjDqHF1ZQoKVW5lIGFwcGxpY2F0aW9uIGRlIGdlc3Rpb24gZGUgYmli\nbGlvdGjDqHF1ZSDDqWNyaXRlIGVuIEphdmEgYXZlYyBTcHJpbmcgQm9vdC4KTGVzIGxpdnJlcyBz\nb250IHN0b2Nrw6lzIGRhbnMgdW5lIGJhc2UgZGUgZG9ubsOpZXMgTXlTUUwuCg==\n"
+      }
+    },
+    "/repos/test-student/projet-bibliotheque/git/trees/main?recursive=1": {
+      "status": 200,
+      "headers": {
+        "ETag": "W/\"124956589169\""
+      },
+      "body": {
+        "sha": "def456",
+        "truncated": false,
+        "tree": [
+          {
+            "path": "README.md",
+            "mode": "100644",
+            "type": "blob",
+            "size": 100
+          },
+          {
+            "path": "pom.xml",
+            "mode": "100644",
+            "type": "blob",
+            "size": 100
+          },
+          {
+            "path": "src/main/java/App.java",
+            "mode": "100644",
+            "type": "blob",
+            "size": 100
+          }
+        ]
+      }
+    },
+    "/repos/test-student/projet-bibliotheque/contents/pom.xml?ref=main": {
+      "status": 200,
+      "headers": {
+        "ETag": "W/\"96143426944\""
+      },
+      "body": {
+        "type": "file",
+        "name": "pom.xml",
+        "path": "pom.xml",
+        "encoding": "base64",
+        "size": 196,
+        "content": "PHByb2plY3Q+CiAgPGRlcGVuZGVuY2llcz4KICAgIDxkZXBlbmRlbmN5PgogICAgICA8Z3JvdXBJ\nZD5vcmcuc3ByaW5nZnJhbWV3b3JrLmJvb3Q8L2dyb3VwSWQ+CiAgICAgIDxhcnRpZmFjdElkPnNw\ncmluZy1ib290LXN0YXJ0ZXItd2ViPC9hcnRpZmFjdElkPgogICAgPC9kZXBlbmRlbmN5PgogIDwv\nZGVwZW5kZW5jaWVzPgo8L3Byb2plY3Q+Cg==\n"
+      }
+    },
+    "/repos/test-student/awesome-dashboard/languages": {
+      "status": 200,
+      "headers": {
+        "ETag": "W/\"156808147074\""
+      },
+      "body": {
+        "JavaScript": 8000,
+        "CSS": 2000
+      }
+    },
+    "/repos/test-student/empty-repo/languages": {
+      "status": 200,
+      "headers": {
+        "ETag": "W/\"80117134351\""
+      },
+      "body": {}
+    },
+    "/repos/test-student/empty-repo/contributors?per_page=100": {
+      "status": 204,
+      "headers": {},
+      "body": null
+    },
+    "/repos/test-student/empty-repo/readme": {
+      "status": 404,
+      "headers": {},
+      "body": null
+    },
+    "/repos/test-student/empty-repo/git/trees/main?recursive=1": {
+      "status": 409,
+      "headers": {},
+      "body": null
+    },
+    "/users/nobody-here/repos?per_page=20&sort=pushed&type=owner": {
+      "status": 404,
+      "headers": {},
+      "body": null
+    }
+  }
+}

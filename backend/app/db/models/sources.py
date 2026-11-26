@@ -23,8 +23,8 @@ class Source(Base):
     - `details`: kind-specific facts, e.g. for a repo `owner`, `is_fork`, `languages`.
     - `storage_path`: where an uploaded file is kept, so deleting the account can remove it.
       Relative to the `UPLOAD_DIR` setting, e.g. `<user id>/<source id>.pdf`.
-    - `text`: the plain text read from the file (CVs, M3.5), in its original language.
-      Skill extraction (M4, M6) reads this, not the file.
+    - `text`: the plain text we read, in its original language: a CV's text (M3.5) or a
+      repo's README (M3.6). Skill extraction (M4, M6) reads this, not the file.
     - `manual_project_id`: set exactly when `kind` is `manual_project`.
     """
 

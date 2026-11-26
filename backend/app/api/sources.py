@@ -1,4 +1,4 @@
-"""Sources: things we read skills from (M3.5: CV upload).
+"""Sources: things we read skills from (M3.5: CV upload). GitHub import: app/api/github.py.
 
 POST /sources/cv   form field `file` (PDF or .docx) → 201 the new source, with its text
 

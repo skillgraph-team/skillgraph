@@ -8,7 +8,7 @@ from functools import lru_cache
 from pathlib import Path
 from typing import Literal
 
-from pydantic import Field, model_validator
+from pydantic import Field, SecretStr, model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 BACKEND_DIR = Path(__file__).resolve().parents[1]
@@ -46,6 +46,18 @@ class Settings(BaseSettings):
     upload_dir: Path = BACKEND_DIR / "storage" / "uploads"
     # Largest CV file accepted, in bytes (default 5 MB).
     cv_max_bytes: int = Field(default=5 * 1024 * 1024, ge=1)
+
+    # GitHub import (M3.6, D-009: public data by username, no user login).
+    # Optional server token: raises GitHub's limit from 60 to 5000 requests an hour.
+    # Empty means no token. Never logged, never stored in the cache.
+    github_token: SecretStr | None = None
+    github_api_url: str = "https://api.github.com"
+    # Saved GitHub answers (public data only), reused for `github_cache_seconds`.
+    github_cache_dir: Path = BACKEND_DIR / "storage" / "github_cache"
+    github_cache_seconds: int = Field(default=3600, ge=0)
+    # Most recently pushed repos imported per user. Each costs up to ~6 requests, so 10
+    # fits in the 60 an hour allowed without a token; raise it when GITHUB_TOKEN is set.
+    github_max_repos: int = Field(default=10, ge=1, le=100)
 
     @model_validator(mode="after")
     def _test_database_is_separate(self) -> "Settings":
