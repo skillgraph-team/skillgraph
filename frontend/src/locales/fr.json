@@ -29,6 +29,36 @@
     "github_user_not_found": "Aucun utilisateur GitHub ne porte ce nom.",
     "github_rate_limited": "GitHub limite les requêtes pour le moment. Réessayez plus tard.",
     "github_unavailable": "GitHub est injoignable pour le moment. Réessayez plus tard.",
-    "github_error": "Un problème est survenu pendant la lecture de GitHub."
+    "github_error": "Un problème est survenu pendant la lecture de GitHub.",
+    "backend_unreachable": "SkillGraph est injoignable pour le moment. Réessayez dans un instant.",
+    "invalid_input": "Certaines informations saisies ne sont pas valides.",
+    "unknown": "Un problème est survenu. Réessayez."
+  },
+  "auth": {
+    "checking": "Vérification de la connexion…",
+    "email": "Adresse e-mail",
+    "password": "Mot de passe",
+    "password_hint": "Au moins {{min}} caractères.",
+    "log_in": "Se connecter",
+    "sign_up": "S'inscrire",
+    "log_out": "Se déconnecter",
+    "no_account": "Pas encore de compte ?",
+    "have_account": "Vous avez déjà un compte ?",
+    "validation": {
+      "required": "Saisissez votre adresse e-mail et votre mot de passe.",
+      "email_invalid": "Cette adresse e-mail ne semble pas valide.",
+      "password_too_short": "Le mot de passe doit contenir au moins 8 caractères.",
+      "password_too_long": "Le mot de passe ne peut pas dépasser 128 caractères."
+    }
+  },
+  "privacy": {
+    "title": "Vos données",
+    "stored": "SkillGraph conserve ce que vous ajoutez : votre CV, les données publiques du compte GitHub que vous choisissez d'importer, et votre profil.",
+    "used": "Ces données servent uniquement à repérer vos compétences et leurs preuves, et à vous proposer des stages adaptés. Pour cela, le texte est analysé par un modèle d'IA.",
+    "deleted": "Supprimer votre compte efface toutes ces données."
+  },
+  "home": {
+    "logged_in_as": "Connecté avec",
+    "coming": "Votre profil, vos compétences et vos stages correspondants apparaîtront ici."
   }
 }

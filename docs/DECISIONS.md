@@ -874,6 +874,51 @@ These fill in details D-006 left open. They are part of the contract in `docs/de
 - **Why:** a new code without words would show a raw `snake_case` code on screen. The texts don't include limits that are settings (the 5 MB CV size), so they can't go out of date.
 - **Where:** the locale files and the test above. Added after M3.10, on Rasen's request.
 
+### M3.2 · Sign-up and login screens
+
+#### T-108 · React Router for pages (`react-router` 7, declarative mode)
+- **What:** `<BrowserRouter>` in `main.tsx`, `<Routes>` in `App.tsx`. Routes: `/` (home, login needed), `/login`, `/signup`, `/health`; anything else goes to `/`.
+- **Why:** the alternative was a small router of our own on the History API (no dependency). React Router is the usual choice for React, so chatbots and teammates know it, and the later screens (profile, skills, matches, with ids in the URL) need nested routes and parameters we'd otherwise rebuild. Its declarative mode is just components, with no build plugin or file-based routing. Decided under autonomous mode (D-017); easy to change while there are few pages.
+- **Where:** `frontend/package.json`, `frontend/src/main.tsx`, `frontend/src/App.tsx`.
+
+#### T-109 · Who is logged in: one React context filled by `GET /auth/me`
+- **What:** `AuthProvider` asks `/auth/me` on start and holds `loading` / `anonymous` / `logged-in` (with the user). `useAuth()` gives that state plus `logIn`, `signUp` and `logOut`. If the backend is down at start, the state becomes `anonymous` and the login form says so when used.
+- **Why:** the login cookie is HttpOnly (D-015), so the frontend can only learn who is logged in by asking. One provider means one request per page load, and no login state in localStorage.
+- **Where:** `frontend/src/auth/context.ts`, `frontend/src/auth/AuthProvider.tsx`.
+
+#### T-110 · Page guards, and the page to return to travels in router state
+- **What:** `<RequireLogin>` sends anonymous visitors to `/login` with `{from: <path>}` in the router state. `<AnonymousOnly>` sends a logged-in user from `/login` or `/signup` to that path, or `/`. That redirect is also what happens right after logging in, so the forms never navigate themselves. `safeReturnPath` accepts only paths starting with one `/`.
+- **Why:** state can't be set by a link from another site, unlike a `?next=` URL parameter, and the path check adds a second guard against redirecting to another site. One place doing the redirect avoids two navigations racing after login.
+- **Where:** `frontend/src/auth/guards.tsx`, `frontend/src/auth/returnPath.ts`.
+
+#### T-111 · Forms check input themselves (`noValidate`), with the backend's rules
+- **What:** the browser's built-in checks are off. Sign-up checks the email shape and the 8–128 password length before sending (T-069); login only checks that both fields are filled. Email and password inputs are `dir="ltr"`, also in Arabic.
+- **Why:** the browser's own messages are in the browser's language, not the interface's. Emails and passwords are Latin text, which is easier to type and check left to right.
+- **Where:** `frontend/src/components/AuthForm.tsx`.
+
+#### T-112 · `request()` and `errorKey()`: one way to call the backend and show its errors
+- **What:** `request(method, path, body)` in `api/client.ts` sends JSON with the cookie. It throws `ApiError(status, code)` for an error answer: the backend's code, `invalid_input` for FastAPI's 422 without a code, otherwise `unknown`. It throws `BackendUnreachableError` when there is no answer, or a 5xx without JSON (the Vite proxy's 502 when the backend is off). `errorKey(error)` in `api/errors.ts` gives `errors.<code>`, or `errors.unknown` for a code the locale files don't have.
+- **Why:** every later screen calls the backend the same way and shows errors with one line. An unexpected code never shows up raw on screen.
+- **Where:** `frontend/src/api/client.ts`, `frontend/src/api/errors.ts`, `frontend/src/api/auth.ts`.
+
+#### T-113 · The interface language follows the account (D-012)
+- **What:**
+  - Sign-up sends the interface's current language as `preferred_language`.
+  - Logging in (or opening the app while logged in) switches the interface to the account's language.
+  - While logged in, every language change is saved with `PATCH /profile`. A failed save is logged to the console and doesn't interrupt; the choice is still remembered in the browser.
+- **Why:** D-012 says the choice is saved to the account. The provider listens to i18next's `languageChanged`, so the language switcher didn't need to change.
+- **Where:** `frontend/src/auth/AuthProvider.tsx`.
+
+#### T-114 · Page tests run the whole app against a pretend backend
+- **What:** `src/test/fakeBackend.ts` replaces `fetch` and answers the auth endpoints like the real backend (codes, cookie-like login state, in memory). `App.test.tsx` renders the real app in a `MemoryRouter` and drives the forms with `fireEvent`.
+- **Why:** it tests the real client, provider, guards and pages together, without mocking each module. No new test library was needed (`@testing-library/user-event` would be nicer, but isn't needed yet).
+- **Where:** `frontend/src/test/fakeBackend.ts`, `frontend/src/App.test.tsx`.
+
+#### T-115 · The status page moved to `/health`
+- **What:** the home page `/` is now for logged-in users. The backend and database status page is at `/health`, open to anyone.
+- **Why:** the status page is still useful when setting up, and must work without logging in.
+- **Where:** `frontend/src/App.tsx`, `docs/USER_GUIDE.md` §4.
+
 ### Repo setup script (no slice)
 
 #### T-078 · `github_setup.py` creates only missing labels

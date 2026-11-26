@@ -2,7 +2,7 @@
 
 How to use SkillGraph, written for the people using it: students, recent graduates, and anyone trying the demo. It describes only what works today. Features still being built are listed at the end.
 
-_Last updated: 2026-11-23, after M0.7 (three-language support)._
+_Last updated: 2026-11-26, after M3.2 (sign-up and login screens)._
 
 > **For contributors:** update this guide in the same commit as any slice that changes what a user sees or does (CLAUDE.md, "Finishing"). See "Keeping this guide up to date" at the end.
 
@@ -24,12 +24,38 @@ SkillGraph works in **English**, **French** and **Arabic**.
 - Use the **Language** menu at the top of the page. Each language is listed in its own language: English, Français, العربية.
 - The whole page switches at once. In Arabic it reads right-to-left: the menu moves to the left and the text lines up on the right.
 - Your choice is remembered in this browser, so the next visit opens in the same language.
+- Once you're logged in, your choice is also saved to your account. When you log in on another computer, SkillGraph switches to your account's language.
 - On your first visit, SkillGraph uses your browser's language if it's one of the three, otherwise English.
 - Numbers and dates follow your language's conventions, always with the digits 0–9.
 
-## 3. Checking that SkillGraph is working
+## 3. Creating an account and logging in
 
-The home page currently shows whether SkillGraph's parts are running:
+Everything except the status page (section 4) needs an account. If you aren't logged in, SkillGraph shows the **Log in** page.
+
+**Creating an account**
+1. On the Log in page, next to "No account yet?", click **Sign up**.
+2. Enter your email and a password of at least 8 characters.
+3. Read the short **Your data** notice: what SkillGraph stores, what it's used for, and that deleting your account removes all of it.
+4. Click **Sign up**. You're logged in right away. Your account gets the language the page is in.
+
+**Logging in:** enter your email and password and click **Log in**. If you tried to open a page before logging in, you're taken back to it.
+
+**Logging out:** click **Log out** at the top of the page.
+
+There's no "forgot my password" email yet. If you lose your password, ask whoever runs your SkillGraph.
+
+| Message (English) | What it means |
+|---|---|
+| Enter your email and password. | One of the two fields is empty. |
+| This doesn't look like an email address. | Check the email for typos. |
+| The password needs at least 8 characters. | Choose a longer password. |
+| An account with this email already exists. | Log in instead, or use another email. |
+| Wrong email or password. | One of the two is wrong. For your safety, SkillGraph doesn't say which. |
+| SkillGraph can't be reached right now. Try again in a moment. | The backend isn't running (see section 4). |
+
+## 4. Checking that SkillGraph is working
+
+Open **http://localhost:5173/health** to see whether SkillGraph's parts are running:
 
 | Message (English) | What it means | What to do |
 |---|---|---|
@@ -38,11 +64,11 @@ The home page currently shows whether SkillGraph's parts are running:
 | The backend is running, but it can't reach the database. | The database isn't running. | Run `docker compose up -d db` (step 1 above), then reload. |
 | The backend can't be reached. Is it running? | The backend isn't running. | Start it (step 2 above), then reload. |
 
-## 4. Coming later
+## 5. Coming later
 
 These are planned (see `docs/MILESTONES.md`) but **not available yet**:
 
-- Creating an account and logging in
+- Changing your password and deleting your account from the screen (they work in the backend already)
 - Uploading your CV and linking your GitHub profile
 - Seeing your skills, each linked to its evidence, with a status: claimed, demonstrated, assessed or unverified
 - Matching your profile against curated internships, with an explanation of each match and each gap

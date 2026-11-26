@@ -29,6 +29,36 @@
     "github_user_not_found": "No GitHub user has this name.",
     "github_rate_limited": "GitHub is limiting requests for now. Try again later.",
     "github_unavailable": "GitHub can't be reached right now. Try again later.",
-    "github_error": "Something went wrong while reading GitHub."
+    "github_error": "Something went wrong while reading GitHub.",
+    "backend_unreachable": "SkillGraph can't be reached right now. Try again in a moment.",
+    "invalid_input": "Some of what was entered isn't valid.",
+    "unknown": "Something went wrong. Try again."
+  },
+  "auth": {
+    "checking": "Checking your login…",
+    "email": "Email",
+    "password": "Password",
+    "password_hint": "At least {{min}} characters.",
+    "log_in": "Log in",
+    "sign_up": "Sign up",
+    "log_out": "Log out",
+    "no_account": "No account yet?",
+    "have_account": "Already have an account?",
+    "validation": {
+      "required": "Enter your email and password.",
+      "email_invalid": "This doesn't look like an email address.",
+      "password_too_short": "The password needs at least 8 characters.",
+      "password_too_long": "The password can have at most 128 characters."
+    }
+  },
+  "privacy": {
+    "title": "Your data",
+    "stored": "SkillGraph stores what you add: your CV, the public data of the GitHub account you choose to import, and your profile.",
+    "used": "It is used only to find your skills and the evidence behind them, and to match you with internships. To do this, the text is analysed by an AI model.",
+    "deleted": "Deleting your account removes all of it."
+  },
+  "home": {
+    "logged_in_as": "Logged in as",
+    "coming": "Your profile, skills and matches will appear here."
   }
 }

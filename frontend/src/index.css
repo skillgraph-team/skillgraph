@@ -35,3 +35,42 @@ textarea {
 main {
   padding-inline: 1rem;
 }
+
+.app-header {
+  gap: 1rem;
+}
+
+.auth-page {
+  max-inline-size: 28rem;
+}
+
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.auth-form button {
+  align-self: flex-start;
+  margin-block-start: 0.5rem;
+}
+
+.hint {
+  margin-block: 0;
+  font-size: 0.875rem;
+}
+
+.form-error {
+  margin-block: 0;
+  color: #b00020;
+}
+
+.privacy-notice h2 {
+  margin-block: 0.5rem 0;
+  font-size: 1rem;
+}
+
+.privacy-notice ul {
+  margin-block: 0.25rem;
+  padding-inline-start: 1.25rem;
+}
