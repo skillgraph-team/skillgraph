@@ -15,6 +15,7 @@ export function AccountMenu() {
         {t("nav.home")}
       </NavLink>
       <NavLink to="/profile">{t("nav.profile")}</NavLink>
+      <NavLink to="/sources">{t("nav.sources")}</NavLink>
       <button type="button" onClick={() => void auth.logOut()}>
         {t("auth.log_out")}
       </button>

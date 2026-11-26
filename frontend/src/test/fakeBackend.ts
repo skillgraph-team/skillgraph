@@ -14,6 +14,7 @@ import { vi } from "vitest";
 
 import type { User } from "../api/auth";
 import type { Entry, EntryKind } from "../api/profile";
+import type { SourceSummary } from "../api/sources";
 import type { Language } from "../i18n/languages";
 
 interface Account {
@@ -22,6 +23,9 @@ interface Account {
   display_name: string | null;
   headline: string | null;
   lists: Record<EntryKind, Entry[]>;
+  sources: SourceSummary[];
+  consentedAt: string | null;
+  githubUsername: string | null;
 }
 
 /** The fields the endpoints read (each call sends only some of them). */
@@ -33,6 +37,7 @@ interface Body {
   headline: string | null;
   current_password: string;
   new_password: string;
+  username: string;
   [field: string]: string | null;
 }
 
@@ -68,6 +73,9 @@ export function fakeBackend() {
       display_name: null,
       headline: null,
       lists: { education: [], experience: [], projects: [] },
+      sources: [],
+      consentedAt: null,
+      githubUsername: null,
     });
     return user;
   }
@@ -83,6 +91,15 @@ export function fakeBackend() {
       const answer = queued;
       queued = null;
       return answer;
+    }
+
+    const sourcePath = /^\/sources\/([^/]+)$/.exec(path);
+    if (sourcePath && method === "DELETE") {
+      if (!loggedIn) return error(401, "not_authenticated");
+      const before = loggedIn.sources.length;
+      loggedIn.sources = loggedIn.sources.filter((source) => source.id !== sourcePath[1]);
+      if (loggedIn.sources.length === before) return error(404, "not_found");
+      return new Response(null, { status: 204 });
     }
 
     const entryPath = ENTRY_PATH.exec(path);
@@ -121,6 +138,42 @@ export function fakeBackend() {
         if ("display_name" in body) loggedIn.display_name = body.display_name;
         if ("headline" in body) loggedIn.headline = body.headline;
         return json(profileOf(loggedIn));
+      }
+      case "GET /sources":
+        return loggedIn ? json(loggedIn.sources) : error(401, "not_authenticated");
+      case "GET /profile/github-consent":
+      case "PUT /profile/github-consent": {
+        if (!loggedIn) return error(401, "not_authenticated");
+        if (method === "PUT") loggedIn.consentedAt ??= "2026-11-26T10:00:00Z";
+        return json({
+          consented_at: loggedIn.consentedAt,
+          github_username: loggedIn.githubUsername,
+        });
+      }
+      case "DELETE /profile/github-consent":
+        if (!loggedIn) return error(401, "not_authenticated");
+        loggedIn.consentedAt = null;
+        loggedIn.githubUsername = null;
+        loggedIn.sources = loggedIn.sources.filter((source) => source.kind !== "github_repo");
+        return new Response(null, { status: 204 });
+      case "POST /sources/github": {
+        if (!loggedIn) return error(401, "not_authenticated");
+        if (!loggedIn.consentedAt) return error(403, "github_consent_required");
+        if (body.username === "nobody-here") return error(404, "github_user_not_found");
+        const repos = ["shop-api", "notes"].map((name) => ({
+          id: `repo-${name}`,
+          kind: "github_repo" as const,
+          title: `${body.username}/${name}`,
+          language: "en" as const,
+          url: `https://github.com/${body.username}/${name}`,
+          created_at: "2026-11-26T10:00:00Z",
+        }));
+        loggedIn.githubUsername = body.username;
+        loggedIn.sources = [
+          ...repos,
+          ...loggedIn.sources.filter((source) => source.kind !== "github_repo"),
+        ];
+        return json(repos);
       }
       case "POST /auth/password":
         if (!loggedIn) return error(401, "not_authenticated");
@@ -185,6 +238,13 @@ export function fakeBackend() {
     /** The account's saved profile lists, to check what the backend holds. */
     lists(email: string) {
       return accounts.get(email)?.lists;
+    },
+    /** Adds a source to the account, as an upload would. */
+    addSource(email: string, source: SourceSummary) {
+      accounts.get(email)?.sources.unshift(source);
+    },
+    sources(email: string) {
+      return accounts.get(email)?.sources ?? [];
     },
     passwordOf(email: string) {
       return accounts.get(email)?.password;

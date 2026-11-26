@@ -64,7 +64,8 @@
   "nav": {
     "label": "Menu principal",
     "home": "Accueil",
-    "profile": "Profil"
+    "profile": "Profil",
+    "sources": "Sources"
   },
   "profile": {
     "title": "Votre profil",
@@ -123,5 +124,53 @@
     "new": "Nouveau mot de passe",
     "change": "Changer le mot de passe",
     "changed": "Mot de passe modifié."
+  },
+  "sources": {
+    "title": "Vos sources",
+    "cv": {
+      "title": "CV",
+      "file": "Fichier du CV",
+      "hint": "PDF ou Word (.docx), en anglais ou en français.",
+      "upload": "Envoyer le CV",
+      "missing": "Choisissez d'abord un fichier.",
+      "sending": "Envoi du fichier",
+      "reading": "Lecture du CV…",
+      "done": "CV ajouté."
+    },
+    "github": {
+      "title": "GitHub",
+      "consent": {
+        "what": "SkillGraph peut lire les données publiques d'un nom d'utilisateur GitHub : ses dépôts, leurs langages, les fichiers README, les fichiers de dépendances (comme requirements.txt ou package.json) et le nombre de commits de cet utilisateur.",
+        "public": "Seules les données publiques sont lues. SkillGraph ne demande jamais votre mot de passe GitHub.",
+        "withdraw": "Vous pouvez retirer ce consentement à tout moment. Tout ce qui a été importé de GitHub est alors supprimé.",
+        "allow": "Autoriser l'import GitHub"
+      },
+      "username": "Nom d'utilisateur GitHub",
+      "username_invalid": "Un nom d'utilisateur GitHub ne contient que des lettres, des chiffres et des tirets simples, 39 caractères au maximum.",
+      "import": "Importer les dépôts",
+      "importing": "Lecture de GitHub…",
+      "imported": "Dépôts importés : {{count}}.",
+      "withdraw": "Retirer le consentement",
+      "confirm_withdraw": "Retirer le consentement et supprimer tous les dépôts importés ?",
+      "withdraw_yes": "Oui, retirer"
+    },
+    "list": {
+      "title": "Déjà ajoutées",
+      "loading": "Chargement des sources…",
+      "empty": "Aucune source pour l'instant. Envoyez un CV ou importez GitHub pour commencer.",
+      "confirm_delete": "Supprimer cette source ?"
+    },
+    "kind": {
+      "cv": "CV",
+      "github_repo": "Dépôt GitHub",
+      "certificate": "Certificat",
+      "manual_project": "Projet"
+    },
+    "language": {
+      "en": "anglais",
+      "fr": "français",
+      "ar": "arabe",
+      "other": "autre langue"
+    }
   }
 }

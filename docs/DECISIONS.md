@@ -946,6 +946,23 @@ These fill in details D-006 left open. They are part of the contract in `docs/de
 - **Why:** no date-picker library needed. The picker itself follows the browser's language, not the interface's: a known limit, fine for the MVP.
 - **Where:** `frontend/src/components/EntryForm.tsx`, `frontend/src/components/EntrySection.tsx`.
 
+### M3.7 · Upload and GitHub screens
+
+#### T-121 · New endpoints `GET /sources` (a summary) and `DELETE /sources/{id}`
+- **What:** the list gives id, kind, title, language, `url` (a repo's GitHub page) and `created_at`, newest first, by title within the same moment. It has no `text` or `details`: a repo's details hold dependency files of up to 100,000 characters each. Deleting removes a CV's file first, then the row (as T-102), and the source's evidence goes with it by cascade. Someone else's id answers 404 `not_found`.
+- **Why:** the slice's "list of sources" had no endpoint. Every CV upload is kept (T-087), so a wrong upload needs a way out. A deleted repo comes back on the next import; withdrawing consent removes them all.
+- **Where:** `backend/app/api/sources.py`, `backend/app/services/sources.py`, `backend/tests/api/test_source_list.py`.
+
+#### T-122 · The CV upload uses XMLHttpRequest, for its progress bar
+- **What:** `uploadCv(file, onProgress)` sends the file with XMLHttpRequest and reports the share sent. At 100% the screen says "Reading the CV…" while the backend extracts the text. Errors are parsed like every other call (`apiError()`, shared with `request()`).
+- **Why:** the slice asks for upload progress, and fetch can't report upload progress in browsers yet. No upload library needed.
+- **Where:** `frontend/src/api/sources.ts`, `frontend/src/components/CvUpload.tsx`.
+
+#### T-123 · The GitHub consent text shows before any GitHub field
+- **What:** without consent, the GitHub section shows only the consent text and **Allow GitHub import**. The text says what is read, that it's public data only and no password is asked, and that withdrawing deletes everything imported. The username field appears after consent. **Withdraw consent** asks to confirm on the spot, because it deletes data. The username is checked against GitHub's rule before asking the backend.
+- **Why:** M3.9 made consent required, and the slice asks for "a clear consent message". The wording is Rasen's to approve, like the privacy notice.
+- **Where:** `frontend/src/components/GitHubConnect.tsx`, `sources.github.consent.*` in the locale files.
+
 ### Repo setup script (no slice)
 
 #### T-078 · `github_setup.py` creates only missing labels

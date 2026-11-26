@@ -57,6 +57,12 @@ function errorCode(status: number, body: unknown): string {
   return status === 422 ? "invalid_input" : "unknown";
 }
 
+/** The ApiError for a backend error answer (its status and parsed JSON body). */
+export function apiError(status: number, json: unknown): ApiError {
+  const code = errorCode(status, json);
+  return new ApiError(status, code, code === "invalid_input" ? invalidFields(json) : {});
+}
+
 /**
  * Calls the backend and returns the JSON answer (or undefined for 204 No Content).
  * Throws ApiError for an error answer, BackendUnreachableError when there is no answer.
@@ -83,8 +89,7 @@ export async function request<T>(
   if (!response.ok) {
     // The Vite proxy answers 502/504 without JSON when the backend isn't running.
     if (json === null && response.status >= 500) throw new BackendUnreachableError(response);
-    const code = errorCode(response.status, json);
-    throw new ApiError(response.status, code, code === "invalid_input" ? invalidFields(json) : {});
+    throw apiError(response.status, json);
   }
   return json as T;
 }

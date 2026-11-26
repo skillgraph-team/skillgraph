@@ -64,7 +64,8 @@
   "nav": {
     "label": "Main menu",
     "home": "Home",
-    "profile": "Profile"
+    "profile": "Profile",
+    "sources": "Sources"
   },
   "profile": {
     "title": "Your profile",
@@ -123,5 +124,53 @@
     "new": "New password",
     "change": "Change password",
     "changed": "Password changed."
+  },
+  "sources": {
+    "title": "Your sources",
+    "cv": {
+      "title": "CV",
+      "file": "CV file",
+      "hint": "PDF or Word (.docx), in English or French.",
+      "upload": "Upload CV",
+      "missing": "Choose a file first.",
+      "sending": "Sending the file",
+      "reading": "Reading the CV…",
+      "done": "CV added."
+    },
+    "github": {
+      "title": "GitHub",
+      "consent": {
+        "what": "SkillGraph can read the public data of a GitHub username: its repositories, their languages, README files, dependency files (such as requirements.txt or package.json) and how many commits are by that user.",
+        "public": "Only public data is read. SkillGraph never asks for your GitHub password.",
+        "withdraw": "You can withdraw this consent at any time. Everything imported from GitHub is then deleted.",
+        "allow": "Allow GitHub import"
+      },
+      "username": "GitHub username",
+      "username_invalid": "A GitHub username has only letters, digits and single hyphens, up to 39 characters.",
+      "import": "Import repositories",
+      "importing": "Reading GitHub…",
+      "imported": "Repositories imported: {{count}}.",
+      "withdraw": "Withdraw consent",
+      "confirm_withdraw": "Withdraw consent and delete every imported repository?",
+      "withdraw_yes": "Yes, withdraw"
+    },
+    "list": {
+      "title": "Added so far",
+      "loading": "Loading the sources…",
+      "empty": "No sources yet. Upload a CV or import GitHub to start.",
+      "confirm_delete": "Delete this source?"
+    },
+    "kind": {
+      "cv": "CV",
+      "github_repo": "GitHub repository",
+      "certificate": "Certificate",
+      "manual_project": "Project"
+    },
+    "language": {
+      "en": "English",
+      "fr": "French",
+      "ar": "Arabic",
+      "other": "other language"
+    }
   }
 }
