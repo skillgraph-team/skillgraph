@@ -1,9 +1,10 @@
 # Skill list (taxonomy)
 
 The skills SkillGraph knows about, their other names, and which skill belongs under which.
-Three CSV files (UTF-8, comma-separated, with a header row). They are loaded into the
-`skills`, `skill_aliases` and `skill_relations` tables (loader: M4.2). The structure
-checks are in `backend/tests/skills/test_skill_data.py`.
+Four CSV files (UTF-8, comma-separated, with a header row). The first three are loaded
+into the `skills`, `skill_aliases` and `skill_relations` tables (loader: M4.2). The
+structure checks are in `backend/tests/skills/test_skill_data.py` and
+`test_resource_data.py`.
 
 ## The files
 
@@ -38,6 +39,20 @@ checks are in `backend/tests/skills/test_skill_data.py`.
   the nearest parent: `postgresql → databases` is already implied by the chain.
 - No loops (a skill can't end up under itself).
 
+**`resources.csv`**: `skill_id,title,url,type,free,language`
+- Free learning resources per skill. **This is the only place recommendations may take
+  links from** (M4.8). An agent never makes up a link.
+- `type`: `course`, `docs`, `tutorial` or `project_idea`. `free`: `yes` or `no`
+  ("free to audit", like most edX and Coursera courses, counts as `yes`).
+  `language`: the language the resource is written in (`en`, `fr`, `ar`), not the
+  language it teaches.
+- `title`: the resource's own name, in its own language.
+- Every skill needs at least **2** free resources (the test checks this). Prefer
+  official documentation and well-known free courses. Add French ones where they exist.
+- `https://` links only. The same link may serve several skills (one row each).
+- **Open every new link in a browser before adding it.** Prefer a stable address
+  (`/stable/`, `/latest/`, no `?view=` version) over one that redirects to a version.
+
 ## Categories
 
 | category | for | examples |
@@ -65,7 +80,8 @@ A new category also needs to be added to `CATEGORIES` in the test file.
 2. Add a row to `skills.csv`: id, the three names, category.
 3. Add its other names to `aliases.csv` (English and French spellings, short forms).
 4. Add one row per parent to `relations.csv`.
-5. Run `cd backend && uv run pytest tests/skills`. It reports duplicates, bad ids, aliases
+5. Add at least 2 free resources to `resources.csv`.
+6. Run `cd backend && uv run pytest tests/skills`. It reports duplicates, bad ids, aliases
    pointing nowhere and loops.
 
 Keep the list between 150 and 300 skills (the test checks this). It's meant to cover

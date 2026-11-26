@@ -1,0 +1,585 @@
+skill_id,title,url,type,free,language
+programming,CS50: Introduction to Computer Science,https://cs50.harvard.edu/x/,course,yes,en
+programming,freeCodeCamp,https://www.freecodecamp.org/learn/,course,yes,en
+programming,France Université Numérique (FUN MOOC),https://www.fun-mooc.fr/fr/,course,yes,fr
+software-engineering,MIT OpenCourseWare: Software Construction (6.005),https://ocw.mit.edu/courses/6-005-software-construction-spring-2016/,course,yes,en
+software-engineering,roadmap.sh: Computer Science,https://roadmap.sh/computer-science,tutorial,yes,en
+web-development,The Odin Project,https://www.theodinproject.com/,course,yes,en
+web-development,MDN: Learn web development,https://developer.mozilla.org/en-US/docs/Learn_web_development,docs,yes,en
+web-development,MDN : Apprendre le développement web,https://developer.mozilla.org/fr/docs/Learn_web_development,docs,yes,fr
+frontend-development,roadmap.sh: Frontend,https://roadmap.sh/frontend,tutorial,yes,en
+frontend-development,freeCodeCamp: Responsive Web Design,https://www.freecodecamp.org/learn/2022/responsive-web-design/,course,yes,en
+backend-development,roadmap.sh: Backend,https://roadmap.sh/backend,tutorial,yes,en
+backend-development,Full Stack Open,https://fullstackopen.com/en/,course,yes,en
+full-stack-development,Full Stack Open,https://fullstackopen.com/en/,course,yes,en
+full-stack-development,roadmap.sh: Full Stack,https://roadmap.sh/full-stack,tutorial,yes,en
+full-stack-development,The Odin Project,https://www.theodinproject.com/,course,yes,en
+mobile-development,roadmap.sh: Android,https://roadmap.sh/android,tutorial,yes,en
+mobile-development,Flutter: Get started,https://docs.flutter.dev/get-started,docs,yes,en
+databases,CMU Intro to Database Systems (15-445),https://15445.courses.cs.cmu.edu/,course,yes,en
+databases,Berkeley CS186: Introduction to Database Systems,https://cs186berkeley.net/,course,yes,en
+data-analysis,Kaggle Learn: Pandas,https://www.kaggle.com/learn/pandas,course,yes,en
+data-analysis,freeCodeCamp: Data Analysis with Python,https://www.freecodecamp.org/learn/data-analysis-with-python/,course,yes,en
+data-analysis,roadmap.sh: Data Analyst,https://roadmap.sh/data-analyst,tutorial,yes,en
+data-science,Kaggle Learn,https://www.kaggle.com/learn,course,yes,en
+data-science,roadmap.sh: AI and Data Scientist,https://roadmap.sh/ai-data-scientist,tutorial,yes,en
+data-engineering,Data Engineering Zoomcamp,https://github.com/DataTalksClub/data-engineering-zoomcamp,course,yes,en
+data-engineering,roadmap.sh: Data Engineer,https://roadmap.sh/data-engineer,tutorial,yes,en
+machine-learning,Google Machine Learning Crash Course,https://developers.google.com/machine-learning/crash-course,course,yes,en
+machine-learning,Kaggle Learn: Intro to Machine Learning,https://www.kaggle.com/learn/intro-to-machine-learning,course,yes,en
+machine-learning,scikit-learn: User guide,https://scikit-learn.org/stable/user_guide.html,docs,yes,en
+artificial-intelligence,Elements of AI,https://www.elementsofai.com/,course,yes,en
+artificial-intelligence,CS50's Introduction to AI with Python,https://cs50.harvard.edu/ai/,course,yes,en
+artificial-intelligence,Elements of AI (en français),https://www.elementsofai.fr/,course,yes,fr
+cloud-computing,AWS Skill Builder,https://skillbuilder.aws/,course,yes,en
+cloud-computing,Microsoft Learn: Azure Fundamentals,https://learn.microsoft.com/en-us/training/courses/az-900t00,course,yes,en
+devops,roadmap.sh: DevOps,https://roadmap.sh/devops,tutorial,yes,en
+devops,Microsoft Learn: DevOps resource center,https://learn.microsoft.com/en-us/devops/,docs,yes,en
+cybersecurity,roadmap.sh: Cyber Security,https://roadmap.sh/cyber-security,tutorial,yes,en
+cybersecurity,TryHackMe: Pre Security,https://tryhackme.com/path/outline/presecurity,course,yes,en
+cybersecurity,SecNumacadémie (ANSSI),https://secnumacademie.gouv.fr/,course,yes,fr
+networking,Cisco Networking Academy,https://www.netacad.com/,course,yes,en
+networking,"Computer Networking: Principles, Protocols and Practice",https://www.computer-networking.info/,course,yes,en
+operating-systems,Operating Systems: Three Easy Pieces,https://pages.cs.wisc.edu/~remzi/OSTEP/,course,yes,en
+operating-systems,MIT 6.S081 Operating System Engineering,https://pdos.csail.mit.edu/6.S081/2020/,course,yes,en
+embedded-systems,Arduino documentation,https://docs.arduino.cc/,docs,yes,en
+embedded-systems,Embedded Systems - Shape The World (edX),https://www.edx.org/learn/embedded-systems/the-university-of-texas-at-austin-embedded-systems-shape-the-world-microcontroller-input-output,course,yes,en
+game-development,Unity Learn,https://learn.unity.com/,docs,yes,en
+game-development,roadmap.sh: Game Developer,https://roadmap.sh/game-developer,tutorial,yes,en
+game-development,Godot Engine: Getting started,https://docs.godotengine.org/en/stable/getting_started/introduction/index.html,docs,yes,en
+ui-ux-design,roadmap.sh: UX Design,https://roadmap.sh/ux-design,tutorial,yes,en
+ui-ux-design,Google Material Design,https://m3.material.io/,docs,yes,en
+ui-ux-design,Figma Learn,https://help.figma.com/hc/en-us/categories/360002051613,docs,yes,en
+testing,roadmap.sh: QA,https://roadmap.sh/qa,tutorial,yes,en
+testing,The Practical Test Pyramid,https://martinfowler.com/articles/practical-test-pyramid.html,tutorial,yes,en
+version-control,Pro Git book,https://git-scm.com/book/en/v2,docs,yes,en
+version-control,Pro Git (en français),https://git-scm.com/book/fr/v2,docs,yes,fr
+version-control,Learn Git Branching,https://learngitbranching.js.org/,tutorial,yes,en
+business-intelligence,Microsoft Learn: Power BI training,https://learn.microsoft.com/en-us/training/powerplatform/power-bi,course,yes,en
+business-intelligence,Tableau free training videos,https://www.tableau.com/learn/training,tutorial,yes,en
+it-support,Microsoft Learn: Windows training,https://learn.microsoft.com/en-us/training/browse/?products=windows,course,yes,en
+it-support,Professor Messer: CompTIA A+ training,https://www.professormesser.com/free-a-plus-training/220-1101/220-1101-video/220-1101-training-course/,course,yes,en
+python,The Python Tutorial,https://docs.python.org/3/tutorial/,docs,yes,en
+python,Le tutoriel Python,https://docs.python.org/fr/3/tutorial/,docs,yes,fr
+python,Kaggle Learn: Python,https://www.kaggle.com/learn/python,course,yes,en
+python,roadmap.sh: Python,https://roadmap.sh/python,tutorial,yes,en
+java,Dev.java: Learn Java,https://dev.java/learn/,docs,yes,en
+java,MOOC.fi: Java Programming,https://java-programming.mooc.fi/,course,yes,en
+java,roadmap.sh: Java,https://roadmap.sh/java,tutorial,yes,en
+javascript,MDN: JavaScript Guide,https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide,docs,yes,en
+javascript,MDN : Guide JavaScript,https://developer.mozilla.org/fr/docs/Web/JavaScript/Guide,docs,yes,fr
+javascript,The Modern JavaScript Tutorial,https://javascript.info/,tutorial,yes,en
+javascript,Le tutoriel JavaScript moderne,https://fr.javascript.info/,tutorial,yes,fr
+typescript,TypeScript Handbook,https://www.typescriptlang.org/docs/handbook/intro.html,docs,yes,en
+typescript,roadmap.sh: TypeScript,https://roadmap.sh/typescript,tutorial,yes,en
+c,Learn-C.org,https://www.learn-c.org/,tutorial,yes,en
+c,CS50: Introduction to Computer Science,https://cs50.harvard.edu/x/,course,yes,en
+c++,LearnCpp.com,https://www.learncpp.com/,tutorial,yes,en
+c++,cppreference.com,https://en.cppreference.com/w/,docs,yes,en
+c++,roadmap.sh: C++,https://roadmap.sh/cpp,tutorial,yes,en
+c#,Microsoft Learn: C# documentation,https://learn.microsoft.com/en-us/dotnet/csharp/,docs,yes,en
+c#,Microsoft Learn : documentation C#,https://learn.microsoft.com/fr-fr/dotnet/csharp/,docs,yes,fr
+c#,freeCodeCamp: Foundational C# with Microsoft,https://www.freecodecamp.org/learn/foundational-c-sharp-with-microsoft/,course,yes,en
+go,A Tour of Go,https://go.dev/tour/,tutorial,yes,en
+go,Go by Example,https://gobyexample.com/,tutorial,yes,en
+go,roadmap.sh: Go,https://roadmap.sh/golang,tutorial,yes,en
+rust,The Rust Programming Language (book),https://doc.rust-lang.org/book/,docs,yes,en
+rust,Rust by Example,https://doc.rust-lang.org/rust-by-example/,tutorial,yes,en
+rust,Le langage de programmation Rust,https://jimskapt.github.io/rust-book-fr/,docs,yes,fr
+kotlin,Kotlin docs: Get started,https://kotlinlang.org/docs/getting-started.html,docs,yes,en
+kotlin,Kotlin Koans,https://play.kotlinlang.org/koans/overview,tutorial,yes,en
+swift,The Swift Programming Language,https://docs.swift.org/swift-book/documentation/the-swift-programming-language/,docs,yes,en
+swift,Hacking with Swift: 100 Days of Swift,https://www.hackingwithswift.com/100,course,yes,en
+php,PHP Manual,https://www.php.net/manual/en/,docs,yes,en
+php,Manuel PHP,https://www.php.net/manual/fr/,docs,yes,fr
+php,PHP: The Right Way,https://phptherightway.com/,tutorial,yes,en
+ruby,Ruby documentation,https://www.ruby-lang.org/en/documentation/,docs,yes,en
+ruby,Ruby in Twenty Minutes,https://www.ruby-lang.org/en/documentation/quickstart/,tutorial,yes,en
+ruby,Documentation Ruby,https://www.ruby-lang.org/fr/documentation/,docs,yes,fr
+r,R for Data Science (2e),https://r4ds.hadley.nz/,docs,yes,en
+r,An Introduction to R,https://cran.r-project.org/doc/manuals/r-release/R-intro.html,docs,yes,en
+matlab,MATLAB Onramp,https://matlabacademy.mathworks.com/details/matlab-onramp/gettingstarted,course,yes,en
+matlab,MATLAB documentation,https://www.mathworks.com/help/matlab/,docs,yes,en
+matlab,GNU Octave documentation,https://docs.octave.org/latest/,docs,yes,en
+scala,Scala 3 Book,https://docs.scala-lang.org/scala3/book/introduction.html,docs,yes,en
+scala,Scala Tour,https://docs.scala-lang.org/tour/tour-of-scala.html,tutorial,yes,en
+dart,Dart language tour,https://dart.dev/language,docs,yes,en
+dart,Dart tutorials,https://dart.dev/tutorials,tutorial,yes,en
+bash,GNU Bash manual,https://www.gnu.org/software/bash/manual/bash.html,docs,yes,en
+bash,The Missing Semester: Shell Tools and Scripting,https://missing.csail.mit.edu/2020/shell-tools/,tutorial,yes,en
+bash,roadmap.sh: Shell / Bash,https://roadmap.sh/shell-bash,tutorial,yes,en
+powershell,Microsoft Learn: PowerShell documentation,https://learn.microsoft.com/en-us/powershell/,docs,yes,en
+powershell,Microsoft Learn : documentation PowerShell,https://learn.microsoft.com/fr-fr/powershell/,docs,yes,fr
+html,MDN: HTML,https://developer.mozilla.org/en-US/docs/Web/HTML,docs,yes,en
+html,MDN : HTML,https://developer.mozilla.org/fr/docs/Web/HTML,docs,yes,fr
+html,web.dev: Learn HTML,https://web.dev/learn/html,course,yes,en
+css,MDN: CSS,https://developer.mozilla.org/en-US/docs/Web/CSS,docs,yes,en
+css,MDN : CSS,https://developer.mozilla.org/fr/docs/Web/CSS,docs,yes,fr
+css,web.dev: Learn CSS,https://web.dev/learn/css,course,yes,en
+sql,SQLBolt,https://sqlbolt.com/,tutorial,yes,en
+sql,SQLZoo,https://sqlzoo.net/,tutorial,yes,en
+sql,Kaggle Learn: Intro to SQL,https://www.kaggle.com/learn/intro-to-sql,course,yes,en
+sql,roadmap.sh: SQL,https://roadmap.sh/sql,tutorial,yes,en
+vba,Microsoft Learn: Office VBA reference,https://learn.microsoft.com/en-us/office/vba/api/overview/,docs,yes,en
+vba,Microsoft Learn: Getting started with VBA in Office,https://learn.microsoft.com/en-us/office/vba/library-reference/concepts/getting-started-with-vba-in-office,docs,yes,en
+vba,Microsoft Learn : bien démarrer avec VBA dans Office,https://learn.microsoft.com/fr-fr/office/vba/library-reference/concepts/getting-started-with-vba-in-office,docs,yes,fr
+assembly,Nand2Tetris,https://www.nand2tetris.org/,course,yes,en
+assembly,"x86-64 Assembly (CS:APP, Carnegie Mellon)",https://www.cs.cmu.edu/~213/,docs,yes,en
+perl,Perl documentation,https://perldoc.perl.org/,docs,yes,en
+perl,Learn Perl,https://www.perl.org/learn.html,tutorial,yes,en
+lua,Programming in Lua (first edition),https://www.lua.org/pil/contents.html,docs,yes,en
+lua,Lua reference manual,https://www.lua.org/manual/5.4/,docs,yes,en
+solidity,Solidity documentation,https://docs.soliditylang.org/,docs,yes,en
+solidity,CryptoZombies,https://cryptozombies.io/,tutorial,yes,en
+react,React: Learn,https://react.dev/learn,docs,yes,en
+react,React : Apprendre,https://fr.react.dev/learn,docs,yes,fr
+react,roadmap.sh: React,https://roadmap.sh/react,tutorial,yes,en
+angular,Angular: Tutorials,https://angular.dev/tutorials,docs,yes,en
+angular,roadmap.sh: Angular,https://roadmap.sh/angular,tutorial,yes,en
+vue,Vue.js: Guide,https://vuejs.org/guide/introduction.html,docs,yes,en
+vue,Vue.js : Guide,https://fr.vuejs.org/guide/introduction.html,docs,yes,fr
+vue,roadmap.sh: Vue,https://roadmap.sh/vue,tutorial,yes,en
+svelte,Svelte tutorial,https://svelte.dev/tutorial,tutorial,yes,en
+svelte,Svelte docs,https://svelte.dev/docs,docs,yes,en
+next.js,Next.js: Learn,https://nextjs.org/learn,tutorial,yes,en
+next.js,Next.js docs,https://nextjs.org/docs,docs,yes,en
+nuxt,Nuxt: Get started,https://nuxt.com/docs/getting-started/introduction,docs,yes,en
+nuxt,Nuxt docs: Guide,https://nuxt.com/docs/guide,docs,yes,en
+jquery,jQuery Learning Center,https://learn.jquery.com/,docs,yes,en
+jquery,jQuery API documentation,https://api.jquery.com/,docs,yes,en
+bootstrap,Bootstrap: Get started,https://getbootstrap.com/docs/5.3/getting-started/introduction/,docs,yes,en
+bootstrap,Bootstrap examples,https://getbootstrap.com/docs/5.3/examples/,docs,yes,en
+tailwind-css,Tailwind CSS docs,https://tailwindcss.com/docs,docs,yes,en
+tailwind-css,Tailwind CSS: Styling with utility classes,https://tailwindcss.com/docs/styling-with-utility-classes,docs,yes,en
+sass,Sass: Guide,https://sass-lang.com/guide/,docs,yes,en
+sass,Sass documentation,https://sass-lang.com/documentation/,docs,yes,en
+redux,Redux Essentials tutorial,https://redux.js.org/tutorials/essentials/part-1-overview-concepts,docs,yes,en
+redux,Redux Toolkit: Quick start,https://redux-toolkit.js.org/tutorials/quick-start,docs,yes,en
+node.js,Node.js: Learn,https://nodejs.org/en/learn,docs,yes,en
+node.js,roadmap.sh: Node.js,https://roadmap.sh/nodejs,tutorial,yes,en
+node.js,Full Stack Open: Node.js and Express,https://fullstackopen.com/en/part3,course,yes,en
+express,Express: Getting started,https://expressjs.com/en/starter/installing.html,docs,yes,en
+express,MDN: Express/Node introduction,https://developer.mozilla.org/en-US/docs/Learn_web_development/Extensions/Server-side/Express_Nodejs,docs,yes,en
+express,Express : Démarrage,https://expressjs.com/fr/starter/installing.html,docs,yes,fr
+nestjs,NestJS documentation,https://docs.nestjs.com/,docs,yes,en
+nestjs,NestJS: First steps,https://docs.nestjs.com/first-steps,docs,yes,en
+django,Django tutorial,https://docs.djangoproject.com/en/stable/intro/tutorial01/,docs,yes,en
+django,Tutoriel Django,https://docs.djangoproject.com/fr/stable/intro/tutorial01/,docs,yes,fr
+django,Django Girls Tutorial,https://tutorial.djangogirls.org/en/,tutorial,yes,en
+flask,Flask tutorial,https://flask.palletsprojects.com/en/stable/tutorial/,docs,yes,en
+flask,The Flask Mega-Tutorial,https://blog.miguelgrinberg.com/post/the-flask-mega-tutorial-part-i-hello-world,tutorial,yes,en
+fastapi,FastAPI tutorial,https://fastapi.tiangolo.com/tutorial/,docs,yes,en
+fastapi,Tutoriel FastAPI,https://fastapi.tiangolo.com/fr/tutorial/,docs,yes,fr
+spring,Spring guides,https://spring.io/guides,docs,yes,en
+spring,Spring Framework documentation,https://docs.spring.io/spring-framework/reference/,docs,yes,en
+spring-boot,Spring Boot: Getting started,https://docs.spring.io/spring-boot/tutorial/first-application/index.html,docs,yes,en
+spring-boot,roadmap.sh: Spring Boot,https://roadmap.sh/spring-boot,tutorial,yes,en
+spring-boot,Spring guide: Building a RESTful web service,https://spring.io/guides/gs/rest-service,tutorial,yes,en
+hibernate,Hibernate ORM documentation,https://hibernate.org/orm/documentation/,docs,yes,en
+hibernate,Spring guide: Accessing data with JPA,https://spring.io/guides/gs/accessing-data-jpa,docs,yes,en
+asp.net,Microsoft Learn: ASP.NET Core,https://learn.microsoft.com/en-us/aspnet/core/,docs,yes,en
+asp.net,Microsoft Learn : ASP.NET Core,https://learn.microsoft.com/fr-fr/aspnet/core/,docs,yes,fr
+asp.net,roadmap.sh: ASP.NET Core,https://roadmap.sh/aspnet-core,tutorial,yes,en
+dotnet,Microsoft Learn: .NET documentation,https://learn.microsoft.com/en-us/dotnet/,docs,yes,en
+dotnet,Microsoft Learn : documentation .NET,https://learn.microsoft.com/fr-fr/dotnet/,docs,yes,fr
+laravel,Laravel documentation,https://laravel.com/docs,docs,yes,en
+laravel,roadmap.sh: Laravel,https://roadmap.sh/laravel,tutorial,yes,en
+symfony,Symfony documentation,https://symfony.com/doc/current/index.html,docs,yes,en
+symfony,Symfony : le livre (en français),https://symfony.com/doc/current/the-fast-track/fr/index.html,docs,yes,fr
+ruby-on-rails,Rails Guides: Getting started,https://guides.rubyonrails.org/getting_started.html,docs,yes,en
+ruby-on-rails,The Odin Project: Ruby on Rails,https://www.theodinproject.com/paths/full-stack-ruby-on-rails,tutorial,yes,en
+graphql,GraphQL: Learn,https://graphql.org/learn/,docs,yes,en
+graphql,roadmap.sh: GraphQL,https://roadmap.sh/graphql,tutorial,yes,en
+rest-api,MDN: HTTP,https://developer.mozilla.org/en-US/docs/Web/HTTP,docs,yes,en
+rest-api,MDN : HTTP,https://developer.mozilla.org/fr/docs/Web/HTTP,docs,yes,fr
+rest-api,Microsoft Learn: RESTful web API design,https://learn.microsoft.com/en-us/azure/architecture/best-practices/api-design,tutorial,yes,en
+api-design,roadmap.sh: API Design,https://roadmap.sh/api-design,tutorial,yes,en
+api-design,Google API Design Guide,https://cloud.google.com/apis/design,docs,yes,en
+websockets,MDN: WebSockets API,https://developer.mozilla.org/en-US/docs/Web/API/WebSockets_API,docs,yes,en
+websockets,Socket.IO: Get started,https://socket.io/get-started/chat,docs,yes,en
+microservices,microservices.io patterns,https://microservices.io/patterns/,docs,yes,en
+microservices,Microsoft Learn: Microservice architecture style,https://learn.microsoft.com/en-us/azure/architecture/guide/architecture-styles/microservices,docs,yes,en
+software-architecture,roadmap.sh: Software Architect,https://roadmap.sh/software-architect,tutorial,yes,en
+software-architecture,The System Design Primer,https://github.com/donnemartin/system-design-primer,tutorial,yes,en
+software-architecture,roadmap.sh: System Design,https://roadmap.sh/system-design,tutorial,yes,en
+design-patterns,Refactoring.Guru: Design patterns,https://refactoring.guru/design-patterns,tutorial,yes,en
+design-patterns,Refactoring.Guru : patrons de conception,https://refactoring.guru/fr/design-patterns,tutorial,yes,fr
+oop,MDN: Object-oriented programming,https://developer.mozilla.org/en-US/docs/Learn_web_development/Extensions/Advanced_JavaScript_objects/Object-oriented_programming,docs,yes,en
+oop,Python tutorial: Classes,https://docs.python.org/3/tutorial/classes.html,docs,yes,en
+oop,Tutoriel Python : les classes,https://docs.python.org/fr/3/tutorial/classes.html,docs,yes,fr
+functional-programming,Python: Functional programming HOWTO,https://docs.python.org/3/howto/functional.html,docs,yes,en
+functional-programming,Learn You a Haskell for Great Good,https://learnyouahaskell.github.io/,docs,yes,en
+data-structures,MIT 6.006 Introduction to Algorithms,https://ocw.mit.edu/courses/6-006-introduction-to-algorithms-spring-2020/,course,yes,en
+data-structures,roadmap.sh: Data Structures and Algorithms,https://roadmap.sh/datastructures-and-algorithms,tutorial,yes,en
+data-structures,France-IOI : cours et problèmes d'algorithmique,https://www.france-ioi.org/,course,yes,fr
+data-structures,VisuAlgo,https://visualgo.net/en,tutorial,yes,en
+react-native,React Native: Getting started,https://reactnative.dev/docs/getting-started,docs,yes,en
+react-native,roadmap.sh: React Native,https://roadmap.sh/react-native,tutorial,yes,en
+flutter,Flutter: Get started,https://docs.flutter.dev/get-started,docs,yes,en
+flutter,roadmap.sh: Flutter,https://roadmap.sh/flutter,tutorial,yes,en
+android,Android Basics with Compose,https://developer.android.com/courses/android-basics-compose/course,course,yes,en
+android,roadmap.sh: Android,https://roadmap.sh/android,tutorial,yes,en
+ios,Apple: Develop in Swift tutorials,https://developer.apple.com/tutorials/develop-in-swift,docs,yes,en
+ios,roadmap.sh: iOS,https://roadmap.sh/ios,tutorial,yes,en
+swiftui,Apple: SwiftUI tutorials,https://developer.apple.com/tutorials/swiftui,docs,yes,en
+swiftui,Hacking with Swift: 100 Days of SwiftUI,https://www.hackingwithswift.com/100/swiftui,course,yes,en
+jetpack-compose,Jetpack Compose tutorial,https://developer.android.com/develop/ui/compose/tutorial,docs,yes,en
+jetpack-compose,Android Basics with Compose,https://developer.android.com/courses/android-basics-compose/course,course,yes,en
+xamarin,Microsoft Learn: .NET MAUI,https://learn.microsoft.com/en-us/dotnet/maui/,docs,yes,en
+xamarin,Microsoft Learn: Xamarin documentation,https://learn.microsoft.com/en-us/previous-versions/xamarin/,docs,yes,en
+unity,Unity Learn,https://learn.unity.com/,docs,yes,en
+unity,Unity Manual,https://docs.unity3d.com/Manual/index.html,docs,yes,en
+unreal-engine,Unreal Engine documentation,https://dev.epicgames.com/documentation/en-us/unreal-engine,docs,yes,en
+unreal-engine,Epic Developer Community: learning,https://dev.epicgames.com/community/unreal-engine/learning,course,yes,en
+postgresql,PostgreSQL tutorial (official),https://www.postgresql.org/docs/current/tutorial.html,docs,yes,en
+postgresql,roadmap.sh: PostgreSQL,https://roadmap.sh/postgresql-dba,tutorial,yes,en
+postgresql,PostgreSQL Exercises,https://pgexercises.com/,tutorial,yes,en
+mysql,MySQL tutorial (official),https://dev.mysql.com/doc/refman/8.4/en/tutorial.html,docs,yes,en
+mysql,MySQL reference manual,https://dev.mysql.com/doc/refman/8.4/en/,docs,yes,en
+mariadb,MariaDB documentation,https://mariadb.com/docs/,docs,yes,en
+mariadb,MariaDB Knowledge Base,https://mariadb.com/kb/en/documentation/,docs,yes,en
+sqlite,SQLite documentation,https://www.sqlite.org/docs.html,docs,yes,en
+sqlite,Python: sqlite3 tutorial,https://docs.python.org/3/library/sqlite3.html,docs,yes,en
+oracle-database,Oracle Dev Gym: Databases for Developers,https://devgym.oracle.com/pls/apex/f?p=10001:26,course,yes,en
+oracle-database,Oracle Live SQL,https://livesql.oracle.com/,tutorial,yes,en
+sql-server,Microsoft Learn: SQL Server documentation,https://learn.microsoft.com/en-us/sql/sql-server/,docs,yes,en
+sql-server,Microsoft Learn: Transact-SQL tutorial,https://learn.microsoft.com/en-us/sql/t-sql/tutorial-writing-transact-sql-statements,docs,yes,en
+sql-server,Microsoft Learn : documentation SQL Server,https://learn.microsoft.com/fr-fr/sql/sql-server/,docs,yes,fr
+mongodb,MongoDB University,https://learn.mongodb.com/,course,yes,en
+mongodb,MongoDB manual,https://www.mongodb.com/docs/manual/,docs,yes,en
+mongodb,roadmap.sh: MongoDB,https://roadmap.sh/mongodb,tutorial,yes,en
+redis,Redis documentation,https://redis.io/docs/latest/,docs,yes,en
+redis,Redis University,https://university.redis.io/,course,yes,en
+redis,roadmap.sh: Redis,https://roadmap.sh/redis,tutorial,yes,en
+cassandra,Apache Cassandra: Getting started,https://cassandra.apache.org/_/quickstart.html,docs,yes,en
+cassandra,Apache Cassandra documentation,https://cassandra.apache.org/doc/latest/,docs,yes,en
+elasticsearch,Elasticsearch guide,https://www.elastic.co/docs/solutions/search,docs,yes,en
+elasticsearch,Elastic: Getting started,https://www.elastic.co/docs/get-started,docs,yes,en
+firebase,Firebase documentation,https://firebase.google.com/docs,docs,yes,en
+firebase,Firebase samples,https://firebase.google.com/docs/samples,docs,yes,en
+nosql,MongoDB University,https://learn.mongodb.com/,course,yes,en
+nosql,Redis documentation,https://redis.io/docs/latest/,docs,yes,en
+neo4j,Neo4j GraphAcademy,https://graphacademy.neo4j.com/,course,yes,en
+neo4j,Neo4j: Getting started,https://neo4j.com/docs/getting-started/,docs,yes,en
+supabase,Supabase docs,https://supabase.com/docs,docs,yes,en
+supabase,Supabase: Database guide,https://supabase.com/docs/guides/database/overview,docs,yes,en
+database-design,CMU Intro to Database Systems (15-445),https://15445.courses.cs.cmu.edu/,course,yes,en
+database-design,"Use The Index, Luke",https://use-the-index-luke.com/,tutorial,yes,en
+database-design,"Use The Index, Luke (en français)",https://use-the-index-luke.com/fr,tutorial,yes,fr
+orm,SQLAlchemy ORM quick start,https://docs.sqlalchemy.org/en/20/orm/quickstart.html,docs,yes,en
+orm,Prisma ORM docs,https://www.prisma.io/docs/orm,docs,yes,en
+sqlalchemy,SQLAlchemy Unified Tutorial,https://docs.sqlalchemy.org/en/20/tutorial/,docs,yes,en
+sqlalchemy,SQLAlchemy ORM quick start,https://docs.sqlalchemy.org/en/20/orm/quickstart.html,docs,yes,en
+prisma,Prisma ORM docs,https://www.prisma.io/docs/orm,docs,yes,en
+prisma,Prisma: Getting started,https://www.prisma.io/docs/getting-started,docs,yes,en
+aws,AWS Skill Builder,https://skillbuilder.aws/,course,yes,en
+aws,roadmap.sh: AWS,https://roadmap.sh/aws,tutorial,yes,en
+aws,AWS documentation,https://docs.aws.amazon.com/,docs,yes,en
+azure,Microsoft Learn: Azure Fundamentals,https://learn.microsoft.com/en-us/training/courses/az-900t00,course,yes,en
+azure,Microsoft Learn: Azure documentation,https://learn.microsoft.com/en-us/azure/,docs,yes,en
+azure,Microsoft Learn : documentation Azure,https://learn.microsoft.com/fr-fr/azure/,docs,yes,fr
+gcp,Google Cloud Skills Boost,https://www.cloudskillsboost.google/,course,yes,en
+gcp,Google Cloud documentation,https://cloud.google.com/docs,docs,yes,en
+heroku,Heroku Dev Center: Getting started,https://devcenter.heroku.com/start,docs,yes,en
+heroku,Heroku Dev Center,https://devcenter.heroku.com/,docs,yes,en
+vercel,Vercel documentation,https://vercel.com/docs,docs,yes,en
+vercel,Vercel: Getting started,https://vercel.com/docs/getting-started-with-vercel,docs,yes,en
+aws-lambda,AWS Lambda developer guide,https://docs.aws.amazon.com/lambda/latest/dg/welcome.html,docs,yes,en
+aws-lambda,AWS Lambda: Create your first function,https://docs.aws.amazon.com/lambda/latest/dg/getting-started.html,tutorial,yes,en
+s3,Amazon S3 user guide,https://docs.aws.amazon.com/AmazonS3/latest/userguide/Welcome.html,docs,yes,en
+s3,Amazon S3: Getting started,https://docs.aws.amazon.com/AmazonS3/latest/userguide/GetStartedWithS3.html,tutorial,yes,en
+ec2,Amazon EC2 user guide,https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/concepts.html,docs,yes,en
+ec2,Amazon EC2: Get started,https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/EC2_GetStarted.html,tutorial,yes,en
+serverless,AWS Lambda developer guide,https://docs.aws.amazon.com/lambda/latest/dg/welcome.html,docs,yes,en
+serverless,Cloudflare Workers docs,https://developers.cloudflare.com/workers/,docs,yes,en
+docker,Docker: Get started,https://docs.docker.com/get-started/,docs,yes,en
+docker,roadmap.sh: Docker,https://roadmap.sh/docker,tutorial,yes,en
+docker,Play with Docker classroom,https://training.play-with-docker.com/,tutorial,yes,en
+containerization,Docker: What is a container?,https://docs.docker.com/get-started/docker-concepts/the-basics/what-is-a-container/,docs,yes,en
+containerization,Kubernetes: Concepts,https://kubernetes.io/docs/concepts/,docs,yes,en
+kubernetes,Kubernetes basics tutorial,https://kubernetes.io/docs/tutorials/kubernetes-basics/,docs,yes,en
+kubernetes,roadmap.sh: Kubernetes,https://roadmap.sh/kubernetes,tutorial,yes,en
+kubernetes,Kubernetes : tutoriels,https://kubernetes.io/fr/docs/tutorials/,docs,yes,fr
+helm,Helm: Quickstart,https://helm.sh/docs/intro/quickstart/,docs,yes,en
+helm,Helm documentation,https://helm.sh/docs/,docs,yes,en
+terraform,HashiCorp Developer: Terraform tutorials,https://developer.hashicorp.com/terraform/tutorials,tutorial,yes,en
+terraform,roadmap.sh: Terraform,https://roadmap.sh/terraform,tutorial,yes,en
+ansible,Ansible: Getting started,https://docs.ansible.com/ansible/latest/getting_started/index.html,docs,yes,en
+ansible,Ansible documentation,https://docs.ansible.com/,docs,yes,en
+infrastructure-as-code,HashiCorp Developer: Terraform tutorials,https://developer.hashicorp.com/terraform/tutorials,tutorial,yes,en
+infrastructure-as-code,Ansible: Getting started,https://docs.ansible.com/ansible/latest/getting_started/index.html,docs,yes,en
+ci-cd,GitHub Actions: Quickstart,https://docs.github.com/en/actions/writing-workflows/quickstart,docs,yes,en
+ci-cd,GitLab CI/CD: Get started,https://docs.gitlab.com/ci/,docs,yes,en
+ci-cd,GitHub Actions : démarrage rapide,https://docs.github.com/fr/actions/writing-workflows/quickstart,docs,yes,fr
+github-actions,GitHub Actions: Quickstart,https://docs.github.com/en/actions/writing-workflows/quickstart,docs,yes,en
+github-actions,GitHub Skills: Hello GitHub Actions,https://github.com/skills/hello-github-actions,course,yes,en
+gitlab-ci,GitLab CI/CD: Get started,https://docs.gitlab.com/ci/,docs,yes,en
+gitlab-ci,GitLab CI/CD: Tutorial: create your first pipeline,https://docs.gitlab.com/ci/quick_start/,docs,yes,en
+jenkins,Jenkins user handbook,https://www.jenkins.io/doc/book/,docs,yes,en
+jenkins,Jenkins tutorials,https://www.jenkins.io/doc/tutorials/,tutorial,yes,en
+nginx,NGINX beginner's guide,https://nginx.org/en/docs/beginners_guide.html,docs,yes,en
+nginx,NGINX documentation,https://nginx.org/en/docs/,docs,yes,en
+apache-http-server,Apache HTTP Server documentation,https://httpd.apache.org/docs/current/,docs,yes,en
+apache-http-server,Documentation du serveur HTTP Apache,https://httpd.apache.org/docs/current/fr/,docs,yes,fr
+prometheus,Prometheus: Getting started,https://prometheus.io/docs/prometheus/latest/getting_started/,docs,yes,en
+prometheus,Prometheus documentation,https://prometheus.io/docs/introduction/overview/,docs,yes,en
+grafana,Grafana: Get started,https://grafana.com/docs/grafana/latest/getting-started/,docs,yes,en
+grafana,Grafana tutorials,https://grafana.com/tutorials/,tutorial,yes,en
+monitoring,Google SRE book: Monitoring distributed systems,https://sre.google/sre-book/monitoring-distributed-systems/,docs,yes,en
+monitoring,Prometheus: Getting started,https://prometheus.io/docs/prometheus/latest/getting_started/,docs,yes,en
+linux,Linux Journey,https://linuxjourney.com/,course,yes,en
+linux,roadmap.sh: Linux,https://roadmap.sh/linux,tutorial,yes,en
+linux,The Missing Semester of Your CS Education,https://missing.csail.mit.edu/,tutorial,yes,en
+linux,OverTheWire: Bandit,https://overthewire.org/wargames/bandit/,tutorial,yes,en
+windows-administration,Microsoft Learn: Windows Server training,https://learn.microsoft.com/en-us/training/browse/?products=windows-server,course,yes,en
+windows-administration,Microsoft Learn: Windows Server documentation,https://learn.microsoft.com/en-us/windows-server/,docs,yes,en
+windows-administration,Microsoft Learn : documentation Windows Server,https://learn.microsoft.com/fr-fr/windows-server/,docs,yes,fr
+git,Pro Git book,https://git-scm.com/book/en/v2,docs,yes,en
+git,Pro Git (en français),https://git-scm.com/book/fr/v2,docs,yes,fr
+git,Learn Git Branching,https://learngitbranching.js.org/,tutorial,yes,en
+git,roadmap.sh: Git and GitHub,https://roadmap.sh/git-github,tutorial,yes,en
+github,GitHub Skills,https://skills.github.com/,course,yes,en
+github,GitHub Docs: Get started,https://docs.github.com/en/get-started,docs,yes,en
+github,GitHub Docs : bien démarrer,https://docs.github.com/fr/get-started,docs,yes,fr
+gitlab,GitLab documentation,https://docs.gitlab.com/,docs,yes,en
+gitlab,GitLab: Tutorials,https://docs.gitlab.com/tutorials/,docs,yes,en
+bitbucket,Atlassian Git tutorials,https://www.atlassian.com/git/tutorials,tutorial,yes,en
+bitbucket,Bitbucket Cloud documentation,https://support.atlassian.com/bitbucket-cloud/,docs,yes,en
+jira,Atlassian University: Jira,https://university.atlassian.com/student/catalog,course,yes,en
+jira,Jira Software documentation,https://support.atlassian.com/jira-software-cloud/,docs,yes,en
+confluence,Confluence Cloud documentation,https://support.atlassian.com/confluence-cloud/,docs,yes,en
+confluence,Atlassian University,https://university.atlassian.com/student/catalog,course,yes,en
+postman,Postman Academy,https://academy.postman.com/,course,yes,en
+postman,Postman documentation,https://learning.postman.com/docs/introduction/overview/,docs,yes,en
+vs-code,VS Code: Basic editing,https://code.visualstudio.com/docs/editing/codebasics,docs,yes,en
+vs-code,VS Code documentation,https://code.visualstudio.com/docs,docs,yes,en
+intellij-idea,IntelliJ IDEA: Getting started,https://www.jetbrains.com/help/idea/getting-started.html,docs,yes,en
+intellij-idea,JetBrains Academy: Learn IDE features,https://www.jetbrains.com/help/idea/feature-trainer.html,course,yes,en
+figma,Figma Learn,https://help.figma.com/hc/en-us/categories/360002051613,docs,yes,en
+figma,Figma: Design basics (YouTube),https://www.youtube.com/@Figma,course,yes,en
+adobe-xd,Adobe XD user guide,https://helpx.adobe.com/xd/user-guide.html,docs,yes,en
+adobe-xd,Adobe XD tutorials,https://helpx.adobe.com/xd/tutorials.html,tutorial,yes,en
+photoshop,Adobe Photoshop tutorials,https://helpx.adobe.com/photoshop/tutorials.html,tutorial,yes,en
+photoshop,Adobe Photoshop user guide,https://helpx.adobe.com/photoshop/user-guide.html,docs,yes,en
+excel,Microsoft Excel video training,https://support.microsoft.com/en-us/office/excel-video-training-9bc05390-e94c-46af-a5b3-d7c22f6990bb,docs,yes,en
+excel,GCFGlobal: Excel,https://edu.gcfglobal.org/en/excel/,tutorial,yes,en
+excel,Aide et formation Excel (Microsoft),https://support.microsoft.com/fr-fr/excel,docs,yes,fr
+microsoft-office,GCFGlobal: Microsoft Office tutorials,https://edu.gcfglobal.org/en/subjects/office/,tutorial,yes,en
+microsoft-office,Microsoft 365 help and learning,https://support.microsoft.com/en-us/microsoft-365,docs,yes,en
+power-bi,Microsoft Learn: Power BI training,https://learn.microsoft.com/en-us/training/powerplatform/power-bi,course,yes,en
+power-bi,Microsoft Learn: Power BI documentation,https://learn.microsoft.com/en-us/power-bi/,docs,yes,en
+power-bi,Microsoft Learn : documentation Power BI,https://learn.microsoft.com/fr-fr/power-bi/,docs,yes,fr
+tableau,Tableau free training videos,https://www.tableau.com/learn/training,tutorial,yes,en
+tableau,Tableau Public: Resources,https://public.tableau.com/app/learn/how-to-videos,docs,yes,en
+looker,Looker Studio documentation,https://docs.cloud.google.com/data-studio,docs,yes,en
+looker,Looker documentation,https://cloud.google.com/looker/docs,docs,yes,en
+sap,SAP Learning,https://learning.sap.com/,course,yes,en
+sap,SAP Help Portal,https://help.sap.com/,docs,yes,en
+salesforce,Trailhead,https://trailhead.salesforce.com/,course,yes,en
+salesforce,Salesforce Developers documentation,https://developer.salesforce.com/docs,docs,yes,en
+wordpress,Learn WordPress,https://learn.wordpress.org/,course,yes,en
+wordpress,WordPress developer resources,https://developer.wordpress.org/,docs,yes,en
+pandas,pandas: Getting started,https://pandas.pydata.org/docs/getting_started/index.html,docs,yes,en
+pandas,Kaggle Learn: Pandas,https://www.kaggle.com/learn/pandas,course,yes,en
+numpy,NumPy: the absolute basics for beginners,https://numpy.org/doc/stable/user/absolute_beginners.html,docs,yes,en
+numpy,NumPy user guide,https://numpy.org/doc/stable/user/index.html,docs,yes,en
+scipy,SciPy user guide,https://docs.scipy.org/doc/scipy/tutorial/index.html,docs,yes,en
+scipy,Scientific Python Lectures,https://lectures.scientific-python.org/,tutorial,yes,en
+matplotlib,Matplotlib tutorials,https://matplotlib.org/stable/tutorials/index.html,docs,yes,en
+matplotlib,Matplotlib: Quick start guide,https://matplotlib.org/stable/users/explain/quick_start.html,docs,yes,en
+seaborn,seaborn tutorial,https://seaborn.pydata.org/tutorial.html,docs,yes,en
+seaborn,Kaggle Learn: Data Visualization,https://www.kaggle.com/learn/data-visualization,course,yes,en
+plotly,Plotly Python: Getting started,https://plotly.com/python/getting-started/,docs,yes,en
+plotly,Dash tutorial,https://dash.plotly.com/tutorial,docs,yes,en
+data-visualization,Kaggle Learn: Data Visualization,https://www.kaggle.com/learn/data-visualization,course,yes,en
+data-visualization,Fundamentals of Data Visualization,https://clauswilke.com/dataviz/,tutorial,yes,en
+data-visualization,From Data to Viz,https://www.data-to-viz.com/,tutorial,yes,en
+statistics,Khan Academy: Statistics and probability,https://www.khanacademy.org/math/statistics-probability,course,yes,en
+statistics,Khan Academy : statistiques et probabilités,https://fr.khanacademy.org/math/statistics-probability,course,yes,fr
+statistics,OpenIntro Statistics,https://www.openintro.org/book/os/,tutorial,yes,en
+jupyter,Jupyter documentation,https://docs.jupyter.org/en/latest/,docs,yes,en
+jupyter,Try Jupyter,https://jupyter.org/try,tutorial,yes,en
+scikit-learn,scikit-learn: Getting started,https://scikit-learn.org/stable/getting_started.html,docs,yes,en
+scikit-learn,Inria: Machine learning in Python with scikit-learn (MOOC),https://inria.github.io/scikit-learn-mooc/,course,yes,en
+tensorflow,TensorFlow tutorials,https://www.tensorflow.org/tutorials,docs,yes,en
+tensorflow,TensorFlow: Learn ML,https://www.tensorflow.org/resources/learn-ml,docs,yes,en
+keras,Keras: Getting started,https://keras.io/getting_started/,docs,yes,en
+keras,Keras code examples,https://keras.io/examples/,docs,yes,en
+pytorch,PyTorch tutorials,https://docs.pytorch.org/tutorials/,docs,yes,en
+pytorch,Learn the basics (PyTorch),https://docs.pytorch.org/tutorials/beginner/basics/intro.html,docs,yes,en
+deep-learning,Practical Deep Learning for Coders (fast.ai),https://course.fast.ai/,course,yes,en
+deep-learning,Dive into Deep Learning,https://d2l.ai/,docs,yes,en
+deep-learning,MIT 6.S191 Introduction to Deep Learning,https://introtodeeplearning.com/,course,yes,en
+nlp,Hugging Face LLM course,https://huggingface.co/learn/llm-course,course,yes,en
+nlp,Stanford CS224N (lecture videos),https://web.stanford.edu/class/cs224n/,course,yes,en
+nlp,spaCy 101,https://spacy.io/usage/spacy-101,docs,yes,en
+computer-vision,Kaggle Learn: Computer Vision,https://www.kaggle.com/learn/computer-vision,course,yes,en
+computer-vision,Stanford CS231n,https://cs231n.stanford.edu/,course,yes,en
+opencv,OpenCV-Python tutorials,https://docs.opencv.org/4.x/d6/d00/tutorial_py_root.html,docs,yes,en
+opencv,OpenCV documentation,https://docs.opencv.org/4.x/,docs,yes,en
+hugging-face,Hugging Face LLM course,https://huggingface.co/learn/llm-course,course,yes,en
+hugging-face,Transformers documentation,https://huggingface.co/docs/transformers/index,docs,yes,en
+hugging-face,Cours Hugging Face (en français),https://huggingface.co/learn/llm-course/fr/chapter1/1,course,yes,fr
+llms,Hugging Face LLM course,https://huggingface.co/learn/llm-course,course,yes,en
+llms,roadmap.sh: AI Engineer,https://roadmap.sh/ai-engineer,tutorial,yes,en
+llms,Google: Introduction to Large Language Models,https://developers.google.com/machine-learning/resources/intro-llms,course,yes,en
+prompt-engineering,Prompt Engineering Guide,https://www.promptingguide.ai/,tutorial,yes,en
+prompt-engineering,roadmap.sh: Prompt Engineering,https://roadmap.sh/prompt-engineering,tutorial,yes,en
+prompt-engineering,Prompt Engineering Guide (en français),https://www.promptingguide.ai/fr,tutorial,yes,fr
+langchain,LangChain documentation,https://docs.langchain.com/oss/python/langchain/overview,docs,yes,en
+langchain,LangChain Academy,https://academy.langchain.com/,course,yes,en
+rag,LangChain: Build a RAG agent,https://docs.langchain.com/oss/python/langchain/rag,docs,yes,en
+rag,Prompt Engineering Guide: RAG,https://www.promptingguide.ai/techniques/rag,tutorial,yes,en
+mlops,MLOps Zoomcamp,https://github.com/DataTalksClub/mlops-zoomcamp,course,yes,en
+mlops,roadmap.sh: MLOps,https://roadmap.sh/mlops,tutorial,yes,en
+mlops,Made With ML,https://madewithml.com/,course,yes,en
+xgboost,XGBoost: Get started,https://xgboost.readthedocs.io/en/stable/get_started.html,docs,yes,en
+xgboost,Kaggle Learn: Intermediate Machine Learning,https://www.kaggle.com/learn/intermediate-machine-learning,course,yes,en
+reinforcement-learning,Hugging Face Deep RL course,https://huggingface.co/learn/deep-rl-course/unit0/introduction,course,yes,en
+reinforcement-learning,OpenAI Spinning Up,https://spinningup.openai.com/,tutorial,yes,en
+time-series,Kaggle Learn: Time Series,https://www.kaggle.com/learn/time-series,course,yes,en
+time-series,Forecasting: Principles and Practice (3rd ed.),https://otexts.com/fpp3/,tutorial,yes,en
+data-mining,Kaggle Learn: Feature Engineering,https://www.kaggle.com/learn/feature-engineering,course,yes,en
+big-data,Apache Spark: Quick start,https://spark.apache.org/docs/latest/quick-start.html,docs,yes,en
+apache-spark,Apache Spark: Quick start,https://spark.apache.org/docs/latest/quick-start.html,docs,yes,en
+apache-spark,PySpark documentation,https://spark.apache.org/docs/latest/api/python/getting_started/index.html,docs,yes,en
+hadoop,Apache Hadoop: Getting started,https://hadoop.apache.org/docs/stable/hadoop-project-dist/hadoop-common/SingleCluster.html,docs,yes,en
+hadoop,Apache Hadoop documentation,https://hadoop.apache.org/docs/stable/,docs,yes,en
+kafka,Apache Kafka: Quickstart,https://kafka.apache.org/quickstart,docs,yes,en
+kafka,Confluent Developer: Kafka 101,https://developer.confluent.io/courses/apache-kafka/events/,course,yes,en
+airflow,Apache Airflow tutorials,https://airflow.apache.org/docs/apache-airflow/stable/tutorial/index.html,docs,yes,en
+airflow,Apache Airflow: Quick start,https://airflow.apache.org/docs/apache-airflow/stable/start.html,docs,yes,en
+etl,Data Engineering Zoomcamp,https://github.com/DataTalksClub/data-engineering-zoomcamp,course,yes,en
+etl,Apache Airflow tutorials,https://airflow.apache.org/docs/apache-airflow/stable/tutorial/index.html,docs,yes,en
+data-warehousing,BigQuery: Introduction,https://cloud.google.com/bigquery/docs/introduction,docs,yes,en
+data-warehousing,Data Engineering Zoomcamp,https://github.com/DataTalksClub/data-engineering-zoomcamp,course,yes,en
+snowflake,Snowflake: Getting started,https://docs.snowflake.com/en/user-guide-getting-started,docs,yes,en
+snowflake,Snowflake quickstarts,https://quickstarts.snowflake.com/,tutorial,yes,en
+bigquery,BigQuery: Introduction,https://cloud.google.com/bigquery/docs/introduction,docs,yes,en
+bigquery,Kaggle Learn: Intro to SQL (BigQuery),https://www.kaggle.com/learn/intro-to-sql,course,yes,en
+dbt,dbt Learn: free courses,https://learn.getdbt.com/catalog,course,yes,en
+dbt,dbt documentation,https://docs.getdbt.com/docs/introduction,docs,yes,en
+web-scraping,Beautiful Soup documentation,https://www.crummy.com/software/BeautifulSoup/bs4/doc/,docs,yes,en
+web-scraping,Scrapy tutorial,https://docs.scrapy.org/en/latest/intro/tutorial.html,docs,yes,en
+unit-testing,pytest: Get started,https://docs.pytest.org/en/stable/getting-started.html,docs,yes,en
+unit-testing,Python: unittest,https://docs.python.org/3/library/unittest.html,docs,yes,en
+unit-testing,Python : unittest,https://docs.python.org/fr/3/library/unittest.html,docs,yes,fr
+test-automation,Playwright: Getting started,https://playwright.dev/docs/intro,docs,yes,en
+test-automation,Selenium documentation,https://www.selenium.dev/documentation/,docs,yes,en
+pytest,pytest: Get started,https://docs.pytest.org/en/stable/getting-started.html,docs,yes,en
+pytest,pytest documentation,https://docs.pytest.org/en/stable/,docs,yes,en
+junit,JUnit 5 user guide,https://junit.org/junit5/docs/current/user-guide/,docs,yes,en
+junit,JUnit website,https://junit.org/,docs,yes,en
+jest,Jest: Getting started,https://jestjs.io/docs/getting-started,docs,yes,en
+jest,Jest : Prise en main,https://jestjs.io/fr/docs/getting-started,docs,yes,fr
+selenium,Selenium documentation,https://www.selenium.dev/documentation/,docs,yes,en
+selenium,Selenium: Getting started,https://www.selenium.dev/documentation/webdriver/getting_started/,docs,yes,en
+cypress,Cypress documentation,https://docs.cypress.io/,docs,yes,en
+cypress,Cypress Learn,https://learn.cypress.io/,course,yes,en
+playwright,Playwright: Getting started,https://playwright.dev/docs/intro,docs,yes,en
+playwright,Playwright for Python,https://playwright.dev/python/docs/intro,docs,yes,en
+tdd,Learn Go with Tests,https://quii.gitbook.io/learn-go-with-tests,tutorial,yes,en
+tdd,Obey the Testing Goat (TDD with Python),https://www.obeythetestinggoat.com/,tutorial,yes,en
+network-security,Cisco Networking Academy,https://www.netacad.com/,course,yes,en
+network-security,TryHackMe: Pre Security,https://tryhackme.com/path/outline/presecurity,course,yes,en
+penetration-testing,PortSwigger Web Security Academy,https://portswigger.net/web-security,course,yes,en
+penetration-testing,OverTheWire wargames,https://overthewire.org/wargames/,tutorial,yes,en
+penetration-testing,Root Me,https://www.root-me.org/,course,yes,fr
+cryptography,"Cryptography I (Stanford, Coursera audit)",https://www.coursera.org/learn/crypto,course,yes,en
+cryptography,CryptoHack,https://cryptohack.org/,tutorial,yes,en
+owasp,OWASP Top Ten,https://owasp.org/www-project-top-ten/,docs,yes,en
+owasp,OWASP Cheat Sheet Series,https://cheatsheetseries.owasp.org/,docs,yes,en
+owasp,PortSwigger Web Security Academy,https://portswigger.net/web-security,course,yes,en
+siem,Splunk free training,https://www.splunk.com/en_us/training/free-courses/overview.html,course,yes,en
+siem,Elastic Security documentation,https://www.elastic.co/docs/solutions/security,docs,yes,en
+wireshark,Wireshark user's guide,https://www.wireshark.org/docs/wsug_html_chunked/,docs,yes,en
+wireshark,Wireshark sample captures,https://wiki.wireshark.org/SampleCaptures,tutorial,yes,en
+tcp-ip,"Computer Networking: Principles, Protocols and Practice",https://www.computer-networking.info/,course,yes,en
+tcp-ip,Beej's Guide to Network Programming,https://beej.us/guide/bgnet/,tutorial,yes,en
+cisco,Cisco Networking Academy,https://www.netacad.com/,course,yes,en
+cisco,Jeremy's IT Lab: free CCNA course,https://www.youtube.com/@JeremysITLab,course,yes,en
+vpn,WireGuard: Quick start,https://www.wireguard.com/quickstart/,docs,yes,en
+vpn,OpenVPN community documentation,https://openvpn.net/community-docs/,docs,yes,en
+identity-access-management,OAuth 2.0 simplified,https://www.oauth.com/,docs,yes,en
+identity-access-management,OWASP Authentication Cheat Sheet,https://cheatsheetseries.owasp.org/cheatsheets/Authentication_Cheat_Sheet.html,docs,yes,en
+arduino,Arduino documentation,https://docs.arduino.cc/,docs,yes,en
+arduino,Arduino Project Hub,https://projecthub.arduino.cc/,tutorial,yes,en
+raspberry-pi,Raspberry Pi documentation,https://www.raspberrypi.com/documentation/,docs,yes,en
+raspberry-pi,Raspberry Pi projects,https://projects.raspberrypi.org/en,project_idea,yes,en
+raspberry-pi,Projets Raspberry Pi (en français),https://projects.raspberrypi.org/fr-FR,project_idea,yes,fr
+iot,Raspberry Pi projects,https://projects.raspberrypi.org/en,project_idea,yes,en
+iot,Arduino documentation,https://docs.arduino.cc/,docs,yes,en
+fpga,Nand2Tetris,https://www.nand2tetris.org/,course,yes,en
+fpga,HDLBits (Verilog practice),https://hdlbits.01xz.net/wiki/Main_Page,tutorial,yes,en
+blockchain,roadmap.sh: Blockchain,https://roadmap.sh/blockchain,tutorial,yes,en
+blockchain,Ethereum developer docs,https://ethereum.org/en/developers/docs/,docs,yes,en
+agile,The Agile Manifesto,https://agilemanifesto.org/,docs,yes,en
+agile,Le Manifeste agile,https://agilemanifesto.org/iso/fr/manifesto.html,docs,yes,fr
+agile,Atlassian Agile Coach,https://www.atlassian.com/agile,docs,yes,en
+scrum,The Scrum Guide,https://scrumguides.org/scrum-guide.html,docs,yes,en
+scrum,Le Guide Scrum (en français),https://scrumguides.org/docs/scrumguide/v2020/2020-Scrum-Guide-French.pdf,docs,yes,fr
+scrum,Atlassian Agile Coach: Scrum,https://www.atlassian.com/agile/scrum,docs,yes,en
+kanban,Atlassian Agile Coach: Kanban,https://www.atlassian.com/agile/kanban,docs,yes,en
+kanban,The Kanban Guide,https://kanbanguides.org/english/,docs,yes,en
+project-management,Google: Project Management (Coursera audit),https://www.coursera.org/professional-certificates/google-project-management,course,yes,en
+project-management,Atlassian: Project management guide,https://www.atlassian.com/work-management/project-management,docs,yes,en
+project-management,MIT OpenCourseWare: Project Management,https://ocw.mit.edu/courses/1-040-project-management-spring-2009/,course,yes,en
+uml,UML diagrams (uml-diagrams.org),https://www.uml-diagrams.org/,docs,yes,en
+uml,PlantUML language reference,https://plantuml.com/,docs,yes,en
+code-review,Google engineering practices: Code review,https://google.github.io/eng-practices/review/,docs,yes,en
+code-review,roadmap.sh: Code Review,https://roadmap.sh/code-review,tutorial,yes,en
+debugging,Python: pdb,https://docs.python.org/3/library/pdb.html,docs,yes,en
+debugging,Chrome DevTools: Debug JavaScript,https://developer.chrome.com/docs/devtools/javascript,docs,yes,en
+debugging,VS Code: Debugging,https://code.visualstudio.com/docs/debugtest/debugging,docs,yes,en
+technical-writing,Google Technical Writing courses,https://developers.google.com/tech-writing,course,yes,en
+technical-writing,Write the Docs: guide,https://www.writethedocs.org/guide/,docs,yes,en
+seo,Google Search Central: SEO Starter Guide,https://developers.google.com/search/docs/fundamentals/seo-starter-guide,docs,yes,en
+seo,Google Search Central : guide de démarrage SEO,https://developers.google.com/search/docs/fundamentals/seo-starter-guide?hl=fr,docs,yes,fr
+accessibility,web.dev: Learn Accessibility,https://web.dev/learn/accessibility,course,yes,en
+accessibility,MDN: Accessibility,https://developer.mozilla.org/en-US/docs/Web/Accessibility,docs,yes,en
+accessibility,MDN : Accessibilité,https://developer.mozilla.org/fr/docs/Web/Accessibility,docs,yes,fr
+accessibility,W3C WAI: Introduction to web accessibility,https://www.w3.org/WAI/fundamentals/accessibility-intro/,docs,yes,en
+responsive-design,web.dev: Learn Responsive Design,https://web.dev/learn/design,course,yes,en
+responsive-design,MDN: Responsive design,https://developer.mozilla.org/en-US/docs/Learn_web_development/Core/CSS_layout/Responsive_Design,docs,yes,en
+communication,GCFGlobal: Business communication,https://edu.gcfglobal.org/en/business-communication/,course,yes,en
+communication,Google Technical Writing courses,https://developers.google.com/tech-writing,course,yes,en
+teamwork,Atlassian Team Playbook,https://www.atlassian.com/team-playbook,tutorial,yes,en
+problem-solving,Exercism: programming exercises,https://exercism.org/,tutorial,yes,en
+problem-solving,Project Euler,https://projecteuler.net/,tutorial,yes,en
+problem-solving,France-IOI : cours et problèmes d'algorithmique,https://www.france-ioi.org/,course,yes,fr
+leadership,Atlassian Team Playbook,https://www.atlassian.com/team-playbook,tutorial,yes,en
+leadership,roadmap.sh: Engineering Manager,https://roadmap.sh/engineering-manager,tutorial,yes,en
+time-management,"Work Smarter, Not Harder: Time Management (Coursera, free to audit)",https://www.coursera.org/learn/work-smarter-not-harder,course,yes,en
+presentation-skills,GCFGlobal: Business communication,https://edu.gcfglobal.org/en/business-communication/,course,yes,en
+presentation-skills,GCFGlobal: PowerPoint,https://edu.gcfglobal.org/en/powerpoint/,course,yes,en
+critical-thinking,Khan Academy: Logic and critical thinking,https://www.khanacademy.org/partner-content/wi-phi/wiphi-critical-thinking,course,yes,en
+critical-thinking,Project Euler,https://projecteuler.net/,tutorial,yes,en
+english,BBC Learning English,https://www.bbc.co.uk/learningenglish/,course,yes,en
+english,British Council: LearnEnglish,https://learnenglish.britishcouncil.org/,course,yes,en
+french,TV5MONDE : Apprendre le français,https://apprendre.tv5monde.com/,course,yes,fr
+french,RFI : Le français facile,https://francaisfacile.rfi.fr/,course,yes,fr
+spanish,BBC Languages: Spanish,https://www.bbc.co.uk/languages/spanish/,course,yes,en
+spanish,Duolingo,https://www.duolingo.com/,course,yes,en
+german,Deutsche Welle: Learn German,https://learngerman.dw.com/,course,yes,en
+german,Duolingo,https://www.duolingo.com/,course,yes,en
+mysql,MySQL Tutorial,https://www.mysqltutorial.org/,tutorial,yes,en
+oracle-database,Oracle Database documentation,https://docs.oracle.com/en/database/oracle/oracle-database/,docs,yes,en
+french,Duolingo: French,https://www.duolingo.com/,course,yes,en
+english,Duolingo: English,https://www.duolingo.com/,course,yes,en
+network-security,Professor Messer: CompTIA Security+ training,https://www.professormesser.com/security-plus/sy0-701/sy0-701-video/sy0-701-comptia-security-plus-course/,course,yes,en
+data-mining,scikit-learn: Clustering,https://scikit-learn.org/stable/modules/clustering.html,docs,yes,en
+big-data,Spark SQL guide,https://spark.apache.org/docs/latest/sql-programming-guide.html,docs,yes,en
+time-management,edX: Time management courses,https://www.edx.org/learn/time-management,course,yes,en
+teamwork,MIT OpenCourseWare: Management Communication,https://ocw.mit.edu/courses/15-279-management-communication-for-undergraduates-fall-2012/,course,yes,en
+presentation-skills,MIT OpenCourseWare: Management Communication,https://ocw.mit.edu/courses/15-279-management-communication-for-undergraduates-fall-2012/,course,yes,en
+matlab,MATLAB Onramp exercises (MathWorks),https://matlabacademy.mathworks.com/,docs,yes,en
+cryptography,A Graduate Course in Applied Cryptography (Boneh and Shoup),https://toc.cryptobook.us/,docs,yes,en
+photoshop,Adobe Photoshop (YouTube channel),https://www.youtube.com/@Photoshop,tutorial,yes,en
+adobe-xd,Adobe XD (YouTube channel),https://www.youtube.com/@AdobeXD,tutorial,yes,en
+oracle-database,Oracle Database SQL language reference,https://docs.oracle.com/en/database/oracle/oracle-database/23/sqlrf/,docs,yes,en
+siem,Wazuh: Getting started (open-source SIEM),https://documentation.wazuh.com/current/getting-started/index.html,docs,yes,en
+mysql,W3Schools: MySQL tutorial,https://www.w3schools.com/mysql/,tutorial,yes,en
+tableau,Tableau: Get started tutorial,https://help.tableau.com/current/guides/get-started-tutorial/en-us/get-started-tutorial-home.htm,tutorial,yes,en
+salesforce,Trailhead: Developer Beginner trail,https://trailhead.salesforce.com/content/learn/trails/force_com_dev_beginner,course,yes,en
+french,Bonjour de France : cours et exercices,https://www.bonjourdefrance.com/,course,yes,fr
+french,Le Point du FLE,https://www.lepointdufle.net/,course,yes,fr

@@ -988,7 +988,7 @@ These fill in details D-006 left open. They are part of the contract in `docs/de
 ### M4.1 · Skill list data
 
 #### T-126 · The first skill list is built for tech internships, before the curated postings exist
-- **What:** 246 skills for the internships SkillGraph targets (software, web, mobile, data, AI, cloud, DevOps, security, networks, embedded), plus a few soft skills and spoken languages that postings often ask for. 356 aliases (English and French spellings, short forms) and 258 parent links. This matches D-032 (first version: software engineering only); other fields come in M17.
+- **What:** 246 skills (245 since T-138) for the internships SkillGraph targets (software, web, mobile, data, AI, cloud, DevOps, security, networks, embedded), plus a few soft skills and spoken languages that postings often ask for. 356 aliases (English and French spellings, short forms) and 258 parent links. This matches D-032 (first version: software engineering only); other fields come in M17.
 - **Why:** M4.1 should cover every skill in the curated postings (M1.7) and test profiles (M1.5), but neither exists yet. Waiting would block all of M4. When M1.7 lands, check each posting's skills against the list and add what's missing. Until then the "Done when" coverage item is open, and so is issue #32.
 - **Where:** `backend/app/skills/data/{skills,aliases,relations}.csv`.
 
@@ -1033,6 +1033,29 @@ These fill in details D-006 left open. They are part of the contract in `docs/de
 - **What:** the names follow the term list and the style rules (French without inclusive spelling; Modern Standard Arabic without diacritics). They haven't been read by a fluent speaker yet.
 - **Why:** the same review the term list in `docs/design/localization.md` section 5 already asks for. Fixing a name is a one-cell edit and doesn't change any id.
 - **Where:** `backend/app/skills/data/skills.csv`.
+
+### M4.8 · Learning resources list
+
+#### T-135 · Every skill gets at least 2 free resources, not only the skills postings ask for
+- **What:** `resources.csv` has 584 rows (526 different links) covering all 245 skills, with at least 2 free resources each. 55 are in French. None are in Arabic, because Arabic is for the interface only (D-030). A test checks the columns, the allowed values, `https://`, that every `skill_id` exists, no duplicate rows, and the 2-per-skill minimum.
+- **Why:** the slice asks for 2 per skill "required by a curated posting", but the postings (M1.7) don't exist yet. Covering every skill satisfies that whatever the postings ask for. The test then makes sure a new skill can't be added without its resources.
+- **Where:** `backend/app/skills/data/resources.csv`, `backend/tests/skills/test_resource_data.py`.
+
+#### T-136 · Links were checked by a script, not opened by hand; 19 couldn't be confirmed that way
+- **What:** every link was fetched with curl (browser user agent, redirects followed). 507 of 526 answered 200. Links that 404'd or redirected to the wrong page were replaced. The 19 that weren't confirmed are official pages behind bot protection or slow servers: MySQL manual (2), MathWorks, Adobe help (4), Tableau training, Salesforce docs, Oracle Dev Gym and Live SQL, Splunk training, TV5MONDE, RFI, British Council, TryHackMe (rate limit), OpenCV docs (2, redirect loop for curl), GNU Bash manual (timeout; it opened in an earlier run). Each skill that has one of them also has at least 2 confirmed links.
+- **Why:** the slice says "open every link". 527 links by hand is hours of work, and a script catches dead links the same way. The 19 still need a person to open them in a browser.
+- **Where:** list in the M4.8 issue comment.
+- **Watch out:** links rot. A committed link checker (for example a monthly CI job) would be a separate slice.
+
+#### T-137 · Redirecting links keep their stable address; "free to audit" counts as free
+- **What:** a link that redirects to a versioned page (`/en/stable/` → `/en/6.1/`, `?view=…`) keeps the stable address. edX and Coursera courses you can take for free without the certificate are marked `free=yes`. `language` is the language the resource is written in.
+- **Why:** the stable address keeps working when a new version comes out. Students care whether they can learn without paying, not whether the certificate is free.
+- **Where:** `backend/app/skills/data/resources.csv`, README.
+
+#### T-138 · Arabic is not a skill on the list
+- **What:** the `arabic` spoken-language skill (added in M4.1) was removed from `skills.csv`, along with its learning resources. English, French, Spanish and German stay.
+- **Why:** Rasen, 2026-11-26: Arabic is for the interface only, not a professional language SkillGraph assesses or recommends learning (extends D-030). Keeping the skill would have forced Arabic-learning resources into the recommendation list.
+- **Where:** `backend/app/skills/data/skills.csv`, `resources.csv`.
 
 ### Repo setup script (no slice)
 
