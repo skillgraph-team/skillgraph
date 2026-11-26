@@ -225,8 +225,13 @@ Two kinds of entry:
 - **Spec:** `docs/SPEC.md` updated to match (approved by Rasen, 2026-11-26).
 
 ### D-031 · Which fields beyond software, and how the skill list holds them
-- **Status:** Open — decided in M17.1 (optional milestone, after the core project).
+- **Status:** Open — decided in M17.1 (optional milestone, after the core project). Builds on D-032.
 - **Question:** which non-software fields to add first (mathematics, biology, physics, chemistry, engineering, economics…; the list stays open, more fields can join later), and how one skill list holds any number of fields: a `field` column or a top-level area per field, new categories, a size limit per field, words whose meaning depends on the field. Where evidence for these fields comes from is a separate, later decision.
+
+### D-032 · First version: software engineering only
+- **Status:** Decided (Rasen, 2026-11-26)
+- **Choice:** the primary, first version of SkillGraph (M0–M16) is for software engineering: its skill list, test profiles, postings, assessments and evaluation all cover software engineering. Mathematics, biology and other fields come in M17, an optional milestone after the core project.
+- **Why:** one field done well gives a working product and a clean evaluation; a structure designed in M17.1 then lets other fields join one at a time.
 
 ---
 

@@ -13,7 +13,7 @@ The whole project as a list of small, self-contained pieces of work.
 - **They never block the graded work.** No slice in M9 (evaluation) or M10 (deploy and demo) depends on them. If time runs short, the evaluation and the presentation still happen, and the presentation shows whatever of M11–M16 is merged.
 - **Numbers are ids, not order.** M11 isn't "after M10"; the weeks and `depends` give the order.
 - **Each of them starts with a decision or contract slice.** Do that one first; the rest build on it.
-- **M17 (skills beyond software) is optional.** It starts only after the core project is done, and nothing depends on it.
+- **Software engineering first (D-032).** The first version of SkillGraph, M0–M16, is for software engineering students and internships. M17 expands it to mathematics, biology and more fields. M17 is optional: it starts only after the core project is done, and nothing depends on it.
 - **New personal data is deleted with the account.** Any slice that adds a table holding a user's data (attempts, history, notifications, visibility, contact requests, institution links) makes it cascade from `users` and adds it to `tests/db/test_delete_user.py`, so account deletion (M3.9) keeps removing everything.
 
 Every slice answers five questions:
@@ -2356,7 +2356,7 @@ The pieces that turn a working app into a product: free and premium plans, a vis
 
 ## M17 · Skills beyond software (optional)
 <!-- weeks: 15-18 -->
-**Optional, and only after the core project is done** (M0–M10 merged, plus whichever M11–M16 slices the team chose to finish). Nothing else depends on it. Today the skill list (M4.1) covers software engineering only, so a mathematics or biology student gets an empty or misleading profile. This milestone extends the skill list, test data and matching to other fields, one field at a time. **The list of fields is open:** mathematics and biology are the first two, and more (physics, chemistry, engineering, economics, and others) can join at any time later. See "Adding another field" at the end of this milestone. **Where evidence for these fields comes from** (publications, lab reports, competition results, other websites) is a separate question, decided later. Until then these fields use the sources that already exist (CV, certificates, portfolio, manual projects).
+**Optional, and only after the core project is done** (M0–M10 merged, plus whichever M11–M16 slices the team chose to finish). Nothing else depends on it. The first version of SkillGraph is for software engineering (D-032), and its skill list (M4.1) covers software engineering only, so a mathematics or biology student gets an empty or misleading profile. This milestone extends the skill list, test data and matching to other fields, one field at a time. **The list of fields is open:** mathematics and biology are the first two, and more (physics, chemistry, engineering, economics, and others) can join at any time later. See "Adding another field" at the end of this milestone. **Where evidence for these fields comes from** (publications, lab reports, competition results, other websites) is a separate question, decided later. Until then these fields use the sources that already exist (CV, certificates, portfolio, manual projects).
 **Demo:** a biology student and a mathematics student each upload a CV in French, get a profile with skills from their field and the evidence behind them, and are matched against internships in their field.
 
 ### M17.1 · Which fields, and how the skill list holds them
