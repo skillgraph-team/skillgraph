@@ -881,6 +881,11 @@ These fill in details D-006 left open. They are part of the contract in `docs/de
 - **Why:** the alternative was a small router of our own on the History API (no dependency). React Router is the usual choice for React, so chatbots and teammates know it, and the later screens (profile, skills, matches, with ids in the URL) need nested routes and parameters we'd otherwise rebuild. Its declarative mode is just components, with no build plugin or file-based routing. Decided under autonomous mode (D-017); easy to change while there are few pages.
 - **Where:** `frontend/package.json`, `frontend/src/main.tsx`, `frontend/src/App.tsx`.
 
+#### T-125 · The sign-up privacy notice wording is approved
+- **What:** the three points under "Your data" on the sign-up page (`privacy.*` in the locale files): what is stored, what it is used for (including analysis by an AI model), and that deleting the account removes it all.
+- **Why:** M3.2 asks Rasen to approve the wording. Approved on 2026-11-26, and it can be edited later. Revisit it when D-005 (which LLM) is decided: a hosted service that keeps or trains on data must be named.
+- **Where:** `frontend/src/locales/{en,fr,ar}.json`, `frontend/src/pages/SignUpPage.tsx`.
+
 #### T-109 · Who is logged in: one React context filled by `GET /auth/me`
 - **What:** `AuthProvider` asks `/auth/me` on start and holds `loading` / `anonymous` / `logged-in` (with the user). `useAuth()` gives that state plus `logIn`, `signUp` and `logOut`. If the backend is down at start, the state becomes `anonymous` and the login form says so when used.
 - **Why:** the login cookie is HttpOnly (D-015), so the frontend can only learn who is logged in by asking. One provider means one request per page load, and no login state in localStorage.
@@ -962,6 +967,7 @@ These fill in details D-006 left open. They are part of the contract in `docs/de
 - **What:** without consent, the GitHub section shows only the consent text and **Allow GitHub import**. The text says what is read, that it's public data only and no password is asked, and that withdrawing deletes everything imported. The username field appears after consent. **Withdraw consent** asks to confirm on the spot, because it deletes data. The username is checked against GitHub's rule before asking the backend.
 - **Why:** M3.9 made consent required, and the slice asks for "a clear consent message". The wording is Rasen's to approve, like the privacy notice.
 - **Where:** `frontend/src/components/GitHubConnect.tsx`, `sources.github.consent.*` in the locale files.
+- **Approved:** Rasen approved the consent wording on 2026-11-26 (it can be edited later).
 
 ### M3.8 · Dashboard layout
 
