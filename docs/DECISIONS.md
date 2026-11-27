@@ -69,7 +69,7 @@ Two kinds of entry:
 - **Why:** matches the project report, all free, and agents + API live in one Python codebase.
 
 ### D-005 · LLM provider
-- **Status:** Open — decided by the M2.1 spike, on measured results.
+- **Status:** Open — decided by the M2.1 spike, on measured results. Spike set up 2026-11-27 (`docs/spikes/llm.md`); live runs still need a Groq/Gemini key or Ollama installed.
 - **Candidates:** a hosted free tier (check current limits and terms at decision time) vs a small local model through Ollama (needs a machine with enough RAM/GPU; slower). The provider interface means this can change later at low cost.
 
 ### D-006 · Evidence model (contract)
@@ -1233,6 +1233,29 @@ These fill in details D-006 left open. They are part of the contract in `docs/de
 - **What:** if the `skills` table is empty, saving a project removes its old evidence and recomputes, instead of failing. Skills appear at the next build.
 - **Why:** a profile edit shouldn't fail because of server setup. The build endpoint already reports the missing list (T-162).
 - **Where:** `backend/app/services/manual_projects.py`.
+
+### M2.1 · LLM spike (set up; live runs pending)
+
+#### T-167 · The spike compares Groq, the Gemini free tier and Ollama
+- **What:** three $0 options: Groq `llama-3.3-70b-versatile`, Gemini `gemini-2.5-flash`, Ollama `qwen2.5:7b` locally. All are called through the OpenAI-compatible chat endpoint with JSON mode, so one HTTP function serves all three.
+- **Why:** one fast hosted free tier with a large open model, one big-lab free tier, one that needs no account and keeps data on the machine. `qwen2.5:7b` is the largest common model that fits the 6 GB laptop GPU. OpenRouter free models and GitHub Models were left out to keep the spike small.
+- **Where:** `PROVIDERS` in `spikes/llm/run_spike.py`; limits and terms in `docs/spikes/llm.md`.
+- **Watch out:** the Gemini free tier's terms allow human review and product use of prompts and say not to send personal data, so it is a poor fit for real CVs whatever it scores.
+
+#### T-168 · Five spike-only profiles, English and French CVs, answers in all three languages
+- **What:** 5 made-up profiles (3 en, 2 fr) with reference answers (must-find skills, allowed skills, acceptable statuses) in `spikes/llm/profiles.py`. Each is asked for explanations in en, fr and ar: 15 calls per model. No Arabic CV, though the slice text asks for one.
+- **Why:** M1.5's profile set isn't done yet, and CVs are English/French only (D-030). 15 calls fit even the smallest reported free limit (~20/day for Gemini).
+- **Where:** `spikes/llm/profiles.py`.
+
+#### T-169 · The model judges links; the status is computed by the D-006 rules
+- **What:** the model returns skills with quoted evidence, a type, `supports`/`weak` and a reason code. The scorer computes the status from those judgements (D-006 choice 4) and compares it with the reference. It also checks that each quote is in the input word for word, and guesses the explanation's language from letters and common words.
+- **Why:** that's the AI's only job in the real design, so it's what the spike should measure. The quote check catches made-up evidence. The language check is rough (a sentence full of English skill names can fool it), so the hand read of the answers still matters.
+- **Where:** `status_of`, `score_row`, `language_of` in `spikes/llm/score.py`.
+
+#### T-170 · Spike code uses only the standard library and keys come from the shell
+- **What:** `urllib` for HTTP, no new dependencies. Keys are read from `SPIKE_GROQ_API_KEY` / `SPIKE_GEMINI_API_KEY` in the shell, never from `.env` and never saved. Raw answers go to `spikes/llm/results/*.jsonl` and are committed. Ruff's line-length and import-order rules are turned off per file for the spike.
+- **Why:** throwaway code shouldn't add dependencies to the backend; the `SPIKE_` prefix keeps spike keys apart from the app's `LLM_API_KEY` (M2.2). The profiles are made up, so the answers are safe to commit and let anyone re-score without spending quota.
+- **Where:** `spikes/llm/`.
 
 ### Repo setup script (no slice)
 
