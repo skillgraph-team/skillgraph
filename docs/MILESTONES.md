@@ -1688,6 +1688,7 @@ Profiles built from more than a CV and GitHub: certificates (with link checks wh
 **Tasks**
 - [ ] Upload with size and type limits; reading text from images needs an OCR library: a new dependency, so 2 options + trade-offs, $0
 - [ ] Extract title, issuer, date and credential link/id; map to skills with the normalizer (M4.2)
+- [ ] Let the user link a certificate to one of their education entries; the certificate is how typed education counts as evidence (D-033)
 - [ ] Tests with made-up certificates in all three languages
 
 **Done when**

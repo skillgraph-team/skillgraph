@@ -38,6 +38,7 @@ Two kinds of entry:
 | D-028 | How upgrades are paid for | Open | M16.2 |
 | D-029 | MVP plus full product: M11–M16 are full milestones | Decided | — |
 | D-030 | CVs and postings: English and French only; Arabic is interface-only (narrows D-012) | Decided | — |
+| D-033 | Typed education and experience: education counts only through a certificate; experience through repos and projects | Decided (contract) | M12.2 |
 
 ---
 
@@ -232,6 +233,15 @@ Two kinds of entry:
 - **Status:** Decided (Rasen, 2026-11-26)
 - **Choice:** the primary, first version of SkillGraph (M0–M16) is for software engineering: its skill list, test profiles, postings, assessments and evaluation all cover software engineering. Mathematics, biology and other fields come in M17, an optional milestone after the core project.
 - **Why:** one field done well gives a working product and a clean evaluation; a structure designed in M17.1 then lets other fields join one at a time.
+
+### D-033 · Typed education and experience as evidence (contract)
+- **Status:** Decided (Rasen, 2026-11-27). Extends the evidence model (D-006). **Contract owner: Rasen.** Raised by M4.10.
+- **Question:** projects typed into the profile count as evidence (M4.10). Should typed education and experience entries count too?
+- **Choice:**
+  1. **Education counts only when a certificate backs it.** The user uploads a diploma or course certificate and links it to the education entry. The certificate is the evidence, with the existing type `certificate`: a claim type, so at most *claimed*, but it raises confidence. A typed education entry without a certificate is not evidence.
+  2. **Experience doesn't become evidence of its own.** The skills used in a job or internship are backed by the repos and projects worked on, which already count (`repo_*`, `manual_project`). The typed experience entry stays profile information.
+- **Why:** anyone can type a degree or a job title. A certificate or real work is something that can be checked, and that is what "evidence-based" means here. No new evidence type is needed.
+- **Consequences:** no work until certificate upload exists (M12.2, which now also links a certificate to an education entry). CV sections are unchanged: `cv_education` (context only) and `cv_experience` (work) still apply to what a CV says.
 
 ---
 
