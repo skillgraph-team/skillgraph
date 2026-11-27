@@ -1108,7 +1108,7 @@ These fill in details D-006 left open. They are part of the contract in `docs/de
   - authorship: the user's share of the commits; 0 for a fork or a repo with no commits.
   - recency: 1 if pushed in the last year, 0.5 in the last three, otherwise 0.25.
   - size: the code's bytes divided by 50 000, at most 1.
-- **Why:** the slice asks for more weight on larger, recent, self-written repos, but status and confidence follow D-006's fixed rules, and those have no weight. Storing it lets the screens and agents order and explain repo evidence without changing the contract. **Needs Rasen** if weight should change confidence: that would be a new D-entry on the evidence model.
+- **Why:** the slice asks for more weight on larger, recent, self-written repos, but status and confidence follow D-006's fixed rules, and those have no weight. Storing it lets the screens and agents order and explain repo evidence without changing the contract. Whether weight should change confidence (a new D-entry on the evidence model) was **tabled by Rasen on 2026-11-27**, to come back to later.
 - **Where:** `repo_weight` in `backend/app/skills/repo_finder.py`.
 
 #### T-148 · GitHub topics are stored as `repo_readme` evidence
@@ -1201,6 +1201,28 @@ These fill in details D-006 left open. They are part of the contract in `docs/de
 - **What:** if the `skills` table is empty, the build refuses with a code. The interface text is in en, fr and ar.
 - **Why:** a silent empty result would look like "this CV has no skills". The list is loaded by a command (T-145), not by the app, so a fresh setup can hit this.
 - **Where:** `backend/app/services/skill_profile.py`, `backend/app/api/skills.py`, `frontend/src/locales/*.json`.
+
+### M4.10 · Manual projects as evidence, and removing sources
+
+#### T-163 · Saving a project rebuilds the user's skills; deleting anything only recomputes
+- **What:** adding or editing a project updates its `sources` row (kind `manual_project`, text = title and description), then runs `build_profile`. Deleting a project, a CV or a repo, importing GitHub again, or withdrawing consent runs `recompute_skills`. That one runs no finder: it removes skills left without any link and recomputes status and confidence from the links that remain, in the same transaction.
+- **Why:** after an edit, the new evidence has to be linked at once, or fixing a typo would make a skill disappear until the next build. The rebuild only re-reads stored text, with no network. A deletion never needs to find anything new, so the light step is enough and works even without the skill list.
+- **Where:** `backend/app/services/manual_projects.py`, `backend/app/services/skill_profile.py` (`recompute_skills`), `sources.py`, `github_imports.py`.
+- **Watch out:** saving a project gives a new user their first skills without pressing "build". That's intended: projects are evidence (M3.3).
+
+#### T-164 · A project is found like CV prose, one finding per sentence, as `manual_project`
+- **What:** the title and each description sentence are matched with the shared prose matcher. Location `{"project_id", "field": "title" | "description", "line"}`. The judgement is the CV project test (concrete work or vague mention).
+- **Where:** `backend/app/skills/project_finder.py`, `backend/app/services/project_evidence.py`.
+
+#### T-165 · The sources endpoints only show CVs and repos
+- **What:** `GET /sources` lists only kinds `cv` and `github_repo`. `DELETE /sources/{id}` on a project's source answers 404 `not_found`.
+- **Why:** a project's source is managed with the project. Deleting it from the sources screen would leave a project that no longer counts, without saying so.
+- **Where:** `LISTED_KINDS` in `backend/app/services/sources.py`.
+
+#### T-166 · Without the skill list, a project still saves
+- **What:** if the `skills` table is empty, saving a project removes its old evidence and recomputes, instead of failing. Skills appear at the next build.
+- **Why:** a profile edit shouldn't fail because of server setup. The build endpoint already reports the missing list (T-162).
+- **Where:** `backend/app/services/manual_projects.py`.
 
 ### Repo setup script (no slice)
 

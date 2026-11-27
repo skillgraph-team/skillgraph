@@ -20,6 +20,9 @@ Consent (M3.9): the import refuses (`GitHubConsentRequiredError`) until the user
 agreed (`give_consent`, stored as `profiles.github_consent_at`). `withdraw_consent`
 takes it back and deletes everything imported from GitHub: the repo sources (and
 their evidence, by cascade), the saved username, and the cached GitHub answers.
+
+After an import or a withdrawal, skills left without evidence are removed and the rest
+recomputed (M4.10, `recompute_skills`).
 """
 
 from collections.abc import Sequence
@@ -34,6 +37,7 @@ from app.ingestion.github_client import GitHubClient, forget_cached_user
 from app.ingestion.github_repos import RepoInfo, fetch_repos
 from app.ingestion.language import detect_language
 from app.services.profiles import get_or_create_profile
+from app.services.skill_profile import recompute_skills
 
 
 class GitHubConsentRequiredError(Exception):
@@ -68,6 +72,7 @@ def import_github(
     for gone in existing.values():
         session.delete(gone)
     session.flush()
+    recompute_skills(session, user)
     return saved
 
 
@@ -96,5 +101,6 @@ def withdraw_consent(session: Session, user: User, *, cache_dir: Path) -> None:
     profile.github_username = None
     session.flush()
     session.expire_all()  # sources loaded before the delete must not be reused
+    recompute_skills(session, user)
     if username:
         forget_cached_user(cache_dir, username)

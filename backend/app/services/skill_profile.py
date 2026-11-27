@@ -2,16 +2,21 @@
 reads them back with their evidence.
 
 `build_profile(session, user)` does, in order:
-1. For each of the user's CVs and GitHub repos, run its finder and replace that source's
-   evidence records (app/services/cv_evidence.py, repo_evidence.py).
+1. For each of the user's CVs, GitHub repos and manual projects, run its finder and
+   replace that source's evidence records (app/services/cv_evidence.py,
+   repo_evidence.py, project_evidence.py).
 2. Judge every link (evidence × skill) with `judge` (app/skills/judge.py).
 3. For each skill, compute status and confidence from its links (app/skills/status_rules.py)
    and save the `user_skills` row and its `user_skill_evidence` links.
 
 Running it again gives the same result. Skill rows are updated in place, so their ids
 and the user's corrections (hidden, disputed, note) stay. A skill none of the evidence
-names any more is deleted ("no skill without a source"). Manual projects and
-user-added skills aren't read yet (M4.10 and a later slice).
+names any more is deleted ("no skill without a source"). User-added skills aren't read
+yet (a later slice).
+
+`recompute_skills(session, user)` is the light version for after a source is deleted
+(M4.10): it runs no finder, only removes skills left without any link and recomputes
+the status and confidence of the others from the links that remain.
 
 `list_skills` returns each skill with its names, status, confidence, the reason (a code
 and the evidence id, computed from the links, so it can't go stale), the corrections, and
@@ -33,6 +38,7 @@ from app.db.models import Evidence, Profile, Skill, Source, User, UserSkill, Use
 from app.db.values import Confidence, EvidenceType, Judgement, SourceLanguage, Status
 from app.services.cv_evidence import save_cv_evidence
 from app.services.evidence_records import FoundEvidence
+from app.services.project_evidence import save_project_evidence
 from app.services.repo_evidence import save_repo_evidence
 from app.skills.index import load_index
 from app.skills.judge import judge
@@ -145,11 +151,27 @@ def _find_evidence(session: Session, user: User, *, today: date | None) -> list[
     for source in sources:
         if source.kind == "cv":
             found += save_cv_evidence(session, source, index)
+        elif source.kind == "manual_project":
+            found += save_project_evidence(session, source, index)
         elif source.kind == "github_repo":
             found += save_repo_evidence(
                 session, source, index, github_username=username, today=today
             )
     return found
+
+
+def recompute_skills(session: Session, user: User) -> None:
+    """After evidence was deleted: drop skills with no link left, recompute the rest."""
+    session.flush()
+    evidence_by_skill = _evidence_by_skill(session, user)
+    for row in session.scalars(select(UserSkill).where(UserSkill.user_id == user.id)):
+        evidence = evidence_by_skill.get(row.id)
+        if not evidence:
+            session.delete(row)
+            continue
+        result = compute([_link(e) for e in evidence])
+        row.status, row.confidence = result.status, result.confidence
+    session.flush()
 
 
 # --- reading and correcting -------------------------------------------------------------------
@@ -216,19 +238,7 @@ def _evidence_by_skill(session: Session, user: User) -> dict[uuid.UUID, list[Evi
 
 
 def _view(row: UserSkill, skill: Skill, evidence: list[EvidenceView]) -> SkillView:
-    result = compute(
-        [
-            Link(
-                evidence_id=str(e.id),
-                source_id=str(e.source_id) if e.source_id else None,
-                type=e.type,
-                judgement=e.judgement,
-                reason_code=e.reason_code,
-                location=e.location,
-            )
-            for e in evidence
-        ]
-    )
+    result = compute([_link(e) for e in evidence])
     reason_id = uuid.UUID(result.reason.evidence_id) if result.reason.evidence_id else None
     return SkillView(
         id=row.id,
@@ -246,4 +256,15 @@ def _view(row: UserSkill, skill: Skill, evidence: list[EvidenceView]) -> SkillVi
         disputed=row.disputed,
         note=row.note,
         evidence=evidence,
+    )
+
+
+def _link(evidence: EvidenceView) -> Link:
+    return Link(
+        evidence_id=str(evidence.id),
+        source_id=str(evidence.source_id) if evidence.source_id else None,
+        type=evidence.type,
+        judgement=evidence.judgement,
+        reason_code=evidence.reason_code,
+        location=evidence.location,
     )

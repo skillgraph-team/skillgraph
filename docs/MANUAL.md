@@ -178,6 +178,12 @@ Do this pass once in English, then repeat the starred (★) steps in **Français
 - [ ] `PATCH` with `{"status": "assessed"}` → 422. As a second user, `PATCH` the first user's skill → 404 `not_found`.
 - [ ] On a fresh database without `python -m app.skills.taxonomy`: `POST /skills/build` → 503 `skill_list_not_loaded`.
 
+**Projects as evidence, removing sources (M4.10)**
+- [ ] `POST /profile/projects` with `{"title": "Chat app", "description": "Built a chat app with Flask and Redis."}`, then `GET /skills`: Flask and Redis are `demonstrated · medium`.
+- [ ] Edit the description to name Django instead: Flask and Redis are gone and Django is there.
+- [ ] Upload a CV and build, then `DELETE /sources/{cv id}`: skills only the CV backed are gone; the project's skills stay.
+- [ ] `GET /sources` never lists a project.
+
 ---
 
 ## 5. GitHub settings and tooling

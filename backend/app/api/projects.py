@@ -8,9 +8,9 @@ DELETE /profile/projects/{entry_id}  → 204
 
 Only the caller's own projects: any other id answers 404 `not_found`.
 
-Stored in the `manual_projects` table. Turning a project into evidence (its `sources`
-row of kind `manual_project`) is left to the evidence slices; deleting a project already
-deletes that source and its evidence (ON DELETE CASCADE).
+Stored in the `manual_projects` table. Each project is also an evidence source
+(M4.10): saving it updates its `sources` row and the user's skills, deleting it removes
+the skills only it backed (app/services/manual_projects.py).
 """
 
 import uuid
@@ -22,7 +22,7 @@ from app.api._fields import EntryIn, LongText, ShortText, WebUrl
 from app.api.current_user import CurrentUser
 from app.db.models import ManualProject
 from app.db.session import DbSession
-from app.services import profiles
+from app.services import manual_projects, profiles
 
 router = APIRouter(prefix="/profile/projects", tags=["profile"])
 
@@ -55,7 +55,7 @@ def list_projects(user: CurrentUser, session: DbSession) -> list[ProjectOut]:
 
 @router.post("", status_code=status.HTTP_201_CREATED)
 def add_project(body: ProjectIn, user: CurrentUser, session: DbSession) -> ProjectOut:
-    entry = profiles.add_entry(session, user, ManualProject, body.model_dump())
+    entry = manual_projects.add_project(session, user, body.model_dump())
     session.commit()
     return ProjectOut.model_validate(entry)
 
@@ -65,7 +65,7 @@ def replace_project(
     entry_id: uuid.UUID, body: ProjectIn, user: CurrentUser, session: DbSession
 ) -> ProjectOut:
     try:
-        entry = profiles.replace_entry(session, user, ManualProject, entry_id, body.model_dump())
+        entry = manual_projects.replace_project(session, user, entry_id, body.model_dump())
     except profiles.EntryNotFoundError:
         raise _not_found() from None
     session.commit()
@@ -75,7 +75,7 @@ def replace_project(
 @router.delete("/{entry_id}", status_code=status.HTTP_204_NO_CONTENT)
 def delete_project(entry_id: uuid.UUID, user: CurrentUser, session: DbSession) -> None:
     try:
-        profiles.delete_entry(session, user, ManualProject, entry_id)
+        manual_projects.delete_project(session, user, entry_id)
     except profiles.EntryNotFoundError:
         raise _not_found() from None
     session.commit()
