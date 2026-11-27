@@ -73,7 +73,8 @@ Two kinds of entry:
 - **Choice:** **a local model through Ollama, `qwen2.5:7b`**, behind M2.2's provider interface. Groq's free tier (`llama-3.3-70b-versatile`) is the first upgrade to try once someone has a key.
 - **Why:** measured on 5 test profiles × 3 answer languages (`docs/spikes/llm.md`): 100% valid JSON, 79% of statuses right, 97% of quotes word for word, 98% precision. `gemma3:4b` found more skills (83% vs 65%) but judged worse (71%), invented skill ids and got stuck in repeat loops in Arabic. Local costs nothing, has no rate limits for the eval, and keeps real CVs on the machine. The Gemini free tier allows human review of prompts and says not to send personal data, so it's out for real CVs.
 - **Trade-offs accepted:** qwen misses about a third of the skills and judges French CVs worse (48–71% status ok vs 85–100% for English). M6 should make up for that with changes that help any model (clearer rules with French examples, "list every skill", judging the rule-based finders' candidates), not qwen-specific tricks. System C needs Ollama plus ~5 GB on whatever machine runs it (affects D-008). Tests never need it (record/replay).
-- **Not measured:** Groq and Gemini (no API key during the spike). Running them takes two commands; switching is a config change after M2.2.
+- **Gemini free tier (`gemini-3.8-flash`), run later the same day:** judged perfectly on the 11 of 15 calls it answered (100% recall, status and quotes), but ~95 s per call, 4 calls failed (timeouts, "high demand"), and the ~20 requests/day quota ran out during the spike. Not usable for the eval (hundreds of calls per run) or real CVs (terms). It shows the rules work with a strong model, so a paid or stronger model is the natural upgrade.
+- **Not measured:** Groq (no key). Running it takes two commands; switching is a config change after M2.2.
 - **Model-agnostic (Rasen, 2026-11-27):** qwen is only the *current default*, not a design target. The platform must not be tuned to one model: it may move to paid APIs with stronger models later. So: provider and model come from config only (`LLM_PROVIDER`, `LLM_MODEL`); M2.2's interface must fit hosted paid APIs (keys, rate limits, costs) as well as Ollama; prompts state the rules plainly and never rely on one model's quirks; Ollama-only settings (like `num_ctx`) stay inside the Ollama provider. The eval should be able to re-run with any provider to compare.
 
 ### D-006 · Evidence model (contract)
@@ -1265,6 +1266,11 @@ These fill in details D-006 left open. They are part of the contract in `docs/de
 - **What:** for Ollama, `run_spike.py` uses `/api/chat` with `format: "json"`, `num_ctx: 8192`, `num_predict: 4000` and temperature 0, instead of the OpenAI-compatible endpoint.
 - **Why:** the OpenAI-compatible endpoint can't change the context window, and Ollama's default (~4k tokens) would cut off long answers without an error. The prompts turned out to be ~1,250 tokens, so this was a precaution; M2.2 should still set `num_ctx` explicitly.
 - **Where:** `call` in `spikes/llm/run_spike.py`.
+
+#### T-172 · The spike retries 503 "overloaded" like 429, and survives dropped connections
+- **What:** `run_spike.py` retries HTTP 503 as well as 429 (up to `--retries`, 20 s apart, counted separately as `overloaded`); a dropped connection or timeout is saved as a failed call (status 0) instead of stopping the run; `--lang` runs one answer language. The Gemini default model is `gemini-3.8-flash` because `gemini-2.5-flash` returns 404 for new users.
+- **Why:** Gemini's free tier often answered "model is experiencing high demand", and one dropped connection stopped the whole first run. `score.py` shows 429s and 503s as separate columns so busy-provider errors aren't mistaken for our own rate limit. M2.2 will need the same retry rules.
+- **Where:** `call` and `main` in `spikes/llm/run_spike.py`; `table` in `spikes/llm/score.py`.
 
 ### Repo setup script (no slice)
 

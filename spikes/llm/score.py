@@ -13,7 +13,8 @@ What each column means:
   (D-006 rules, below) is one the reference accepts. This is the "judge evidence" score.
 - quotes exact: share of quotes found word for word in the input (catches made-up quotes).
 - language ok: explanations written in the requested language (rough letter/word check).
-- seconds, 429s: response time and rate-limit errors.
+- seconds, 429s, 503s: response time, rate-limit errors and "model overloaded" errors
+  (both counted whether or not a retry then worked).
 """
 
 import json
@@ -109,7 +110,12 @@ def language_of(text: str) -> str:
 def score_row(row: dict, known: set[str]) -> dict:
     profile = next(p for p in PROFILES if p["id"] == row["profile"])
     ref = profile["reference"]
-    out = {"seconds": row["seconds"], "429s": row["rate_limited"], "http_ok": row["status"] == 200}
+    out = {
+        "seconds": row["seconds"],
+        "429s": row["rate_limited"],
+        "503s": row.get("overloaded", 0),
+        "http_ok": row["status"] == 200,
+    }
     skills = parse(row["text"]) if row["status"] == 200 else None
     out["valid"] = skills is not None
     if skills is None:
@@ -145,8 +151,8 @@ def pct(values: list[float]) -> str:
 
 
 def table(scores: list[tuple[dict, dict]]) -> str:
-    head = "| answer lang | CV lang | calls | valid JSON | recall | precision | status ok | quotes exact | language ok | median s | 429s |"
-    lines = [head, "|" + "---|" * 11]
+    head = "| answer lang | CV lang | calls | valid JSON | recall | precision | status ok | quotes exact | language ok | median s | 429s | 503s |"
+    lines = [head, "|" + "---|" * 12]
     groups: dict[tuple[str, str], list[dict]] = defaultdict(list)
     for row, sc in scores:
         cv_lang = next(p["cv_language"] for p in PROFILES if p["id"] == row["profile"])
@@ -164,7 +170,7 @@ def table(scores: list[tuple[dict, dict]]) -> str:
             f"| {pct([s['recall'] for s in v])} | {pct([s['precision'] for s in v])} "
             f"| {pct([s['status_ok'] for s in v])} | {pct([s['quotes_exact'] for s in v])} "
             f"| {pct([s['lang_ok'] for s in v])} | {median(s['seconds'] for s in g):.1f} "
-            f"| {sum(s['429s'] for s in g)} |"
+            f"| {sum(s['429s'] for s in g)} | {sum(s['503s'] for s in g)} |"
         )
     return "\n".join(lines)
 

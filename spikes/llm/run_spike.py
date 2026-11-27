@@ -14,6 +14,7 @@ Score them with `python spikes/llm/score.py`.
 """
 
 import argparse
+import http.client
 import json
 import os
 import sys
@@ -38,7 +39,7 @@ PROVIDERS = {
     "gemini": {
         "url": "https://generativelanguage.googleapis.com/v1beta/openai/chat/completions",
         "key_env": "SPIKE_GEMINI_API_KEY",
-        "model": "gemini-2.5-flash",
+        "model": "gemini-3.8-flash",
     },
     "ollama": {
         "url": "http://localhost:11434/api/chat",
@@ -125,7 +126,7 @@ def fake_answer(profile: Profile, lang: str) -> str:
 
 
 def call(provider: str, model: str, msgs: list[dict[str, str]], max_retries: int) -> dict:
-    """One chat call. Returns raw text, seconds, HTTP status, number of 429s seen."""
+    """One chat call. Returns raw text, seconds, HTTP status, and how many 429s / 503s were retried."""
     cfg = PROVIDERS[provider]
     headers = {"Content-Type": "application/json"}
     if cfg["key_env"]:
@@ -155,6 +156,7 @@ def call(provider: str, model: str, msgs: list[dict[str, str]], max_retries: int
         }
     body = json.dumps(payload).encode()
     rate_limited = 0
+    overloaded = 0  # 503 "model overloaded": the provider is busy, not our limit
     start = time.monotonic()
     for attempt in range(max_retries + 1):
         req = urllib.request.Request(cfg["url"], data=body, headers=headers, method="POST")
@@ -176,28 +178,33 @@ def call(provider: str, model: str, msgs: list[dict[str, str]], max_retries: int
                 "text": text,
                 "seconds": time.monotonic() - start,
                 "rate_limited": rate_limited,
+                "overloaded": overloaded,
                 "usage": usage,
             }
         except urllib.error.HTTPError as err:
-            if err.code == 429 and attempt < max_retries:
-                rate_limited += 1
+            if err.code in (429, 503) and attempt < max_retries:
+                rate_limited += err.code == 429
+                overloaded += err.code == 503
                 wait = min(float(err.headers.get("Retry-After") or 20), 60)
-                print(f"  429 rate limited, waiting {wait:.0f}s", flush=True)
+                print(f"  {err.code}, waiting {wait:.0f}s", flush=True)
                 time.sleep(wait)
                 continue
             rate_limited += err.code == 429
+            overloaded += err.code == 503
             return {
                 "status": err.code,
                 "text": err.read().decode(errors="replace")[:500],
                 "seconds": time.monotonic() - start,
                 "rate_limited": rate_limited,
+                "overloaded": overloaded,
             }
-        except (urllib.error.URLError, TimeoutError) as err:
+        except (OSError, http.client.HTTPException) as err:  # dropped connection, timeout
             return {
                 "status": 0,
                 "text": str(err),
                 "seconds": time.monotonic() - start,
                 "rate_limited": rate_limited,
+                "overloaded": overloaded,
             }
     raise AssertionError("unreachable")
 
@@ -207,8 +214,9 @@ def main() -> None:
     parser.add_argument("--provider", required=True, choices=PROVIDERS)
     parser.add_argument("--model", help="override the default model")
     parser.add_argument("--pause", type=float, default=5.0, help="seconds between calls")
-    parser.add_argument("--retries", type=int, default=2, help="retries after a 429")
+    parser.add_argument("--retries", type=int, default=2, help="retries after a 429 or 503")
     parser.add_argument("--only", help="run only this profile id")
+    parser.add_argument("--lang", choices=("en", "fr", "ar"), help="run only this answer language")
     args = parser.parse_args()
 
     model = args.model or PROVIDERS[args.provider]["model"]
@@ -219,6 +227,8 @@ def main() -> None:
             if args.only and profile["id"] != args.only:
                 continue
             for lang in ("en", "fr", "ar"):
+                if args.lang and lang != args.lang:
+                    continue
                 print(f"{args.provider}/{model} {profile['id']} -> {lang}", flush=True)
                 if args.provider == "fake":
                     res = {
