@@ -86,11 +86,11 @@ Run on 2026-11-27, laptop with an RTX 4050 (6 GB), Ollama 0.40.18, 15 calls per 
 - **Speed:** 10–30 s per profile on the laptop GPU; the first call after loading a model takes about a minute. One early qwen call crashed in Ollama's GPU start-up (`CUDA error`, HTTP 500); a re-run worked, so it's counted as an Ollama hiccup and the scores use the re-run.
 
 ## Recommendation
-**Use Ollama with `qwen2.5:7b` as the D-005 provider, behind M2.2's provider interface, and keep Groq as the first upgrade to try.**
+**Use Ollama with `qwen2.5:7b` as the current default, behind M2.2's provider interface, and keep Groq as the first upgrade to try.** The platform stays model-agnostic (D-005): nothing is tuned to qwen, and it may move to paid APIs with stronger models later. The spike's script and profiles can be re-run against any provider to compare.
 
 - **Why qwen over gemma:** the design only asks the model to *judge* evidence (D-006 choice 4), and the rule-based finders (M4.2, M4.3) already find most skills by name. qwen judges better (status ok 79% vs 71%), sticks to the id list (98% vs 84% precision), and always returns valid JSON. gemma's extra recall comes with invented ids and repeatable loops in Arabic.
 - **Why local over hosted:** it's the only option measured. It costs nothing, has no rate limits (the eval runs 3 systems × all profiles many times), and real CVs never leave the machine. The Gemini free tier's terms rule it out for real CVs anyway.
-- **What it costs us:** 65% recall and weaker French judging, so System C may not beat the baseline by much unless M6 improves it: a better prompt (French examples, "list every skill", one call per source), or giving the model the finders' candidates to judge. Every machine that runs System C needs Ollama and ~5 GB for the model; tests never need it (record/replay, M2.2). The demo host (D-008) must be able to run it, or switch to a hosted provider.
+- **What it costs us:** 65% recall and weaker French judging, so System C may not beat the baseline by much unless M6 improves it with changes that help any model, not qwen-specific tricks: a better prompt (French examples, "list every skill", one call per source), or giving the model the finders' candidates to judge. Every machine that runs System C needs Ollama and ~5 GB for the model; tests never need it (record/replay, M2.2). The demo host (D-008) must be able to run it, or switch to a hosted provider.
 - **Revisit when:** someone has a Groq key. Run `python spikes/llm/run_spike.py --provider groq` and `python spikes/llm/score.py`, add the table here, and switch if it clearly judges better. With M2.2 that's a config change.
 
 ## How to run it
