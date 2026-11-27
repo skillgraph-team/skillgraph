@@ -15,6 +15,7 @@ from sqlalchemy import (
     ForeignKey,
     ForeignKeyConstraint,
     String,
+    Text,
     UniqueConstraint,
 )
 from sqlalchemy.dialects.postgresql import ARRAY
@@ -28,7 +29,8 @@ from app.db.values import Confidence, Judgement, Status, System
 class UserSkill(Base):
     """One skill on one person's profile, with its computed status and confidence.
 
-    - `hidden` / `disputed`: the user's corrections (evidence model section 8).
+    - `hidden` / `disputed`: the user's corrections (evidence model section 8), with an
+      optional `note` saying why (M4.5). A rebuild keeps all three.
     - `produced_by` / `agent_run_id`: which system and which run computed it.
     """
 
@@ -50,6 +52,7 @@ class UserSkill(Base):
     confidence: Mapped[str] = mapped_column(String(10))
     hidden: Mapped[bool] = mapped_column(server_default="false")
     disputed: Mapped[bool] = mapped_column(server_default="false")
+    note: Mapped[str | None] = mapped_column(Text)
     produced_by: Mapped[str] = mapped_column(String(20))
     agent_run_id: Mapped[uuid.UUID | None] = mapped_column(
         ForeignKey("agent_runs.id", ondelete="SET NULL")

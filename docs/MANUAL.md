@@ -168,6 +168,16 @@ Do this pass once in English, then repeat the starred (★) steps in **Français
 - [ ] `uv run python -m app.skills.check_cv_finder tests/fixtures/cv/cv_en.pdf python,docker,kubernetes` prints `expected 3, found 2, missed 1, wrong 6` and `missed: kubernetes`.
 - [ ] Try it on a made-up CV of your own (never a real person's). List the skills you'd expect, and note what's missed or wrong. Misses usually mean a missing alias or heading, which is worth adding.
 
+**Status rules (M4.4)**
+- [ ] `uv run pytest tests/skills/test_status_rules.py -v`: one test per worked example in the evidence model, section 9. Read the names; if an example's expected result looks wrong, the evidence model is what needs a new decision.
+
+**Build and skills API (M4.5)** (http://localhost:8000/docs; load the skill list first)
+- [ ] Sign up, upload `tests/fixtures/cv/cv_en.pdf`, then `POST /skills/build` → 200. Python is `claimed · medium`, with reason `named_in_list` and the quote "Skills: Python, FastAPI, PostgreSQL and Docker."
+- [ ] Give GitHub consent, import `octocat`, build again: the repo languages appear as evidence.
+- [ ] `PATCH /skills/{id}` with `{"hidden": true, "note": "test"}` → 200, status unchanged. Build again: still hidden, same note.
+- [ ] `PATCH` with `{"status": "assessed"}` → 422. As a second user, `PATCH` the first user's skill → 404 `not_found`.
+- [ ] On a fresh database without `python -m app.skills.taxonomy`: `POST /skills/build` → 503 `skill_list_not_loaded`.
+
 ---
 
 ## 5. GitHub settings and tooling

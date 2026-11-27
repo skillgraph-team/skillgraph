@@ -27,6 +27,7 @@
     "cv_file_error": "Impossible de lire ce fichier.",
     "github_consent_required": "Autorisez d'abord SkillGraph à lire vos données GitHub publiques.",
     "github_user_not_found": "Aucun utilisateur GitHub ne porte ce nom.",
+    "skill_list_not_loaded": "Les compétences ne peuvent pas encore être calculées : la liste des compétences n'est pas chargée. Merci de prévenir l'équipe SkillGraph.",
     "github_rate_limited": "GitHub limite les requêtes pour le moment. Réessayez plus tard.",
     "github_unavailable": "GitHub est injoignable pour le moment. Réessayez plus tard.",
     "github_error": "Un problème est survenu pendant la lecture de GitHub.",

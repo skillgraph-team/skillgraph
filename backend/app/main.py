@@ -17,6 +17,7 @@ from app.api import (
     github_consent,
     profile,
     projects,
+    skills,
     sources,
 )
 from app.db.session import DbSession
@@ -31,6 +32,7 @@ app.include_router(sources.router)
 app.include_router(github.router)
 app.include_router(github_consent.router)
 app.include_router(account.router)
+app.include_router(skills.router)
 
 
 @app.get("/health")

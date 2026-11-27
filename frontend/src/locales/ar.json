@@ -27,12 +27,13 @@
     "cv_file_error": "تعذّرت قراءة هذا الملف.",
     "github_consent_required": "يلزم أولًا السماح لـ SkillGraph بقراءة بيانات GitHub العامة.",
     "github_user_not_found": "لا يوجد مستخدم GitHub بهذا الاسم.",
-    "github_rate_limited": "يحدّ GitHub من الطلبات حاليًا. يُرجى المحاولة لاحقًا.",
-    "github_unavailable": "تعذّر الوصول إلى GitHub حاليًا. يُرجى المحاولة لاحقًا.",
+    "skill_list_not_loaded": "لا يمكن حساب المهارات بعد: قائمة المهارات غير محملة. يرجى إبلاغ فريق SkillGraph.",
+    "github_rate_limited": "يحدّ GitHub من الطلبات حاليًا. يرجى المحاولة لاحقًا.",
+    "github_unavailable": "تعذّر الوصول إلى GitHub حاليًا. يرجى المحاولة لاحقًا.",
     "github_error": "حدث خطأ أثناء القراءة من GitHub.",
-    "backend_unreachable": "تعذّر الوصول إلى SkillGraph حاليًا. يُرجى المحاولة بعد قليل.",
+    "backend_unreachable": "تعذّر الوصول إلى SkillGraph حاليًا. يرجى المحاولة بعد قليل.",
     "invalid_input": "بعض البيانات المُدخلة غير صالحة.",
-    "unknown": "حدث خطأ. يُرجى المحاولة مرة أخرى."
+    "unknown": "حدث خطأ. يرجى المحاولة مرة أخرى."
   },
   "auth": {
     "checking": "جارٍ التحقق من تسجيل الدخول…",

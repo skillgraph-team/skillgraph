@@ -1170,6 +1170,38 @@ These fill in details D-006 left open. They are part of the contract in `docs/de
 - **Why:** the slice asks for property-based tests (GLOSSARY). Hypothesis is the standard Python library for them, and it's free. When a property fails, it shrinks the failing list to the smallest example, which a hand-rolled random generator wouldn't. It's for tests only, never in the app. Decided under autonomous mode (D-017).
 - **Where:** `backend/pyproject.toml`, `backend/tests/skills/test_status_rules_properties.py`.
 
+### M4.5 · Build profile and skills API
+
+#### T-158 · A rebuild updates skill rows in place and replaces their evidence and links
+- **What:** `build_profile` re-runs every finder (each source's evidence records are replaced, and their links go with them by cascade), then updates the user's `user_skills` rows by skill id and adds fresh links. Rows for skills no evidence names any more are deleted.
+- **Why:** the same sources always give the same skills, statuses, confidences and evidence (tested), and the skill row ids, plus the user's hidden / disputed / note, survive a rebuild. Deleting skills without evidence keeps "no skill without a source".
+- **Where:** `backend/app/services/skill_profile.py`.
+- **Watch out:** evidence ids change on every rebuild, so nothing should store an evidence id for long. Manual projects (M4.10) and user-added skills aren't read yet. Once user-added skills exist, the rebuild must keep their links.
+
+#### T-159 · The reason is computed when skills are read, not stored
+- **What:** `GET /skills` computes each skill's `reason` from its stored links with `compute`, after sorting them in a fixed order (supporting first, then type, then quote). Status and confidence are stored, because the database checks them and matching will filter on them.
+- **Why:** no new column, and the reason can't disagree with the links. The rules are cheap and deterministic.
+- **Where:** `backend/app/services/skill_profile.py`.
+
+#### T-160 · New column `user_skills.note` (migration `d8e2f4a61b37`)
+- **What:** optional text, at most 500 characters (checked by the API), set with `PATCH /skills/{id}`. Sending `"note": null` or an empty note clears it. `hidden` and `disputed` can't be cleared with null, only set to true or false.
+- **Why:** the slice asks for an optional note when hiding or disputing. 500 characters is enough for a reason and keeps the screen tidy.
+- **Where:** `backend/app/db/models/user_skills.py`, `backend/migrations/versions/2026_11_27-d8e2f4a61b37_user_skills_note.py`, `backend/app/api/skills.py`.
+
+#### T-161 · Three endpoints: build, list, correct
+- **What:**
+  - `POST /skills/build` runs the build and returns the skills.
+  - `GET /skills` lists them, strongest first (status, then confidence, then English name), hidden ones included with their flag so the screen can offer "show again".
+  - `PATCH /skills/{id}` changes only `hidden`, `disputed` and `note`. Any other field is a 422, and another user's id is a 404 `not_found`.
+  - Each skill carries `names` in en, fr and ar, so the screen picks its language without another request.
+- **Why:** building can take a moment and writes data, so it's an explicit action rather than a side effect of reading.
+- **Where:** `backend/app/api/skills.py`.
+
+#### T-162 · Building before the skill list is loaded answers 503 `skill_list_not_loaded`
+- **What:** if the `skills` table is empty, the build refuses with a code. The interface text is in en, fr and ar.
+- **Why:** a silent empty result would look like "this CV has no skills". The list is loaded by a command (T-145), not by the app, so a fresh setup can hit this.
+- **Where:** `backend/app/services/skill_profile.py`, `backend/app/api/skills.py`, `frontend/src/locales/*.json`.
+
 ### Repo setup script (no slice)
 
 #### T-078 · `github_setup.py` creates only missing labels
