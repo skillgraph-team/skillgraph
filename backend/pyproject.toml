@@ -22,6 +22,7 @@ dependencies = [
 [dependency-groups]
 dev = [
     "fpdf2>=2.9.0",
+    "hypothesis>=6.170.22",
     "mypy>=2.4.1",
     "pytest>=9.2.0",
     "ruff>=0.17.6",

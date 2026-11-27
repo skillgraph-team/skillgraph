@@ -1137,6 +1137,39 @@ These fill in details D-006 left open. They are part of the contract in `docs/de
 - **Why:** `# shop-api` would read as "API design", `pip install django` in a code block isn't a statement, and badge URLs are full of tool names.
 - **Where:** `backend/app/skills/repo_finder.py`, `backend/app/skills/matching.py`.
 
+### M4.4 · Status and confidence rules
+
+#### T-153 · Two modules: shared status rules, and System A's link judgement
+- **What:** `app/skills/status_rules.py` turns judged links into status, confidence and reason (evidence model §4–5), and holds the §7 validator. All three systems use it. `app/skills/judge.py` is System A's own judgement of one link (§3.2). The agents will replace only the judging (M6.3).
+- **Why:** the evidence model says the systems differ only in how they judge links. Keeping the computation in one shared module makes that true in code too.
+- **Where:** `backend/app/skills/status_rules.py`, `backend/app/skills/judge.py`.
+
+#### T-154 · A skill's reason is the reason code of the link that set its status
+- **What:** `SkillResult.reason` is `{code, evidence_id}`: the first assessment, work or claim link that decided the status. For an unverified skill it's the first link's code, and `no_evidence` for an empty list (a new reason code, for job requirements). No sentences.
+- **Why:** the slice wants "a code plus data" that the frontend turns into text, and the evidence id lets the screen show the quote behind it.
+- **Where:** `compute` in `backend/app/skills/status_rules.py`.
+
+#### T-155 · Concrete work vs vague mention is decided by English and French phrase lists
+- **What:** in a CV experience or project (and a manual project), a vague phrase ("familiar with", « notions de », a sentence starting "Technologies:") makes the link weak. Otherwise an action verb ("built", "wrote", « développé », « mise en place ») makes it support. Otherwise it's weak. In a skills list or summary, a wants-to-learn phrase ("interested in", "looking for", « à la recherche d' ») makes it weak. Phrases are matched as whole words after `normalize`. Bare "learning" isn't a phrase, so "Machine learning" stays a claim.
+- **Why:** these are the rules of §3.2 in a form that can be tested and extended by hand. Vague phrases are checked first, so "Built a website. Tech stack: React" stays weak.
+- **Where:** `WANTS_TO_LEARN`, `VAGUE`, `STARTS_VAGUE`, `ACTION_VERBS` in `backend/app/skills/judge.py`.
+- **Watch out:** "looking for a backend internship" counts as wanting to learn, so a summary like that gives "backend development" as unverified, not claimed. Worth checking against the labels in M4.7.
+
+#### T-156 · The validator covers guardrails 1 and 3–6; guardrail 2 is for the agent runtime
+- **What:** `validate(links, status, confidence)` raises `RuleViolationError` with a code: `no_links`, `supports_on_context_type`, `repo_language_conditions`, `assessed_not_allowed` (unless `allow_assessed=True`, for M11), `status_mismatch`, `confidence_mismatch`. Guardrail 2 (only cite evidence given to this agent) needs the agent's context, so the runtime checks it (M5).
+- **Why:** the agents' results (M6.3) must be refused when they break the evidence model, and the checks belong next to the rules they protect.
+- **Where:** `backend/app/skills/status_rules.py`.
+
+#### T-157 · Hypothesis for the property-based tests (new dev dependency)
+- **What:** `hypothesis` is added to the dev dependency group. The property tests generate random lists of links and check that:
+  - more supporting evidence never lowers confidence or status;
+  - weak evidence never changes confidence;
+  - only an assessment gives assessed;
+  - unverified is always low;
+  - the order of links doesn't matter.
+- **Why:** the slice asks for property-based tests (GLOSSARY). Hypothesis is the standard Python library for them, and it's free. When a property fails, it shrinks the failing list to the smallest example, which a hand-rolled random generator wouldn't. It's for tests only, never in the app. Decided under autonomous mode (D-017).
+- **Where:** `backend/pyproject.toml`, `backend/tests/skills/test_status_rules_properties.py`.
+
 ### Repo setup script (no slice)
 
 #### T-078 · `github_setup.py` creates only missing labels
