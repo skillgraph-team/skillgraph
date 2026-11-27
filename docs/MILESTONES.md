@@ -797,6 +797,23 @@ Turn CVs and repos into skills with evidence, using fixed rules and no AI. This 
 **Done when**
 - [ ] Tests: a project's text produces evidence; editing it replaces that evidence; deleting a CV or project leaves no skill without evidence, and doesn't touch another user's data
 
+### M4.11 · Typed experience as evidence
+`area:backend` `size:S` `depends:M4.10`
+
+**Goal:** Experience entries typed into the profile count as evidence, exactly like a CV's experience section (D-033).
+
+**Why:** Code written for an employer is rarely public, so an internship's description is often the only evidence of the work. The same words already count when they're on a CV.
+
+**Read first:** D-033; `docs/design/evidence-model.md` §8 ("Typed profile entries"); `backend/app/services/manual_projects.py` (the same pattern, M4.10).
+
+**Tasks**
+- [ ] A source kind for a typed experience entry, like `manual_project` for projects: a schema change (new value in `SourceKind`, a foreign key to `experiences`, a migration), so propose it before coding
+- [ ] Saving or editing an experience entry updates its source and rebuilds the skills; the role and description sentences become `cv_experience` evidence with a location saying it was typed in the app; deleting the entry recomputes the skills
+- [ ] Tests in English and French: a concrete description gives demonstrated · medium, a vague one gives claimed · low, and a CV plus a typed entry about the same job count as two sources
+
+**Done when**
+- [ ] Tests pass; editing or deleting an experience entry never leaves a skill without evidence
+
 ---
 
 ## M5 · Agent runtime
@@ -1688,7 +1705,7 @@ Profiles built from more than a CV and GitHub: certificates (with link checks wh
 **Tasks**
 - [ ] Upload with size and type limits; reading text from images needs an OCR library: a new dependency, so 2 options + trade-offs, $0
 - [ ] Extract title, issuer, date and credential link/id; map to skills with the normalizer (M4.2)
-- [ ] Let the user link a certificate to one of their education entries; the certificate is how typed education counts as evidence (D-033)
+- [ ] Let the user link a certificate to one of their education or experience entries; for education, the certificate is how a typed entry counts as evidence (D-033)
 - [ ] Tests with made-up certificates in all three languages
 
 **Done when**

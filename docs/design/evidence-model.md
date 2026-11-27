@@ -166,7 +166,7 @@ Users can **hide**, **dispute** or **add** a skill. They can never raise a statu
 
 Building these features is a later slice; the model only needs the `user_added` type and the hidden / disputed flags.
 
-**Typed profile entries (D-033).** A project the user types in is `manual_project` evidence (work type). A typed education entry is evidence only through a certificate linked to it (`certificate`, claim type); without one it isn't evidence. A typed experience entry isn't evidence: the skills used there are backed by the repos and projects worked on.
+**Typed profile entries (D-033).** A project the user types in is `manual_project` evidence (work type). A typed education entry is evidence only through a certificate linked to it (`certificate`, claim type); without one it isn't evidence. A typed experience entry counts exactly like a CV's experience section: type `cv_experience`, judged by the same test (concrete work → supports; vague → weak, still claimed). A certificate for it (an internship certificate) adds `certificate` evidence.
 
 ---
 

@@ -38,7 +38,7 @@ Two kinds of entry:
 | D-028 | How upgrades are paid for | Open | M16.2 |
 | D-029 | MVP plus full product: M11–M16 are full milestones | Decided | — |
 | D-030 | CVs and postings: English and French only; Arabic is interface-only (narrows D-012) | Decided | — |
-| D-033 | Typed education and experience: education counts only through a certificate; experience through repos and projects | Decided (contract) | M12.2 |
+| D-033 | Typed education and experience: education counts only through a certificate; experience counts like CV experience | Decided (contract) | M4.11, M12.2 |
 
 ---
 
@@ -239,9 +239,9 @@ Two kinds of entry:
 - **Question:** projects typed into the profile count as evidence (M4.10). Should typed education and experience entries count too?
 - **Choice:**
   1. **Education counts only when a certificate backs it.** The user uploads a diploma or course certificate and links it to the education entry. The certificate is the evidence, with the existing type `certificate`: a claim type, so at most *claimed*, but it raises confidence. A typed education entry without a certificate is not evidence.
-  2. **Experience doesn't become evidence of its own.** The skills used in a job or internship are backed by the repos and projects worked on, which already count (`repo_*`, `manual_project`). The typed experience entry stays profile information.
-- **Why:** anyone can type a degree or a job title. A certificate or real work is something that can be checked, and that is what "evidence-based" means here. No new evidence type is needed.
-- **Consequences:** no work until certificate upload exists (M12.2, which now also links a certificate to an education entry). CV sections are unchanged: `cv_education` (context only) and `cv_experience` (work) still apply to what a CV says.
+  2. **Typed experience counts exactly like CV experience** (option B, chosen 2026-11-27 over "not evidence" and "claim only"). It uses the same evidence type, `cv_experience`, with a location saying it was typed in the app. A concrete description ("built a REST API with FastAPI") is work evidence; a vague one ("familiar with Docker") is a claim. One entry gives at most medium confidence, like one CV entry. An internship or work certificate (*attestation de stage*), once certificate upload exists, is `certificate` evidence and raises confidence.
+- **Why:** education: anyone can type a degree, so a certificate is what can be checked. Experience: code written for an employer is almost never public (the company owns it, private repos, confidentiality agreements), so asking for repos would leave most real work experience unbacked. A CV's experience section already counts as work (D-006, choice 3); the same words typed into the app shouldn't count for less. The first proposal, "experience is backed only by repos and projects", was dropped for these reasons.
+- **Consequences:** M4.11 reads typed experience as evidence, like M4.10 did for projects. It needs a source kind for a typed experience entry, which is a schema change for that slice to propose. M12.2 accepts certificates for education entries and for experience entries. CV sections are unchanged.
 
 ---
 
