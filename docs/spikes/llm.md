@@ -1,6 +1,6 @@
 # LLM spike (M2.1): can a free model judge evidence?
 
-**Status:** set up, **not yet run.** The script, test profiles, reference answers and scorer are ready and checked offline. The live runs need an API key or a local model that this machine doesn't have yet (see "What's needed to finish"). D-005 stays `Open` until the table below has real numbers.
+**Status:** run on two local models through Ollama (`qwen2.5:7b`, `gemma3:4b`) on 2026-11-27. The hosted free tiers (Groq, Gemini) were **not run**: no API key was available. **D-005 decided: Ollama with `qwen2.5:7b`** (see Recommendation). Running the hosted options later takes two commands (see "How to run it").
 
 Last updated: 2026-11-27.
 
@@ -13,7 +13,7 @@ Limits and terms change often. These were checked on 2026-11-27 and must be re-c
 
 | | Groq (free plan) | Google Gemini API (free tier) | Ollama (local) |
 |---|---|---|---|
-| Model tried | `llama-3.3-70b-versatile` | `gemini-2.5-flash` | `qwen2.5:7b` (fits the 6 GB laptop GPU) |
+| Model tried | `llama-3.3-70b-versatile` (not run: no key) | `gemini-2.5-flash` (not run: no key) | `qwen2.5:7b` and `gemma3:4b` (both fit the 6 GB laptop GPU; Ollama 0.40.18) |
 | Sign-up | Account, no card | Google account, API key from AI Studio | Install Ollama, download the model (~5 GB) |
 | Limits | Per organisation and per model. Third-party reports: ~30 requests/min and 1,000–14,400 requests/day depending on model; tokens/min also capped. Exact numbers: console → Settings → Limits | Per Google Cloud project. Google no longer publishes a fixed table; developers reported free Flash cut to about **20 requests/day**. Exact numbers: AI Studio's rate-limit page | None except your hardware |
 | Over the limit | HTTP 429, no charge | HTTP 429, no charge | — |
@@ -36,16 +36,62 @@ Sources: [Gemini rate limits](https://ai.google.dev/gemini-api/docs/rate-limits)
 
 ## Results
 
-*Not run yet.* Paste the output of `python spikes/llm/score.py` here, one table per model, then fill in the hand notes.
+Run on 2026-11-27, laptop with an RTX 4050 (6 GB), Ollama 0.40.18, 15 calls per model. Raw answers: `spikes/llm/results/`. The per-answer details (missed skills, wrong statuses, invented ids) are printed by `score.py`. "answer lang" is the language the explanations were asked in; "CV lang" is the CV's language.
 
-| Model | valid JSON | recall | status ok | quotes exact | ar explanations ok | median s | 429s | Hand notes |
+### Summary
+
+| Model | valid JSON | recall | precision | status ok | quotes exact | language ok | median s | 429s |
 |---|---|---|---|---|---|---|---|---|
-| Groq `llama-3.3-70b-versatile` | | | | | | | | |
-| Gemini `gemini-2.5-flash` | | | | | | | | |
-| Ollama `qwen2.5:7b` | | | | | | | | |
+| Ollama `qwen2.5:7b` | **100%** | 65% | **98%** | **79%** | 97% | 91% | 23.6 | 0 |
+| Ollama `gemma3:4b` | 93% | **83%** | 84% | 71% | **99%** | **97%** | **14.0** | 0 |
+| Groq `llama-3.3-70b-versatile` | not run | | | | | | | |
+| Gemini `gemini-2.5-flash` | not run | | | | | | | |
+
+### Ollama `qwen2.5:7b`
+
+| answer lang | CV lang | calls | valid JSON | recall | precision | status ok | quotes exact | language ok | median s | 429s |
+|---|---|---|---|---|---|---|---|---|---|---|
+| en | en | 3 | 100% | 70% | 100% | 85% | 92% | 100% | 29.4 | 0 |
+| en | fr | 2 | 100% | 62% | 100% | 71% | 100% | 100% | 26.1 | 0 |
+| en | all | 5 | 100% | 67% | 100% | 79% | 95% | 100% | 29.4 | 0 |
+| fr | en | 3 | 100% | 66% | 100% | 92% | 100% | 78% | 24.5 | 0 |
+| fr | fr | 2 | 100% | 56% | 92% | 55% | 100% | 67% | 17.4 | 0 |
+| fr | all | 5 | 100% | 62% | 97% | 77% | 100% | 73% | 18.7 | 0 |
+| ar | en | 3 | 100% | 66% | 100% | 100% | 92% | 100% | 29.0 | 0 |
+| ar | fr | 2 | 100% | 67% | 94% | 48% | 100% | 100% | 21.5 | 0 |
+| ar | all | 5 | 100% | 66% | 98% | 79% | 95% | 100% | 23.6 | 0 |
+| all | all | 15 | 100% | 65% | 98% | 79% | 97% | 91% | 23.6 | 0 |
+
+### Ollama `gemma3:4b`
+
+| answer lang | CV lang | calls | valid JSON | recall | precision | status ok | quotes exact | language ok | median s | 429s |
+|---|---|---|---|---|---|---|---|---|---|---|
+| en | en | 3 | 100% | 93% | 91% | 75% | 100% | 100% | 16.1 | 0 |
+| en | fr | 2 | 100% | 82% | 85% | 77% | 100% | 100% | 12.1 | 0 |
+| en | all | 5 | 100% | 89% | 89% | 76% | 100% | 100% | 14.3 | 0 |
+| fr | en | 3 | 100% | 87% | 79% | 67% | 97% | 87% | 13.3 | 0 |
+| fr | fr | 2 | 100% | 82% | 85% | 77% | 100% | 100% | 12.6 | 0 |
+| fr | all | 5 | 100% | 85% | 81% | 71% | 98% | 92% | 13.3 | 0 |
+| ar | en | 3 | 67% | 60% | 92% | 62% | 100% | 100% | 9.9 | 0 |
+| ar | fr | 2 | 100% | 86% | 72% | 68% | 100% | 100% | 15.8 | 0 |
+| ar | all | 5 | 80% | 73% | 82% | 65% | 100% | 100% | 12.9 | 0 |
+| all | all | 15 | 93% | 83% | 84% | 71% | 99% | 97% | 14.0 | 0 |
+
+### Hand notes (reading the answers)
+- **`qwen2.5:7b` lists too few skills.** It often stops after the skills list plus one or two more: it missed FastAPI, PostgreSQL and REST API in the `shop-api` profile (all three languages), Power BI and Excel for the data analyst, PyTorch and Hugging Face for the data scientist. What it does list is almost always a real, expected skill (precision 98%) with the right judgement.
+- **`gemma3:4b` finds more but follows the rules less.** It invents skill ids that aren't in the list (`react-dom`, `bert`, `transformers`, `psycopg`, `b2`, `licence-3-informatique`) and judges a `repo_dependency` as `supports`, which the rules forbid. It usually stops at the CV skills list, so work evidence is missed: React, CSS and Python came out `claimed` where repos and projects show them `demonstrated`. It twice got stuck in a loop on the same Arabic answer (Ollama stopped it: "token repeat limit reached"), once in the main run and again on a re-run, so that failure is repeatable at temperature 0.
+- **Both misread French hedges.** Both models judged "notions de Docker" `weak` ("wants to learn") in every language, and `qwen2.5:7b` once said the person *wants to learn* scikit-learn and TensorFlow, which the CV lists as skills. French CVs score clearly lower on status (qwen 48–71%) than English ones (85–100%). The prompt needs French examples (M6).
+- **Quotes are reliable.** Almost all quotes are copied word for word. The one made-up one was qwen quoting "SQL 10%" where the repo says "HTML 10%".
+- **Arabic explanations read naturally** for both models. qwen once spelled React in Arabic letters wrongly ("رايت"); product names should stay in Latin letters (a prompt rule for M6). qwen wrote some English sentences when asked for French (language ok 73% for fr).
+- **Speed:** 10–30 s per profile on the laptop GPU; the first call after loading a model takes about a minute. One early qwen call crashed in Ollama's GPU start-up (`CUDA error`, HTTP 500); a re-run worked, so it's counted as an Ollama hiccup and the scores use the re-run.
 
 ## Recommendation
-*Pending the runs.* What would decide it: status ok and quotes exact first (they are what the evaluation measures), then valid JSON (M2.2 repairs once, so a few failures are acceptable), then Arabic and French explanations, then limits and speed. The data terms above rule out the Gemini free tier for real CVs unless the team accepts them.
+**Use Ollama with `qwen2.5:7b` as the D-005 provider, behind M2.2's provider interface, and keep Groq as the first upgrade to try.**
+
+- **Why qwen over gemma:** the design only asks the model to *judge* evidence (D-006 choice 4), and the rule-based finders (M4.2, M4.3) already find most skills by name. qwen judges better (status ok 79% vs 71%), sticks to the id list (98% vs 84% precision), and always returns valid JSON. gemma's extra recall comes with invented ids and repeatable loops in Arabic.
+- **Why local over hosted:** it's the only option measured. It costs nothing, has no rate limits (the eval runs 3 systems × all profiles many times), and real CVs never leave the machine. The Gemini free tier's terms rule it out for real CVs anyway.
+- **What it costs us:** 65% recall and weaker French judging, so System C may not beat the baseline by much unless M6 improves it: a better prompt (French examples, "list every skill", one call per source), or giving the model the finders' candidates to judge. Every machine that runs System C needs Ollama and ~5 GB for the model; tests never need it (record/replay, M2.2). The demo host (D-008) must be able to run it, or switch to a hosted provider.
+- **Revisit when:** someone has a Groq key. Run `python spikes/llm/run_spike.py --provider groq` and `python spikes/llm/score.py`, add the table here, and switch if it clearly judges better. With M2.2 that's a config change.
 
 ## How to run it
 ```bash
@@ -64,6 +110,7 @@ python spikes/llm/run_spike.py --provider gemini --pause 10
 # Ollama: install from ollama.com (Windows: winget install Ollama.Ollama), then
 ollama pull qwen2.5:7b
 python spikes/llm/run_spike.py --provider ollama --pause 0
+ollama pull gemma3:4b && python spikes/llm/run_spike.py --provider ollama --model gemma3:4b --pause 0
 
 python spikes/llm/score.py           # tables for this page
 ```

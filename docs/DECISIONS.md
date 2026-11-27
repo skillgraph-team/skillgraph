@@ -12,7 +12,7 @@ Two kinds of entry:
 | D-002 | Who owns the repo, and public or private | Decided | M0.1 |
 | D-003 | Frontend framework | Decided | M0.4 |
 | D-004 | Backend stack and tooling | Decided | M0.2 |
-| D-005 | Which free LLM (hosted free tier vs local) | Open | M2.1 |
+| D-005 | Which free LLM (hosted free tier vs local) | Decided | M2.1 |
 | D-006 | Evidence model: types, statuses, confidence | Decided (contract) | M2.3 |
 | D-007 | Agent message envelope | Decided (contract) | M2.5 |
 | D-008 | Hosting for the demo | Open | M10.1 |
@@ -69,8 +69,11 @@ Two kinds of entry:
 - **Why:** matches the project report, all free, and agents + API live in one Python codebase.
 
 ### D-005 · LLM provider
-- **Status:** Open — decided by the M2.1 spike, on measured results. Spike set up 2026-11-27 (`docs/spikes/llm.md`); live runs still need a Groq/Gemini key or Ollama installed.
-- **Candidates:** a hosted free tier (check current limits and terms at decision time) vs a small local model through Ollama (needs a machine with enough RAM/GPU; slower). The provider interface means this can change later at low cost.
+- **Status:** Decided (2026-11-27, by Claude Code on the M2.1 spike's measured results, under Rasen's instruction to finish the milestone; **Rasen to confirm or overturn**).
+- **Choice:** **a local model through Ollama, `qwen2.5:7b`**, behind M2.2's provider interface. Groq's free tier (`llama-3.3-70b-versatile`) is the first upgrade to try once someone has a key.
+- **Why:** measured on 5 test profiles × 3 answer languages (`docs/spikes/llm.md`): 100% valid JSON, 79% of statuses right, 97% of quotes word for word, 98% precision. `gemma3:4b` found more skills (83% vs 65%) but judged worse (71%), invented skill ids and got stuck in repeat loops in Arabic. Local costs nothing, has no rate limits for the eval, and keeps real CVs on the machine. The Gemini free tier allows human review of prompts and says not to send personal data, so it's out for real CVs.
+- **Trade-offs accepted:** qwen misses about a third of the skills and judges French CVs worse (48–71% status ok vs 85–100% for English). M6 has to make up for that with the prompt (French examples, "list every skill") or by letting the model judge the rule-based finders' candidates. System C needs Ollama plus ~5 GB on whatever machine runs it (affects D-008). Tests never need it (record/replay).
+- **Not measured:** Groq and Gemini (no API key during the spike). Running them takes two commands; switching is a config change after M2.2.
 
 ### D-006 · Evidence model (contract)
 - **Status:** Decided (Rasen, 2026-11-23). **Contract owner: Rasen.** M2.3 writes this up in full in `docs/design/evidence-model.md` (with worked examples); Rasen approves it (D-018). Changes after that need a new D-entry approved by the owner.
@@ -1234,7 +1237,7 @@ These fill in details D-006 left open. They are part of the contract in `docs/de
 - **Why:** a profile edit shouldn't fail because of server setup. The build endpoint already reports the missing list (T-162).
 - **Where:** `backend/app/services/manual_projects.py`.
 
-### M2.1 · LLM spike (set up; live runs pending)
+### M2.1 · LLM spike
 
 #### T-167 · The spike compares Groq, the Gemini free tier and Ollama
 - **What:** three $0 options: Groq `llama-3.3-70b-versatile`, Gemini `gemini-2.5-flash`, Ollama `qwen2.5:7b` locally. All are called through the OpenAI-compatible chat endpoint with JSON mode, so one HTTP function serves all three.
@@ -1256,6 +1259,11 @@ These fill in details D-006 left open. They are part of the contract in `docs/de
 - **What:** `urllib` for HTTP, no new dependencies. Keys are read from `SPIKE_GROQ_API_KEY` / `SPIKE_GEMINI_API_KEY` in the shell, never from `.env` and never saved. Raw answers go to `spikes/llm/results/*.jsonl` and are committed. Ruff's line-length and import-order rules are turned off per file for the spike.
 - **Why:** throwaway code shouldn't add dependencies to the backend; the `SPIKE_` prefix keeps spike keys apart from the app's `LLM_API_KEY` (M2.2). The profiles are made up, so the answers are safe to commit and let anyone re-score without spending quota.
 - **Where:** `spikes/llm/`.
+
+#### T-171 · The spike calls Ollama through its own API with an 8k context
+- **What:** for Ollama, `run_spike.py` uses `/api/chat` with `format: "json"`, `num_ctx: 8192`, `num_predict: 4000` and temperature 0, instead of the OpenAI-compatible endpoint.
+- **Why:** the OpenAI-compatible endpoint can't change the context window, and Ollama's default (~4k tokens) would cut off long answers without an error. The prompts turned out to be ~1,250 tokens, so this was a precaution; M2.2 should still set `num_ctx` explicitly.
+- **Where:** `call` in `spikes/llm/run_spike.py`.
 
 ### Repo setup script (no slice)
 

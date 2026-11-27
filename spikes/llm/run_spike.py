@@ -41,7 +41,7 @@ PROVIDERS = {
         "model": "gemini-2.5-flash",
     },
     "ollama": {
-        "url": "http://localhost:11434/v1/chat/completions",
+        "url": "http://localhost:11434/api/chat",
         "key_env": None,
         "model": "qwen2.5:7b",
     },
@@ -135,15 +135,25 @@ def call(provider: str, model: str, msgs: list[dict[str, str]], max_retries: int
                 f"Set {cfg['key_env']} first (the key is never written to disk by this script)."
             )
         headers["Authorization"] = f"Bearer {key}"
-    body = json.dumps(
-        {
+    if provider == "ollama":
+        # Ollama's own API, because the OpenAI-compatible one can't raise the context
+        # window: the default (~4k tokens) would silently cut off prompt + answer.
+        payload: dict = {
+            "model": model,
+            "messages": msgs,
+            "stream": False,
+            "format": "json",
+            "options": {"temperature": 0, "num_ctx": 8192, "num_predict": 4000},
+        }
+    else:
+        payload = {
             "model": model,
             "messages": msgs,
             "temperature": 0,
             "max_tokens": 4000,
             "response_format": {"type": "json_object"},
         }
-    ).encode()
+    body = json.dumps(payload).encode()
     rate_limited = 0
     start = time.monotonic()
     for attempt in range(max_retries + 1):
@@ -151,13 +161,22 @@ def call(provider: str, model: str, msgs: list[dict[str, str]], max_retries: int
         try:
             with urllib.request.urlopen(req, timeout=180) as resp:
                 data = json.loads(resp.read())
-            text = data["choices"][0]["message"]["content"] or ""
+            if provider == "ollama":
+                text = data["message"]["content"]
+                usage = {
+                    "prompt_tokens": data.get("prompt_eval_count"),
+                    "completion_tokens": data.get("eval_count"),
+                    "done_reason": data.get("done_reason"),
+                }
+            else:
+                text = data["choices"][0]["message"]["content"] or ""
+                usage = data.get("usage")
             return {
                 "status": 200,
                 "text": text,
                 "seconds": time.monotonic() - start,
                 "rate_limited": rate_limited,
-                "usage": data.get("usage"),
+                "usage": usage,
             }
         except urllib.error.HTTPError as err:
             if err.code == 429 and attempt < max_retries:
